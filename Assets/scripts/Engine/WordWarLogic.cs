@@ -397,39 +397,6 @@ namespace WordSpell
             {
 
                 ScoreStats ss = RecordWordScore();
-                if (ss.MannaScore > 0)
-                {
-                    //ScoreFlash.Foreground = WordWarLogic.GetFortuneColor(WordWarLogic.ScoreWord());
-                    //ScoreFlash.Text = "Manna +" + ss.MannaScore;
-                    //await BeginAsync(ScoreMotionSmall);
-                }
-
-                if (ss.bonus > 0)
-                {
-                    //ScoreFlash.Foreground = WordWarLogic.GetFortuneColor(WordWarLogic.ScoreWord());
-                    //ScoreFlash.Text = "Bonus +" + ss.bonus;
-                    //await BeginAsync(ScoreMotionSmall);
-                }
-
-                if (ss.si != null)
-                {
-                    boardScript.ShowMsg("Nice word, you've earned a " + ss.si.FriendlyName + " spell.");
-                }
-
-                TurnOver();
-
-                if (CheckNextLevel(totalScore))
-                {
-                    boardScript.LevelSound();
-                    string levelmsg = "Welcom to Level " + CurrentLevel.ToString() + "\n\n";
-                    if (Spells.HasSpells())
-                    {
-                        levelmsg += "You have new spells";
-                    }
-
-                    boardScript.ShowMsg(levelmsg);
-                }
-
                 RemoveWordAndReplaceTiles();
 
                 Deselect(null);
@@ -448,6 +415,40 @@ namespace WordSpell
                 }
                 else
                 {
+                    if (ss.MannaScore > 0)
+                    {
+                        //ScoreFlash.Foreground = WordWarLogic.GetFortuneColor(WordWarLogic.ScoreWord());
+                        //ScoreFlash.Text = "Manna +" + ss.MannaScore;
+                        //await BeginAsync(ScoreMotionSmall);
+                    }
+
+                    if (ss.bonus > 0)
+                    {
+                        //ScoreFlash.Foreground = WordWarLogic.GetFortuneColor(WordWarLogic.ScoreWord());
+                        //ScoreFlash.Text = "Bonus +" + ss.bonus;
+                        //await BeginAsync(ScoreMotionSmall);
+                    }
+
+                    if (ss.si != null)
+                    {
+                        boardScript.ShowMsg("Nice word, you've earned a " + ss.si.FriendlyName + " spell.");
+                    }
+
+                    TurnOver();
+
+                    if (CheckNextLevel(totalScore))
+                    {
+                        boardScript.LevelSound();
+                        string levelmsg = "Welcom to Level " + CurrentLevel.ToString() + "\n\n";
+                        if (Spells.HasSpells())
+                        {
+                            levelmsg += "You have new spells";
+                        }
+
+                        boardScript.ShowMsg(levelmsg);
+                    }
+
+
                     boardScript.ScoreWordSound();
                 }
             }
