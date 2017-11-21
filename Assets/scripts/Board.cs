@@ -30,6 +30,7 @@ public class Board : MonoBehaviour
 
     public AudioClip SubmitWordSound;
     public AudioClip NewLevelSound;
+    public AudioClip GameOverSound;
 
     ListBox<UnityEngine.UI.VerticalLayoutGroup> TryListBox;
     ListBox<UnityEngine.UI.VerticalLayoutGroup> HistoryListBox;
@@ -54,6 +55,7 @@ public class Board : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+
         WSGameState.InitGameGlobal();
 
         TryListBox = new ListBox<VerticalLayoutGroup>(TryList, TextPrefab);
@@ -140,9 +142,21 @@ public class Board : MonoBehaviour
         }
     }
 
+    IEnumerator EndGameDelay()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        ShowMsg("Game Over");
+        PlayEndGameSound();
+        yield return new WaitForSeconds(3);
+        MsgCanvas.SetActive(false);
+
+        StartCanvas.SetActive(true);
+    }
+
     public void EndGanme()
     {
-        StartCanvas.SetActive(true);
+        StartCoroutine(EndGameDelay());
     }
 
     public Transform NewTile(int i, int j, float newtilepos = 0)
@@ -396,5 +410,12 @@ public class Board : MonoBehaviour
     {
         AudioSource audio = GetComponent<AudioSource>();
         audio.PlayOneShot(NewLevelSound);
+    }
+
+    public void PlayEndGameSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(GameOverSound);
+//        yield WaitForSeconds(3);
     }
 }

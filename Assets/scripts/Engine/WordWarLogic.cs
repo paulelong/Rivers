@@ -395,7 +395,6 @@ namespace WordSpell
 
             if (EngLetterScoring.IsWord(s))
             {
-                boardScript.ScoreWordSound();
 
                 ScoreStats ss = RecordWordScore();
                 if (ss.MannaScore > 0)
@@ -440,13 +439,16 @@ namespace WordSpell
                 if (gameOver)
                 {
                     RemoveGameBoard();
-                    boardScript.ShowMsg("Game Over");
-
+                    
                     //SaveStats();
                     Resume = false;
                     boardScript.EndGanme();
 
                     //ResetSavedGame();
+                }
+                else
+                {
+                    boardScript.ScoreWordSound();
                 }
             }
             else

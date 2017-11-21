@@ -241,17 +241,7 @@ namespace WordSpell
             switch(tt)
             {
                 case TileTypes.Burning:
-                    Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = BurningMat;
-                    Transform ll = boardScript.NewLavaLight();
-                    ll.SetParent(Tf.GetChild(0), false);
-                    ll.name = "Point light";
-                    // Need a point light
-                    //Tf.GetChild(0).gameObject.SetActive(true);
-                    //GameObject t = (GameObject)Instantiate(LavaLight, new Vector3(0, 0, 0), Quaternion.identity);
-                    //t.transform.SetParent(Tf);
-//                    Object.Instantiate();
-                    //Tf.GetChild(0).gameObject.SetActive(true);
-                    LetterAnimator.SetTrigger(Burning);
+                    BurnTile();
                     break;
                 case TileTypes.Normal:
                     Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
@@ -275,6 +265,21 @@ namespace WordSpell
                     Tf.gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
                     break;
             }
+        }
+
+        private void BurnTile()
+        {
+            Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = BurningMat;
+            Transform ll = boardScript.NewLavaLight();
+            ll.SetParent(Tf.GetChild(0), false);
+            ll.name = "Point light";
+            // Need a point light
+            //Tf.GetChild(0).gameObject.SetActive(true);
+            //GameObject t = (GameObject)Instantiate(LavaLight, new Vector3(0, 0, 0), Quaternion.identity);
+            //t.transform.SetParent(Tf);
+            //                    Object.Instantiate();
+            //Tf.GetChild(0).gameObject.SetActive(true);
+            LetterAnimator.SetTrigger(Burning);
         }
 
         public void UpdateLetterDisplay()
@@ -390,8 +395,7 @@ namespace WordSpell
             {
                 case TileTypes.Burning:
                     tt = _tt;
-                    //b.Foreground = GetForeColor();
-                    //b.Background = GetBackColor();
+                    BurnTile();
                     break;
             }
         }
