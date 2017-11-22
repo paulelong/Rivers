@@ -7,7 +7,7 @@ using WordSpell;
 
 public class Board : MonoBehaviour
 {
-
+    // Passed in from Board scene
     public Transform LetterBoxPrefab;
     public GameObject SelectPrefab;
     public Transform LavaLightPrefab;
@@ -27,6 +27,8 @@ public class Board : MonoBehaviour
     public GameObject HistoryList;
     public GameObject SpelllList;
     public GameObject SpellFoundList;
+
+    public Transform GameArea;
 
     public AudioClip SubmitWordSound;
     public AudioClip NewLevelSound;
@@ -90,10 +92,16 @@ public class Board : MonoBehaviour
         // sz_fit = lm(sz ~ ratios)
 
         gridYoff = (aspect * 15.09f) + -10.21f;
+        gridYoff = -1.7f;
         CamZ = (aspect * 23.54f) - 27.69f;
+        if(CamZ > -13.4f)
+        {
+            CamZ = -13.4f;
+        }
 
         BoardCam.transform.position = new Vector3(0, gridYoff, CamZ);
         BoardCam.orthographicSize = (aspect * -11.0f) + 15.23f;
+ 
 
         StartCanvas.SetActive(true);
     }
