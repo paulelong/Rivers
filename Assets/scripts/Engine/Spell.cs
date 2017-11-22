@@ -68,11 +68,11 @@ namespace WordSpell
 
         internal static void RestFoundSpells()
         {
-            FoundSpells.Clear();
+            AwardedSpells.Clear();
         }
 
         public static List<SpellInfo> AvailableSpells = new List<SpellInfo>();
-        public static List<SpellInfo> FoundSpells = new List<SpellInfo>();
+        public static List<SpellInfo> AwardedSpells = new List<SpellInfo>();
 
         internal static SpellInfo GetSpell(int v, int level)
         {
@@ -93,9 +93,17 @@ namespace WordSpell
 
             int itemnumber = r.Next(inplay.Count);
             SpellInfo rsi = inplay[itemnumber];
-            FoundSpells.Add(rsi);
+            AwardedSpells.Add(rsi);
 
             return rsi;
+        }
+
+        public static void AwardAllSpells()
+        {
+            foreach (SpellInfo si in AllSpells)
+            {
+                AwardedSpells.Add(si);
+            }
         }
 
         public static SpellInfo FindSpell(string name)
@@ -103,13 +111,13 @@ namespace WordSpell
             return( AllSpells.Find(x => (x.FriendlyName == name)) );
         }
 
-        internal static void RemoveFoundSpell(SpellInfo selectedSpell)
+        internal static void RemoveAwardedSpells(SpellInfo selectedSpell)
         {
-            foreach(SpellInfo si in FoundSpells)
+            foreach(SpellInfo si in AwardedSpells)
             {
                 if(si.spellType == selectedSpell.spellType)
                 {
-                    FoundSpells.Remove(si);
+                    AwardedSpells.Remove(si);
                     break;
                 }
             }
@@ -553,7 +561,7 @@ namespace WordSpell
                 so = CastSpell(selectedSpell, null);
                 if (freeSpell && so.worked)
                 {
-                    Spells.RemoveFoundSpell(selectedSpell);
+                    Spells.RemoveAwardedSpells(selectedSpell);
                     freeSpell = false;
                 }
                 else

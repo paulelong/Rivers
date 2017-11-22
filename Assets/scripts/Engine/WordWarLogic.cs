@@ -50,7 +50,7 @@ namespace WordSpell
 
         private static int level = 1;
 
-        static System.Random r = new System.Random(20);
+        static System.Random r;
 
         //public static TextBlock CurrentWord { get; private set; }
         public static int CurrentLevel { get { return level; } private set { } }
@@ -133,11 +133,18 @@ namespace WordSpell
 
             EngLetterScoring.LoadDictionary();
             LetterProp.InitLetterPropertyList(boardScript);
+
         }
 
         public static void InitNewGame()
         {
+
+            // Reset all variables
             Replay();
+
+            // Stuff useful for development, don't ship
+            Spells.AwardAllSpells();
+            r = new System.Random(20);
 
             LetterProp.InitProbability(level);
 
@@ -289,7 +296,7 @@ namespace WordSpell
                 {
                     if (freeSpell)
                     {
-                        Spells.RemoveFoundSpell(NextSpell);
+                        Spells.RemoveAwardedSpells(NextSpell);
                     }
                     else
                     {

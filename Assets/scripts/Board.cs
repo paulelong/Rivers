@@ -245,9 +245,9 @@ public class Board : MonoBehaviour
             AddSpellList(si.FriendlyName, si.MannaPoints, null);
         }
 
-        ClearSpellFoundList();
+        ClearAwardedSpellList();
 
-        foreach (SpellInfo si in Spells.FoundSpells)
+        foreach (SpellInfo si in Spells.AwardedSpells)
         {
             AddSpellList(si.FriendlyName, si.MannaPoints, null);
         }
@@ -362,7 +362,7 @@ public class Board : MonoBehaviour
         SpellCanvas.SetActive(false);
     }
 
-    public void AddSpellFoundList(string spellName, int cost, Sprite image)
+    public void AddAwardedSpellList(string spellName, int cost, Sprite image)
     {
         Transform item = SpellListFoundBox.Add();
 
@@ -383,7 +383,7 @@ public class Board : MonoBehaviour
         i.sprite = image;
     }
 
-    public void ClearSpellFoundList()
+    public void ClearAwardedSpellList()
     {
         SpellListFoundBox.Clear();
     }
