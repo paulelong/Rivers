@@ -417,7 +417,7 @@ public class Board : MonoBehaviour
     public void LevelSound()
     {
         AudioSource audio = GetComponent<AudioSource>();
-        audio.PlayOneShot(NewLevelSound);
+        audio.PlayOneShot(NewLevelSound, 0.4f);
     }
 
     public void PlayEndGameSound()
