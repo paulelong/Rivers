@@ -780,7 +780,8 @@ namespace WordSpell
             for (int jp = j; jp < gridsize - 1; jp++)
             {
                 LetterProp LetterOntop = LetterPropGrid[i, jp + 1];
-                Tile t = (Tile)LetterOntop.Tf.GetChild(0).gameObject.GetComponent(typeof(Tile));
+                //Tile t = (Tile)LetterOntop.Tf.GetChild(0).gameObject.GetComponent(typeof(Tile));
+                Tile t = (Tile)LetterOntop.Tf.gameObject.GetComponent(typeof(Tile));
                 t.SetPos(i, jp);
 
                 LetterOntop.J = jp;
@@ -803,7 +804,8 @@ namespace WordSpell
         {
             toRemove.Tf.Translate(0.0f, 0.0f, -1f);
 
-            Rigidbody rb = toRemove.Tf.GetChild(0).GetComponent(typeof(Rigidbody)) as Rigidbody;
+            //Rigidbody rb = toRemove.Tf.GetChild(0).GetComponent(typeof(Rigidbody)) as Rigidbody;
+            Rigidbody rb = toRemove.Tf.GetComponent(typeof(Rigidbody)) as Rigidbody;
             rb.useGravity = true;
             rb.isKinematic = false;
 

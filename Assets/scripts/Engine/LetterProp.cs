@@ -221,9 +221,11 @@ namespace WordSpell
             tt = CreateNewTile(level, levelup);
             Tf = _tf;
 
-            LetterAnimator = Tf.GetChild(0).gameObject.GetComponent<Animator>();
+            //LetterAnimator = Tf.GetChild(0).gameObject.GetComponent<Animator>();
+            LetterAnimator = Tf.gameObject.GetComponent<Animator>();
 
-            tileScript = (Tile)Tf.GetChild(0).gameObject.GetComponent(typeof(Tile));
+            //tileScript = (Tile)Tf.GetChild(0).gameObject.GetComponent(typeof(Tile));
+            tileScript = (Tile)Tf.gameObject.GetComponent(typeof(Tile));
 
             tileScript.SetPos(I, J, this);
 
@@ -244,22 +246,23 @@ namespace WordSpell
                     BurnTile();
                     break;
                 case TileTypes.Normal:
-                    Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
+                    //Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
+                    Tf.gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
                     break;
                 case TileTypes.WordDouble:
-                    Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = WordDoubleMat;
+                    Tf.gameObject.GetComponent<MeshRenderer>().material = WordDoubleMat;
                     break;
                 case TileTypes.WordTriple:
-                    Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = WordTripleMat;
+                    Tf.gameObject.GetComponent<MeshRenderer>().material = WordTripleMat;
                     break;
                 case TileTypes.LetterDouble:
-                    Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = LetterDoubleMat;
+                    Tf.gameObject.GetComponent<MeshRenderer>().material = LetterDoubleMat;
                     break;
                 case TileTypes.LetterTriple:
-                    Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = LetterTripleMat;
+                    Tf.gameObject.GetComponent<MeshRenderer>().material = LetterTripleMat;
                     break;
                 case TileTypes.Manna:
-                    Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = ManaMat;
+                    Tf.gameObject.GetComponent<MeshRenderer>().material = ManaMat;
                     break;
                 default:
                     Tf.gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
@@ -269,7 +272,8 @@ namespace WordSpell
 
         private void BurnTile()
         {
-            Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = BurningMat;
+            //Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = BurningMat;
+            Tf.gameObject.GetComponent<MeshRenderer>().material = BurningMat;
             Transform ll = boardScript.NewLavaLight();
             ll.SetParent(Tf.GetChild(0), false);
             ll.name = "Point light";
@@ -284,7 +288,8 @@ namespace WordSpell
 
         public void UpdateLetterDisplay()
         {
-            GameObject text = Tf.GetChild(0).GetChild(0).gameObject;
+            //GameObject text = Tf.GetChild(0).GetChild(0).gameObject;
+            GameObject text = Tf.GetChild(0).gameObject;
 
             TextMesh tm = text.GetComponent(typeof(TextMesh)) as TextMesh;
             if (tm != null)
