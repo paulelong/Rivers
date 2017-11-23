@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace WordSpell 
 {
-    class ListBox<Layout> : ScriptableObject where Layout : class //: MonoBehaviour
+    public class ListBox<Layout> : ScriptableObject where Layout : class //: MonoBehaviour
     {
         GameObject list;
         Transform prefab;

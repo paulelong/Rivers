@@ -237,18 +237,18 @@ public class Board : MonoBehaviour
 
     public void CastSpell()
     {
-        ClearSpellList();
+        ClearSpellList(SpellListBox);
 
         foreach(SpellInfo si in Spells.AvailableSpells)
         {
-            AddSpellList(si.FriendlyName, si.MannaPoints, null);
+            AddSpellList(SpellListBox, si.FriendlyName, si.MannaPoints, null);
         }
 
-        ClearAwardedSpellList();
+        ClearSpellList(AwardedSpellListBox);
 
         foreach (SpellInfo si in Spells.AwardedSpells)
         {
-            AddAwardedSpellList(si.FriendlyName, si.MannaPoints, null);
+            AddSpellList(AwardedSpellListBox, si.FriendlyName, si.MannaPoints, null);
         }
 
 
@@ -319,9 +319,9 @@ public class Board : MonoBehaviour
         TryListBox.Clear();
     }
 
-    public void AddSpellList(string spellName, int cost, Sprite image)
+    public void AddSpellList(ListBox<GridLayoutGroup> spellbox, string spellName, int cost, Sprite image)
     {
-        Transform item = SpellListBox.Add();
+        Transform item = spellbox.Add();
 
         UnityEngine.UI.Text s = item.GetChild(0).GetComponent<UnityEngine.UI.Text>();
         s.text = spellName;
@@ -349,9 +349,9 @@ public class Board : MonoBehaviour
         trigger.triggers.Add(entry);
     }
 
-    public void ClearSpellList()
+    public void ClearSpellList(ListBox<GridLayoutGroup> spellbox)
     {
-        SpellListBox.Clear();
+        spellbox.Clear();
     }
 
     void SelectSpell(PointerEventData eventData)
@@ -359,33 +359,48 @@ public class Board : MonoBehaviour
         SpellInfo si = Spells.FindSpell(eventData.pointerCurrentRaycast.gameObject.name);
         WSGameState.CastSpell(si);
         SpellCanvas.SetActive(false);
-    }
 
-    public void AddAwardedSpellList(string spellName, int cost, Sprite image)
-    {
-        Transform item = AwardedSpellListBox.Add();
-
-        UnityEngine.UI.Text s = item.GetChild(0).GetComponent<UnityEngine.UI.Text>();
-        s.text = spellName;
-
-        UnityEngine.UI.Text c = item.GetChild(1).GetComponent<UnityEngine.UI.Text>();
-        if (cost > 0)
+        // Awarded spells need to be removed from the list
+        string x = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name;
+        if (x == "AwardedSpells")
         {
-            c.text = cost.ToString();
+            Spells.AwardedSpells.Remove(si);
         }
-        else
-        {
-            c.text = "";
-        }
-
-        UnityEngine.UI.Image i = item.GetChild(2).GetComponent<UnityEngine.UI.Image>();
-        i.sprite = image;
     }
 
-    public void ClearAwardedSpellList()
-    {
-        AwardedSpellListBox.Clear();
-    }
+    //public void AddAwardedSpellList(string spellName, int cost, Sprite image)
+    //{
+    //    Transform item = AwardedSpellListBox.Add();
+
+    //    UnityEngine.UI.Text s = item.GetChild(0).GetComponent<UnityEngine.UI.Text>();
+    //    s.text = spellName;
+
+    //    UnityEngine.UI.Text c = item.GetChild(1).GetComponent<UnityEngine.UI.Text>();
+    //    if (cost > 0)
+    //    {
+    //        c.text = cost.ToString();
+    //    }
+    //    else
+    //    {
+    //        c.text = "";
+    //    }
+
+    //    UnityEngine.UI.Image i = item.GetChild(2).GetComponent<UnityEngine.UI.Image>();
+    //    i.sprite = image;
+
+    //    // Add the callback so we know we've been selected
+    //    EventTrigger trigger = item.GetChild(2).GetComponent<EventTrigger>();
+
+    //    EventTrigger.Entry entry = new EventTrigger.Entry();
+    //    entry.eventID = EventTriggerType.PointerClick;
+    //    entry.callback.AddListener((eventData) => { SelectSpell((PointerEventData)eventData); });
+    //    trigger.triggers.Add(entry);
+    //}
+
+    //public void ClearAwardedSpellList()
+    //{
+    //    AwardedSpellListBox.Clear();
+    //}
 
     public void IndicateGoodWord(bool good)
     {
