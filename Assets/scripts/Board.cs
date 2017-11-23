@@ -26,7 +26,7 @@ public class Board : MonoBehaviour
     public GameObject TryList;
     public GameObject HistoryList;
     public GameObject SpelllList;
-    public GameObject SpellFoundList;
+    public GameObject AwardedSpellList;
 
     public Transform GameArea;
 
@@ -37,7 +37,7 @@ public class Board : MonoBehaviour
     ListBox<UnityEngine.UI.VerticalLayoutGroup> TryListBox;
     ListBox<UnityEngine.UI.VerticalLayoutGroup> HistoryListBox;
     ListBox<UnityEngine.UI.GridLayoutGroup> SpellListBox;
-    ListBox<UnityEngine.UI.GridLayoutGroup> SpellListFoundBox;
+    ListBox<UnityEngine.UI.GridLayoutGroup> AwardedSpellListBox;
 
     private bool MsgShowing = false;
 
@@ -57,13 +57,12 @@ public class Board : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-
         WSGameState.InitGameGlobal();
 
         TryListBox = new ListBox<VerticalLayoutGroup>(TryList, TextPrefab);
         HistoryListBox = new ListBox<VerticalLayoutGroup>(HistoryList, TextPrefab);
         SpellListBox = new ListBox<GridLayoutGroup>(SpelllList, SpellPrefab);
-        SpellListFoundBox = new ListBox<GridLayoutGroup>(SpellFoundList, SpellPrefab);
+        AwardedSpellListBox = new ListBox<GridLayoutGroup>(AwardedSpellList, SpellPrefab);
 
         LocateCamera();
 	}
@@ -249,7 +248,7 @@ public class Board : MonoBehaviour
 
         foreach (SpellInfo si in Spells.AwardedSpells)
         {
-            AddSpellList(si.FriendlyName, si.MannaPoints, null);
+            AddAwardedSpellList(si.FriendlyName, si.MannaPoints, null);
         }
 
 
@@ -364,7 +363,7 @@ public class Board : MonoBehaviour
 
     public void AddAwardedSpellList(string spellName, int cost, Sprite image)
     {
-        Transform item = SpellListFoundBox.Add();
+        Transform item = AwardedSpellListBox.Add();
 
         UnityEngine.UI.Text s = item.GetChild(0).GetComponent<UnityEngine.UI.Text>();
         s.text = spellName;
@@ -385,7 +384,7 @@ public class Board : MonoBehaviour
 
     public void ClearAwardedSpellList()
     {
-        SpellListFoundBox.Clear();
+        AwardedSpellListBox.Clear();
     }
 
     public void IndicateGoodWord(bool good)

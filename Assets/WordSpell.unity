@@ -8552,7 +8552,7 @@ MonoBehaviour:
   TryList: {fileID: 812072370}
   HistoryList: {fileID: 1400348595}
   SpelllList: {fileID: 36073718}
-  SpellFoundList: {fileID: 2060689493}
+  AwardedSpellList: {fileID: 2060689493}
   GameArea: {fileID: 223684313}
   SubmitWordSound: {fileID: 8300000, guid: 98c8cd467fae59b4fb3e4dccdfb0d091, type: 3}
   NewLevelSound: {fileID: 8300000, guid: 9baf30858dc663c49b60a24ee2ac01ee, type: 3}
