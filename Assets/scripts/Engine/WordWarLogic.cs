@@ -74,6 +74,10 @@ namespace WordSpell
         private const int EffWordCount = 3;
         private const int NumberOfTopScores = 20;
 
+        static Material BadFortuneMaterial;
+        static Material GoodFortuneMaterial;
+        static Material GreatFortuneMaterial;
+
         //private static TextBlock LevelText;
         //private static TextBlock ScoreText;
         //private static TextBlock WordScoreText;
@@ -133,6 +137,10 @@ namespace WordSpell
 
             EngLetterScoring.LoadDictionary();
             LetterProp.InitLetterPropertyList(boardScript);
+
+            BadFortuneMaterial = (Material)Resources.Load("Copper");
+            GoodFortuneMaterial = (Material)Resources.Load("Silver");
+            GreatFortuneMaterial = (Material)Resources.Load("Gold");
 
         }
 
@@ -230,20 +238,20 @@ namespace WordSpell
             //MannaScoreText.Text = "M: " + Manna.ToString();
         }
 
-        //internal static SolidColorBrush GetFortuneColor()
-        //{
-        //    switch (WordWarLogic.GetFortune())
-        //    {
-        //        case WordWarLogic.FortuneLevel.Bad:
-        //            return (BadFortune);
-        //        case WordWarLogic.FortuneLevel.Good:
-        //            return (GoodFortune);
-        //        case WordWarLogic.FortuneLevel.Great:
-        //            return (GreatFortune);
-        //    }
+        internal static Material GetFortuneColor()
+        {
+            switch (GetFortune())
+            {
+                case FortuneLevel.Bad:
+                    return (BadFortuneMaterial);
+                case FortuneLevel.Good:
+                    return (GoodFortuneMaterial);
+                case FortuneLevel.Great:
+                    return (GreatFortuneMaterial);
+            }
 
-        //    return BadFortune;
-        //}
+            return BadFortuneMaterial;
+        }
 
         //internal static SolidColorBrush GetFortuneColor(int score)
         //{
@@ -262,6 +270,7 @@ namespace WordSpell
 
         internal static void UpdateFortune()
         {
+            //Sel
             //SolidColorBrush scb = GetFortuneColor();
             //SetGridColor(scb);
             //EffText.Foreground = scb;
