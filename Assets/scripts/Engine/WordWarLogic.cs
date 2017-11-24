@@ -389,6 +389,8 @@ namespace WordSpell
             totalwords = 0;
             Manna = 0;
 
+            UpdateStats();
+
             //ButtonList.Clear();
 
             //LetterGrid.Children.Clear();
@@ -455,7 +457,7 @@ namespace WordSpell
                         boardScript.ShowMsg(levelmsg);
                     }
 
-
+                    UpdateStats();
                     boardScript.ScoreWordSound();
                 }
             }
@@ -523,7 +525,6 @@ namespace WordSpell
 
             int wordTotal = ScoreWord();
 
-            //HistoryList.Items.Insert(0, GetWordTally());
             boardScript.AddHistory(GetCurrentWord() + " " + GetWordTally());
 
             totalScore += wordTotal;
@@ -629,7 +630,7 @@ namespace WordSpell
 
             boardScript.SetLevel(level.ToString());
 
-            boardScript.SetMana(Manna.ToString());
+            UpdateManaScore();
         }
 
         private static void CheckTopLongestWordScores(WordScoreItem wsi)

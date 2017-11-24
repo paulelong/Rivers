@@ -9114,7 +9114,7 @@ GameObject:
   - component: {fileID: 1911584542}
   - component: {fileID: 1911584545}
   m_Layer: 0
-  m_Name: FoundSpells
+  m_Name: AwardedSpells
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

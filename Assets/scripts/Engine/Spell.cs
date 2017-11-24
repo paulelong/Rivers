@@ -357,6 +357,7 @@ namespace WordSpell
         private static void ChangeManna(int manna)
         {
             Manna += manna;
+            UpdateManaScore();
             //WordWarLogic.MannaScoreText.Text = "M: " + Manna.ToString();
         }
 

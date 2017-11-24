@@ -162,9 +162,9 @@ namespace WordSpell
         {
             NoramlMat = (Material)Resources.Load("Normal");
             LetterDoubleMat = (Material)Resources.Load("Double Letter");
-            LetterTripleMat = (Material)Resources.Load("Tripple Letter");
+            LetterTripleMat = (Material)Resources.Load("Triple Letter");
             WordDoubleMat = (Material)Resources.Load("Double Word");
-            WordTripleMat = (Material)Resources.Load("Tripple Word");
+            WordTripleMat = (Material)Resources.Load("Triple Word");
             ManaMat = (Material)Resources.Load("Mana");
             BurningMat = (Material)Resources.Load("Burnt");
 
