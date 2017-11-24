@@ -190,6 +190,7 @@ public class Board : MonoBehaviour
         MsgShowing = true;
     }
 
+
     public GameObject SelectLet(int i, int j)
     {
         GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - half_offset) * inc, (j - half_offset) * inc, 0.6f), Quaternion.identity);
@@ -198,6 +199,12 @@ public class Board : MonoBehaviour
         GameObject vt = t.transform.GetChild(1).gameObject;
         GameObject hr = t.transform.GetChild(2).gameObject;
         GameObject vb = t.transform.GetChild(3).gameObject;
+
+        Material m = WSGameState.GetFortuneColor();
+        hl.GetComponent<MeshRenderer>().material = m;
+        vt.GetComponent<MeshRenderer>().material = m;
+        hr.GetComponent<MeshRenderer>().material = m;
+        vb.GetComponent<MeshRenderer>().material = m;
 
         Animator anim_hr = hl.GetComponent<Animator>();
         Animator anim_vt = vt.GetComponent<Animator>();

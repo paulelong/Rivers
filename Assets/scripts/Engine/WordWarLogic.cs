@@ -141,7 +141,6 @@ namespace WordSpell
             BadFortuneMaterial = (Material)Resources.Load("Copper");
             GoodFortuneMaterial = (Material)Resources.Load("Silver");
             GreatFortuneMaterial = (Material)Resources.Load("Gold");
-
         }
 
         public static void InitNewGame()
@@ -237,36 +236,6 @@ namespace WordSpell
             boardScript.SetMana(Manna.ToString());
             //MannaScoreText.Text = "M: " + Manna.ToString();
         }
-
-        internal static Material GetFortuneColor()
-        {
-            switch (GetFortune())
-            {
-                case FortuneLevel.Bad:
-                    return (BadFortuneMaterial);
-                case FortuneLevel.Good:
-                    return (GoodFortuneMaterial);
-                case FortuneLevel.Great:
-                    return (GreatFortuneMaterial);
-            }
-
-            return BadFortuneMaterial;
-        }
-
-        //internal static SolidColorBrush GetFortuneColor(int score)
-        //{
-        //    switch (WordWarLogic.GetFortune(score))
-        //    {
-        //        case WordWarLogic.FortuneLevel.Bad:
-        //            return (BadFortune);
-        //        case WordWarLogic.FortuneLevel.Good:
-        //            return (GoodFortune);
-        //        case WordWarLogic.FortuneLevel.Great:
-        //            return (GreatFortune);
-        //    }
-
-        //    return BadFortune;
-        //}
 
         internal static void UpdateFortune()
         {
@@ -708,6 +677,23 @@ namespace WordSpell
 
             return (double)wordtotal / (double)FortuneWordScoreHistory.Count;
         }
+
+        internal static Material GetFortuneColor()
+        {
+            switch (GetFortune())
+            {
+                case FortuneLevel.Bad:
+                    return (BadFortuneMaterial);
+                case FortuneLevel.Good:
+                    return (GoodFortuneMaterial);
+                case FortuneLevel.Great:
+                    return (GreatFortuneMaterial);
+                default:
+                    return (BadFortuneMaterial);
+            }
+        }
+
+
 
         public static int ScoreManna()
         {

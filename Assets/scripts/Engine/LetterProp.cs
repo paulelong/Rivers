@@ -152,11 +152,11 @@ namespace WordSpell
         static Material WordTripleMat;
         static Material ManaMat;
         static Material BurningMat;
+
         internal GameObject SelectorObject;
         static GameObject LavaLight;
 
         static private Board boardScript;
-
 
         public static void LoadMaterials()
         {
@@ -170,8 +170,6 @@ namespace WordSpell
 
             LavaLight = (GameObject)Resources.Load("LavalLight");
         }
-
-//        private bool fallen = false;
 
         public static void InitLetterPropertyList(Board _boardScript)
         {
