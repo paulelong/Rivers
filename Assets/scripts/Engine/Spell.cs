@@ -78,6 +78,9 @@ namespace WordSpell
         private static bool awarded = false;
         private static int state = 0;
         private static LetterProp lp = null;
+        private static List<LetterProp> RandomLetterList = new List<LetterProp>();
+
+        #region SpellManagement
 
         internal static SpellInfo GetSpell(int v, int level)
         {
@@ -145,10 +148,19 @@ namespace WordSpell
             return (AvailableSpells.Count > 0);
         }
 
+        #endregion SpellManagement
+
+        #region SpellCasting
+
         public static void ReadySpell(string spellname, bool _awarded)
         {
             NextSpell = FindSpell(spellname);
             awarded = _awarded;
+
+            if(NextSpell.Immediate)
+            {
+                CastSpell(NextSpell);
+            }
         }
 
         public static bool EvalSpell(LetterProp _lp)
@@ -177,8 +189,6 @@ namespace WordSpell
             SpellInfo.SpellOut so;
             so.si = null;
             so.worked = true;
-            //            bool SpellWorked = true;
-            //          NextSpell = null;
 
             switch (si.spellType)
             {
@@ -192,7 +202,6 @@ namespace WordSpell
                     break;
                 case SpellInfo.SpellType.RandomVowels:
                     CreateRandomVowels(5);
-                    CompleteSpell();
                     break;
                 case SpellInfo.SpellType.ChangeToVowel:
                     ChangeToVowel(lp);
@@ -285,6 +294,14 @@ namespace WordSpell
                 case SpellInfo.SpellType.DestroyGroup:
                     break;
                 case SpellInfo.SpellType.RandomVowels:
+                    foreach(LetterProp lp in RandomLetterList)
+                    {
+                        lp.UpdateLetterDisplay();
+                        lp.FlipTileForward();
+                        lp.TileIdle();
+                    }
+                    CompleteSpell();
+                    RandomLetterList.Clear();
                     break;
                 case SpellInfo.SpellType.ChangeToVowel:
                     lp.UpdateLetterDisplay();
@@ -439,9 +456,7 @@ namespace WordSpell
                 if (EngLetterScoring.IsConsonant((string)WSGameState.LetterPropGrid[i, j].ASCIIString))
                 {
                     WSGameState.LetterPropGrid[i, j].FlipTileBack();
-                    WSGameState.LetterPropGrid[i, j].letter = EngLetterScoring.RandomVowel();
-                    WSGameState.LetterPropGrid[i, j].FlipTileForward();
-                    WSGameState.LetterPropGrid[i, j].TileIdle();
+                    RandomLetterList.Add(WSGameState.LetterPropGrid[i, j]);
                     n--;
                 }
                 x--;
@@ -478,316 +493,318 @@ namespace WordSpell
         {
             WSGameState.RemoveAndReplaceTile(lp.I, lp.J);
         }
+
+        #endregion SpellCasting
     }
 
-//    partial class WSGameState
-//    {
-//        private static int LetterSwapStep;
-//        private static LetterProp LetterSwapFirst;
+    //    partial class WSGameState
+    //    {
+    //        private static int LetterSwapStep;
+    //        private static LetterProp LetterSwapFirst;
 
-//        private static bool resume = false;
-//        private static bool freeSpell;
+    //        private static bool resume = false;
+    //        private static bool freeSpell;
 
-//        public static bool Resume { get { return resume; } set { resume = value; } }
-        
-//        private static SpellInfo.SpellOut CastSpell(SpellInfo si, LetterProp lp)
-//        {
-//            SpellInfo.SpellOut so;
-//            so.si = null;
-//            so.worked = true;
-////            bool SpellWorked = true;
-//  //          NextSpell = null;
+    //        public static bool Resume { get { return resume; } set { resume = value; } }
 
-//            switch (si.spellType)
-//            {
-//                case SpellInfo.SpellType.DestroyLetter:
-//                    SpellDestroyLetter(lp);
-//                    break;
-//                case SpellInfo.SpellType.DestroyGroup:
-//                    SpellDestroyLetterGroupSmall(lp);
-//                    break;
-//                case SpellInfo.SpellType.RandomVowels:
-//                    CreateRandomVowels(5);
-//                    break;
-//                case SpellInfo.SpellType.ChangeToVowel:
-//                    lp.FlipTileBack();
-//                    lp.letter = EngLetterScoring.RandomVowel();
-//                    so.si = si;
-//                    return so;
-//                    break;
-//                case SpellInfo.SpellType.Burn:
-//                    BurnTile(lp);
-//                    break;
-//                case SpellInfo.SpellType.LetterSwap:
-//                    if(LetterSwapStep == 0)
-//                    {
-//                        LetterSwapFirst = lp;
-//                        LetterSwapStep = 1;
-//                        so.si = si;
-//                        return so;
-//                    }
-//                    else
-//                    {
-//                        so.worked = SwapLetters(lp, LetterSwapFirst);
-//                        LetterSwapFirst = null;
-//                        LetterSwapStep = 0;
-//                        so.si = null;
-//                    }
-//                    break;
-//                case SpellInfo.SpellType.ConvertLetter:
-//                    ConvertLetterTile(lp);
-//                    break;
-//                case SpellInfo.SpellType.WordHint:
-//                    GetBestHint(10);
-//                    break;
-//                case SpellInfo.SpellType.WordHint2:
-//                    GetBestHint(200);
-//                    break;
-//                case SpellInfo.SpellType.RotateL:
-//                    so.worked = Rotate(lp, -1);
-//                    break;
-//                case SpellInfo.SpellType.RotateR:
-//                    so.worked = Rotate(lp, 1);
-//                    break;
-//                case SpellInfo.SpellType.Rotate180:
-//                    so.worked = Rotate(lp, 4);
-//                    break;
-//                case SpellInfo.SpellType.HintOnLetter:
-//                    GetBestHint(lp);
-//                    break;
-//                case SpellInfo.SpellType.AnyLetter:
-//                    //PickALetter p = new PickALetter();
-//                    //var result = p.ShowAsync();
-//                   // if(result == ContentDialogResult.Primary)
-//                    {
-//                        //lp.letter = p.letter;
-//                        so.worked = true;
-//                    }
-//                    break;
-//                case SpellInfo.SpellType.ColumnBGone:
-//                    for(int i = gridsize - 1; i >= 0; i--)
-//                    {
-//                        RemoveAndReplaceTile(lp.I, i);
-//                    }
-//                    break;
-//                case SpellInfo.SpellType.RowBGone:
-//                    for (int i = gridsize - 1; i >= 0; i--)
-//                    {
-//                        RemoveAndReplaceTile(i, lp.J);
-//                    }
-//                    break;
-//            }
+    //        private static SpellInfo.SpellOut CastSpell(SpellInfo si, LetterProp lp)
+    //        {
+    //            SpellInfo.SpellOut so;
+    //            so.si = null;
+    //            so.worked = true;
+    ////            bool SpellWorked = true;
+    //  //          NextSpell = null;
 
-//            //freeSpell = false;
-//            so.si = null;
+    //            switch (si.spellType)
+    //            {
+    //                case SpellInfo.SpellType.DestroyLetter:
+    //                    SpellDestroyLetter(lp);
+    //                    break;
+    //                case SpellInfo.SpellType.DestroyGroup:
+    //                    SpellDestroyLetterGroupSmall(lp);
+    //                    break;
+    //                case SpellInfo.SpellType.RandomVowels:
+    //                    CreateRandomVowels(5);
+    //                    break;
+    //                case SpellInfo.SpellType.ChangeToVowel:
+    //                    lp.FlipTileBack();
+    //                    lp.letter = EngLetterScoring.RandomVowel();
+    //                    so.si = si;
+    //                    return so;
+    //                    break;
+    //                case SpellInfo.SpellType.Burn:
+    //                    BurnTile(lp);
+    //                    break;
+    //                case SpellInfo.SpellType.LetterSwap:
+    //                    if(LetterSwapStep == 0)
+    //                    {
+    //                        LetterSwapFirst = lp;
+    //                        LetterSwapStep = 1;
+    //                        so.si = si;
+    //                        return so;
+    //                    }
+    //                    else
+    //                    {
+    //                        so.worked = SwapLetters(lp, LetterSwapFirst);
+    //                        LetterSwapFirst = null;
+    //                        LetterSwapStep = 0;
+    //                        so.si = null;
+    //                    }
+    //                    break;
+    //                case SpellInfo.SpellType.ConvertLetter:
+    //                    ConvertLetterTile(lp);
+    //                    break;
+    //                case SpellInfo.SpellType.WordHint:
+    //                    GetBestHint(10);
+    //                    break;
+    //                case SpellInfo.SpellType.WordHint2:
+    //                    GetBestHint(200);
+    //                    break;
+    //                case SpellInfo.SpellType.RotateL:
+    //                    so.worked = Rotate(lp, -1);
+    //                    break;
+    //                case SpellInfo.SpellType.RotateR:
+    //                    so.worked = Rotate(lp, 1);
+    //                    break;
+    //                case SpellInfo.SpellType.Rotate180:
+    //                    so.worked = Rotate(lp, 4);
+    //                    break;
+    //                case SpellInfo.SpellType.HintOnLetter:
+    //                    GetBestHint(lp);
+    //                    break;
+    //                case SpellInfo.SpellType.AnyLetter:
+    //                    //PickALetter p = new PickALetter();
+    //                    //var result = p.ShowAsync();
+    //                   // if(result == ContentDialogResult.Primary)
+    //                    {
+    //                        //lp.letter = p.letter;
+    //                        so.worked = true;
+    //                    }
+    //                    break;
+    //                case SpellInfo.SpellType.ColumnBGone:
+    //                    for(int i = gridsize - 1; i >= 0; i--)
+    //                    {
+    //                        RemoveAndReplaceTile(lp.I, i);
+    //                    }
+    //                    break;
+    //                case SpellInfo.SpellType.RowBGone:
+    //                    for (int i = gridsize - 1; i >= 0; i--)
+    //                    {
+    //                        RemoveAndReplaceTile(i, lp.J);
+    //                    }
+    //                    break;
+    //            }
 
-//            return so;
-//        }
+    //            //freeSpell = false;
+    //            so.si = null;
 
-//        private static void GetBestHint(LetterProp lp)
-//        {
-//            WordWarAI wwai = new WordWarAI(LetterPropGrid);
-//            List<WordWarAI.Word> wl = wwai.FindAllWords(lp);
-//            WordWarAI.Word bw = new WordWarAI.Word();
-//            foreach (WordWarAI.Word w in wl)
-//            {
-//                if (bw.GetScore < w.GetScore)
-//                {
-//                    bw = w;
-//                }
-//            }
+    //            return so;
+    //        }
 
-//            boardScript.ShowMsg("Best word is " + bw.GetWord);
-//        }
+    //        private static void GetBestHint(LetterProp lp)
+    //        {
+    //            WordWarAI wwai = new WordWarAI(LetterPropGrid);
+    //            List<WordWarAI.Word> wl = wwai.FindAllWords(lp);
+    //            WordWarAI.Word bw = new WordWarAI.Word();
+    //            foreach (WordWarAI.Word w in wl)
+    //            {
+    //                if (bw.GetScore < w.GetScore)
+    //                {
+    //                    bw = w;
+    //                }
+    //            }
 
-//        private static bool Rotate(LetterProp lp, int v)
-//        {
-//            if (!(lp.I > 0 && lp.J > 0 && lp.I < gridsize-1 && lp.J < gridsize-1))
-//            {
-//                boardScript.ShowMsg("Rotating doesn't work along the edges.");
-//                return false;
-//            }
-//            else
-//            {
-//                if(v <= -1)
-//                {
-//                    SwapLetters(LetterPropGrid[lp.I - 1, lp.J - 1], LetterPropGrid[lp.I, lp.J - 1]);
-//                    SwapLetters(LetterPropGrid[lp.I, lp.J - 1], LetterPropGrid[lp.I + 1, lp.J - 1]);
-//                    SwapLetters(LetterPropGrid[lp.I + 1, lp.J - 1], LetterPropGrid[lp.I + 1, lp.J]);
-//                    SwapLetters(LetterPropGrid[lp.I + 1, lp.J], LetterPropGrid[lp.I + 1, lp.J + 1]);
-//                    SwapLetters(LetterPropGrid[lp.I + 1, lp.J + 1], LetterPropGrid[lp.I, lp.J + 1]);
-//                    SwapLetters(LetterPropGrid[lp.I, lp.J + 1], LetterPropGrid[lp.I - 1, lp.J + 1]);
-//                    SwapLetters(LetterPropGrid[lp.I - 1, lp.J + 1], LetterPropGrid[lp.I - 1, lp.J]);
-//                }
-//                else
-//                {
-//                    for(int vn = 0; vn < v; vn++)
-//                    {
-//                        SwapLetters(LetterPropGrid[lp.I - 1, lp.J - 1], LetterPropGrid[lp.I - 1, lp.J]);
-//                        SwapLetters(LetterPropGrid[lp.I - 1, lp.J], LetterPropGrid[lp.I - 1, lp.J + 1]);
-//                        SwapLetters(LetterPropGrid[lp.I - 1, lp.J + 1], LetterPropGrid[lp.I, lp.J + 1]);
-//                        SwapLetters(LetterPropGrid[lp.I, lp.J + 1], LetterPropGrid[lp.I + 1, lp.J + 1]);
-//                        SwapLetters(LetterPropGrid[lp.I + 1, lp.J + 1], LetterPropGrid[lp.I + 1, lp.J]);
-//                        SwapLetters(LetterPropGrid[lp.I + 1, lp.J], LetterPropGrid[lp.I + 1, lp.J - 1]);
-//                        SwapLetters(LetterPropGrid[lp.I + 1, lp.J - 1], LetterPropGrid[lp.I, lp.J - 1]);
-//                    }
-//                }
-//            }
-//            return true;
-//        }
+    //            boardScript.ShowMsg("Best word is " + bw.GetWord);
+    //        }
 
-//        private static void GetBestHint(int min)
-//        {
-//            WordWarAI wwai = new WordWarAI(LetterPropGrid);
-//            List<WordWarAI.Word> wl = wwai.FindAllWords();
-//            WordWarAI.Word bw = new WordWarAI.Word();
-//            foreach (WordWarAI.Word w in wl)
-//            {
-//                if (bw.GetScore < w.GetScore)
-//                {
-//                    bw = w;
-//                    if (bw.GetScore >= min)
-//                        break;
-//                }
-//            }
+    //        private static bool Rotate(LetterProp lp, int v)
+    //        {
+    //            if (!(lp.I > 0 && lp.J > 0 && lp.I < gridsize-1 && lp.J < gridsize-1))
+    //            {
+    //                boardScript.ShowMsg("Rotating doesn't work along the edges.");
+    //                return false;
+    //            }
+    //            else
+    //            {
+    //                if(v <= -1)
+    //                {
+    //                    SwapLetters(LetterPropGrid[lp.I - 1, lp.J - 1], LetterPropGrid[lp.I, lp.J - 1]);
+    //                    SwapLetters(LetterPropGrid[lp.I, lp.J - 1], LetterPropGrid[lp.I + 1, lp.J - 1]);
+    //                    SwapLetters(LetterPropGrid[lp.I + 1, lp.J - 1], LetterPropGrid[lp.I + 1, lp.J]);
+    //                    SwapLetters(LetterPropGrid[lp.I + 1, lp.J], LetterPropGrid[lp.I + 1, lp.J + 1]);
+    //                    SwapLetters(LetterPropGrid[lp.I + 1, lp.J + 1], LetterPropGrid[lp.I, lp.J + 1]);
+    //                    SwapLetters(LetterPropGrid[lp.I, lp.J + 1], LetterPropGrid[lp.I - 1, lp.J + 1]);
+    //                    SwapLetters(LetterPropGrid[lp.I - 1, lp.J + 1], LetterPropGrid[lp.I - 1, lp.J]);
+    //                }
+    //                else
+    //                {
+    //                    for(int vn = 0; vn < v; vn++)
+    //                    {
+    //                        SwapLetters(LetterPropGrid[lp.I - 1, lp.J - 1], LetterPropGrid[lp.I - 1, lp.J]);
+    //                        SwapLetters(LetterPropGrid[lp.I - 1, lp.J], LetterPropGrid[lp.I - 1, lp.J + 1]);
+    //                        SwapLetters(LetterPropGrid[lp.I - 1, lp.J + 1], LetterPropGrid[lp.I, lp.J + 1]);
+    //                        SwapLetters(LetterPropGrid[lp.I, lp.J + 1], LetterPropGrid[lp.I + 1, lp.J + 1]);
+    //                        SwapLetters(LetterPropGrid[lp.I + 1, lp.J + 1], LetterPropGrid[lp.I + 1, lp.J]);
+    //                        SwapLetters(LetterPropGrid[lp.I + 1, lp.J], LetterPropGrid[lp.I + 1, lp.J - 1]);
+    //                        SwapLetters(LetterPropGrid[lp.I + 1, lp.J - 1], LetterPropGrid[lp.I, lp.J - 1]);
+    //                    }
+    //                }
+    //            }
+    //            return true;
+    //        }
 
-//            boardScript.ShowMsg("Best word is " + bw.GetWord);
-//        }
+    //        private static void GetBestHint(int min)
+    //        {
+    //            WordWarAI wwai = new WordWarAI(LetterPropGrid);
+    //            List<WordWarAI.Word> wl = wwai.FindAllWords();
+    //            WordWarAI.Word bw = new WordWarAI.Word();
+    //            foreach (WordWarAI.Word w in wl)
+    //            {
+    //                if (bw.GetScore < w.GetScore)
+    //                {
+    //                    bw = w;
+    //                    if (bw.GetScore >= min)
+    //                        break;
+    //                }
+    //            }
 
-//        private static void ChangeManna(int manna)
-//        {
-//            Manna += manna;
-//            UpdateManaScore();
-//        }
+    //            boardScript.ShowMsg("Best word is " + bw.GetWord);
+    //        }
 
-//        private static void ConvertLetterTile(LetterProp lp)
-//        {
-//            byte changeletter = lp.letter;
-//            for (int i = gridsize - 1; i >= 0; i--)
-//            {
-//                for (int j = gridsize - 1; j >= 0; j--)
-//                {
-                    
-//                    if(LetterPropGrid[i, j].letter == changeletter)
-//                    {
-//                        LetterPropGrid[i, j].letter = EngLetterScoring.GetRandomLetter(false, GetFortune());
-//                    }
-//                }
-//            }
-//        }
+    //        private static void ChangeManna(int manna)
+    //        {
+    //            Manna += manna;
+    //            UpdateManaScore();
+    //        }
 
-//        private static bool SwapLetters(LetterProp lpa, LetterProp lpb)
-//        {
-//            if (Math.Abs(lpa.I - lpb.I) - Math.Abs(lpa.J - lpb.J) > 1)
-//            {
-//                boardScript.ShowMsg("Swapping only works with adjcent letters, up/down/left/right.");
-//                return false;
-//            }
-//            else
-//            {
-//                int ti = lpa.I;
-//                lpa.I = lpb.I;
-//                lpb.I = ti;
+    //        private static void ConvertLetterTile(LetterProp lp)
+    //        {
+    //            byte changeletter = lp.letter;
+    //            for (int i = gridsize - 1; i >= 0; i--)
+    //            {
+    //                for (int j = gridsize - 1; j >= 0; j--)
+    //                {
 
-//                int tj = lpa.J;
-//                lpa.J = lpb.J;
-//                lpb.J = tj;
+    //                    if(LetterPropGrid[i, j].letter == changeletter)
+    //                    {
+    //                        LetterPropGrid[i, j].letter = EngLetterScoring.GetRandomLetter(false, GetFortune());
+    //                    }
+    //                }
+    //            }
+    //        }
 
-//                Vector3 tv = lpa.Tf.position;
-//                lpa.Tf.position = lpb.Tf.position;
-//                lpb.Tf.position = tv;
+    //        private static bool SwapLetters(LetterProp lpa, LetterProp lpb)
+    //        {
+    //            if (Math.Abs(lpa.I - lpb.I) - Math.Abs(lpa.J - lpb.J) > 1)
+    //            {
+    //                boardScript.ShowMsg("Swapping only works with adjcent letters, up/down/left/right.");
+    //                return false;
+    //            }
+    //            else
+    //            {
+    //                int ti = lpa.I;
+    //                lpa.I = lpb.I;
+    //                lpb.I = ti;
 
-//                //int tti = lpa.i;
+    //                int tj = lpa.J;
+    //                lpa.J = lpb.J;
+    //                lpb.J = tj;
+
+    //                Vector3 tv = lpa.Tf.position;
+    //                lpa.Tf.position = lpb.Tf.position;
+    //                lpb.Tf.position = tv;
+
+    //                //int tti = lpa.i;
 
 
-//                LetterPropGrid[lpa.I, lpa.J] = lpa;
-//                LetterPropGrid[lpb.I, lpb.J] = lpb;
-//            }
+    //                LetterPropGrid[lpa.I, lpa.J] = lpa;
+    //                LetterPropGrid[lpb.I, lpb.J] = lpb;
+    //            }
 
-//            return true;
-//        }
+    //            return true;
+    //        }
 
-//        private static void BurnTile(LetterProp lp)
-//        {
-//            lp.ChangeTileTo(LetterProp.TileTypes.Burning);
-//        }
+    //        private static void BurnTile(LetterProp lp)
+    //        {
+    //            lp.ChangeTileTo(LetterProp.TileTypes.Burning);
+    //        }
 
-//        private static void CreateRandomVowels(int v)
-//        {
-//            int n = v;
-//            int x = 20;  // Try at most to change 20 letters
+    //        private static void CreateRandomVowels(int v)
+    //        {
+    //            int n = v;
+    //            int x = 20;  // Try at most to change 20 letters
 
-//            while (n > 0 && x > 0)
-//            {
-//                int i = r.Next(gridsize);
-//                int j = r.Next(gridsize);
+    //            while (n > 0 && x > 0)
+    //            {
+    //                int i = r.Next(gridsize);
+    //                int j = r.Next(gridsize);
 
-//                if (EngLetterScoring.IsConsonant((string)LetterPropGrid[i, j].ASCIIString))
-//                {
-//                    LetterPropGrid[i, j].FlipTileBack();
-//                    LetterPropGrid[i, j].letter = EngLetterScoring.RandomVowel();
-//                    LetterPropGrid[i, j].FlipTileForward();
-//                    LetterPropGrid[i, j].TileIdle();
-//                    n--; 
-//                }
-//                x--;
-//            }
-//        }
+    //                if (EngLetterScoring.IsConsonant((string)LetterPropGrid[i, j].ASCIIString))
+    //                {
+    //                    LetterPropGrid[i, j].FlipTileBack();
+    //                    LetterPropGrid[i, j].letter = EngLetterScoring.RandomVowel();
+    //                    LetterPropGrid[i, j].FlipTileForward();
+    //                    LetterPropGrid[i, j].TileIdle();
+    //                    n--; 
+    //                }
+    //                x--;
+    //            }
+    //        }
 
-//        private static void SpellDestroyLetterGroupSmall(LetterProp lp)
-//        {
-//            if (lp.J - 1 >= 0)
-//            {
-//                RemoveAndReplaceTile(lp.I, lp.J - 1);
-//            }
-//            RemoveAndReplaceTile(lp.I, lp.J);
+    //        private static void SpellDestroyLetterGroupSmall(LetterProp lp)
+    //        {
+    //            if (lp.J - 1 >= 0)
+    //            {
+    //                RemoveAndReplaceTile(lp.I, lp.J - 1);
+    //            }
+    //            RemoveAndReplaceTile(lp.I, lp.J);
 
-//            if (lp.J + 1 < gridsize)
-//            {
-//                RemoveAndReplaceTile(lp.I, lp.J + 1);
-//            }
+    //            if (lp.J + 1 < gridsize)
+    //            {
+    //                RemoveAndReplaceTile(lp.I, lp.J + 1);
+    //            }
 
-//            RemoveAndReplaceTile(lp.I, lp.J);
+    //            RemoveAndReplaceTile(lp.I, lp.J);
 
-//            if (lp.I - 1 >= 0)
-//            {
-//                RemoveAndReplaceTile(lp.I - 1, lp.J);
-//            }
+    //            if (lp.I - 1 >= 0)
+    //            {
+    //                RemoveAndReplaceTile(lp.I - 1, lp.J);
+    //            }
 
-//            if (lp.I + 1 < gridsize)
-//            {
-//                RemoveAndReplaceTile(lp.I + 1, lp.J);
-//            }
-//        }
+    //            if (lp.I + 1 < gridsize)
+    //            {
+    //                RemoveAndReplaceTile(lp.I + 1, lp.J);
+    //            }
+    //        }
 
-//        private static void SpellDestroyLetter(LetterProp lp)
-//        {
-//            RemoveAndReplaceTile(lp.I, lp.J);
-//        }
+    //        private static void SpellDestroyLetter(LetterProp lp)
+    //        {
+    //            RemoveAndReplaceTile(lp.I, lp.J);
+    //        }
 
-//        internal static void ReadySpell(SpellInfo selectedSpell, bool _freespell)
-//        {
-//            freeSpell = _freespell;
-//            if (selectedSpell.Immediate)
-//            {
-//                SpellInfo.SpellOut so;
-                
-//                so = CastSpell(selectedSpell, null);
-//                if (freeSpell && so.worked)
-//                {
-//                    Spells.RemoveAwardedSpells(selectedSpell);
-//                    freeSpell = false;
-//                }
-//                else
-//                {
-//                    ChangeManna(-selectedSpell.MannaPoints);
-//                }
-//            }
-//            else
-//            {
-//                //CastSpell(selectedSpell, null, NextSpell);
-//                NextSpell = selectedSpell;
-//            }
-//        }
-//    }
+    //        internal static void ReadySpell(SpellInfo selectedSpell, bool _freespell)
+    //        {
+    //            freeSpell = _freespell;
+    //            if (selectedSpell.Immediate)
+    //            {
+    //                SpellInfo.SpellOut so;
+
+    //                so = CastSpell(selectedSpell, null);
+    //                if (freeSpell && so.worked)
+    //                {
+    //                    Spells.RemoveAwardedSpells(selectedSpell);
+    //                    freeSpell = false;
+    //                }
+    //                else
+    //                {
+    //                    ChangeManna(-selectedSpell.MannaPoints);
+    //                }
+    //            }
+    //            else
+    //            {
+    //                //CastSpell(selectedSpell, null, NextSpell);
+    //                NextSpell = selectedSpell;
+    //            }
+    //        }
+    //    }
 }
