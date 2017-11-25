@@ -287,28 +287,31 @@ namespace WordSpell
 
         public static void FinishSpellAnim()
         {
-            switch(NextSpell.spellType)
+            if(NextSpell != null)
             {
-                case SpellInfo.SpellType.DestroyLetter:
-                    break;
-                case SpellInfo.SpellType.DestroyGroup:
-                    break;
-                case SpellInfo.SpellType.RandomVowels:
-                    foreach(LetterProp lp in RandomLetterList)
-                    {
+                switch (NextSpell.spellType)
+                {
+                    case SpellInfo.SpellType.DestroyLetter:
+                        break;
+                    case SpellInfo.SpellType.DestroyGroup:
+                        break;
+                    case SpellInfo.SpellType.RandomVowels:
+                        foreach (LetterProp lp in RandomLetterList)
+                        {
+                            lp.UpdateLetterDisplay();
+                            lp.FlipTileForward();
+                            lp.TileIdle();
+                        }
+                        CompleteSpell();
+                        RandomLetterList.Clear();
+                        break;
+                    case SpellInfo.SpellType.ChangeToVowel:
                         lp.UpdateLetterDisplay();
                         lp.FlipTileForward();
                         lp.TileIdle();
-                    }
-                    CompleteSpell();
-                    RandomLetterList.Clear();
-                    break;
-                case SpellInfo.SpellType.ChangeToVowel:
-                    lp.UpdateLetterDisplay();
-                    lp.FlipTileForward();
-                    lp.TileIdle();
-                    CompleteSpell();
-                    break;
+                        CompleteSpell();
+                        break;
+                }
             }
         }
 
@@ -456,6 +459,7 @@ namespace WordSpell
                 if (EngLetterScoring.IsConsonant((string)WSGameState.LetterPropGrid[i, j].ASCIIString))
                 {
                     WSGameState.LetterPropGrid[i, j].FlipTileBack();
+                    WSGameState.LetterPropGrid[i, j].letter = EngLetterScoring.RandomVowel();
                     RandomLetterList.Add(WSGameState.LetterPropGrid[i, j]);
                     n--;
                 }
