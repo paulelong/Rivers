@@ -242,31 +242,6 @@ public class Board : MonoBehaviour
         IndicateGoodWord(false);
     }
 
-    public void CastSpell()
-    {
-        ClearSpellList(SpellListBox);
-
-        foreach(SpellInfo si in Spells.AvailableSpells)
-        {
-            AddSpellList(SpellListBox, si.FriendlyName, si.MannaPoints, null);
-        }
-
-        ClearSpellList(AwardedSpellListBox);
-
-        foreach (SpellInfo si in Spells.AwardedSpells)
-        {
-            AddSpellList(AwardedSpellListBox, si.FriendlyName, si.MannaPoints, null);
-        }
-
-
-        SpellCanvas.SetActive(true);
-    }
-
-    public void CancelSpells()
-    {
-        SpellCanvas.SetActive(false);
-    }
-
     // ----------------------------
     // Status settings
 
@@ -361,54 +336,43 @@ public class Board : MonoBehaviour
         spellbox.Clear();
     }
 
+    public void ShowSpells()
+    {
+        ClearSpellList(SpellListBox);
+
+        foreach (SpellInfo si in Spells.AvailableSpells)
+        {
+            AddSpellList(SpellListBox, si.FriendlyName, si.MannaPoints, null);
+        }
+
+        ClearSpellList(AwardedSpellListBox);
+
+        foreach (SpellInfo si in Spells.AwardedSpells)
+        {
+            AddSpellList(AwardedSpellListBox, si.FriendlyName, si.MannaPoints, null);
+        }
+
+        SpellCanvas.SetActive(true);
+    }
+
+    public void CancelSpells()
+    {
+        SpellCanvas.SetActive(false);
+    }
+
     void SelectSpell(PointerEventData eventData)
     {
-        SpellInfo si = Spells.FindSpell(eventData.pointerCurrentRaycast.gameObject.name);
-        WSGameState.CastSpell(si);
         SpellCanvas.SetActive(false);
 
         // Awarded spells need to be removed from the list
         string x = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name;
-        if (x == "AwardedSpells")
-        {
-            Spells.AwardedSpells.Remove(si);
-        }
+        Spells.ReadySpell(eventData.pointerCurrentRaycast.gameObject.name, x == "AwardedSpells");
+
+        //SpellInfo si = Spells.FindSpell(eventData.pointerCurrentRaycast.gameObject.name);
+        //WSGameState.CastSpell(si);
+
     }
-
-    //public void AddAwardedSpellList(string spellName, int cost, Sprite image)
-    //{
-    //    Transform item = AwardedSpellListBox.Add();
-
-    //    UnityEngine.UI.Text s = item.GetChild(0).GetComponent<UnityEngine.UI.Text>();
-    //    s.text = spellName;
-
-    //    UnityEngine.UI.Text c = item.GetChild(1).GetComponent<UnityEngine.UI.Text>();
-    //    if (cost > 0)
-    //    {
-    //        c.text = cost.ToString();
-    //    }
-    //    else
-    //    {
-    //        c.text = "";
-    //    }
-
-    //    UnityEngine.UI.Image i = item.GetChild(2).GetComponent<UnityEngine.UI.Image>();
-    //    i.sprite = image;
-
-    //    // Add the callback so we know we've been selected
-    //    EventTrigger trigger = item.GetChild(2).GetComponent<EventTrigger>();
-
-    //    EventTrigger.Entry entry = new EventTrigger.Entry();
-    //    entry.eventID = EventTriggerType.PointerClick;
-    //    entry.callback.AddListener((eventData) => { SelectSpell((PointerEventData)eventData); });
-    //    trigger.triggers.Add(entry);
-    //}
-
-    //public void ClearAwardedSpellList()
-    //{
-    //    AwardedSpellListBox.Clear();
-    //}
-
+    
     public void IndicateGoodWord(bool good)
     {
         //UnityEngine.UI.Button t = tgo.GetComponent(typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button;

@@ -40,9 +40,9 @@ namespace WordSpell
         const string FortuneScoresFileName = "FortuneScores.txt";
         const string HistoryScoresFileName = "HistoryScores.txt";
 
-        static private Board boardScript;
+        static public Board boardScript;
 
-        static private LetterProp[,] LetterPropGrid = null;
+        static public LetterProp[,] LetterPropGrid = null;
 
         static List<LetterProp> SelLetterList = new List<LetterProp>();
 
@@ -52,7 +52,6 @@ namespace WordSpell
 
         static System.Random r;
 
-        //public static TextBlock CurrentWord { get; private set; }
         public static int CurrentLevel { get { return level; } private set { } }
 
         public static double TotalEfficiency { get; internal set; }
@@ -78,22 +77,16 @@ namespace WordSpell
         static Material GoodFortuneMaterial;
         static Material GreatFortuneMaterial;
 
-        //private static TextBlock LevelText;
-        //private static TextBlock ScoreText;
-        //private static TextBlock WordScoreText;
-        //private static TextBlock MannaScoreText;
-        //private static TextBlock EffText;
-        //private static ListBox HistoryList;
-        //public static Popup LetterTipPopup;
-        //private static TextBlock PopupText;
         private static int FortuneLevelCount;
+
+        private static bool resume = false;
+        public static bool Resume { get { return resume; } set { resume = value; } }
 
         internal static void DebugMode()
         {
             Manna = 100;
             level = 20;
         }
-
 
         public enum FortuneLevel
         {
@@ -130,6 +123,8 @@ namespace WordSpell
             return FortuneLevel.Bad;
         }
 
+        #region Init
+
         public static void InitGameGlobal()
         {
             GameObject go = GameObject.Find("BoardBackground");
@@ -160,76 +155,7 @@ namespace WordSpell
             Spells.UpdateSpellsForLevel(level);
         }
 
-
-
-        //public async static Task InitLogic()
-        //{
-        //    await LoadStats();
-        //}
-
-        //public async static void InitializeLetterButtonGrid(Grid _LetterGrid, TextBlock _CurrentWord, ListBox _TryList, TextBlock _MannaScoreText, TextBlock _effText, TextBlock _levelText, TextBlock _scoreText, TextBlock _wordText, ListBox _historyList, Popup _flyout, TextBlock _popuptext, double h)
-        //{
-        //    LetterGrid = _LetterGrid;
-        //    CurrentWord = _CurrentWord;
-        //    TryList = _TryList;
-        //    MannaScoreText = _MannaScoreText;
-        //    EffText = _effText;
-        //    LevelText = _levelText;
-        //    ScoreText = _scoreText;
-        //    WordScoreText = _wordText;
-        //    HistoryList = _historyList;
-        //    LetterTipPopup = _flyout;
-        //    PopupText = _popuptext;
-
-        //    double aw = (int)LetterGrid.ActualWidth;
-        //    double ah = (int)LetterGrid.ActualHeight;
-
-        //    double bs = Math.Min(aw, h);
-
-        //    LetterGrid.Width = bs;
-        //    LetterGrid.Height = bs;
-
-        //    ButtonWidth = (int)(bs / gridsize);
-        //    ButtonHeight = (int)(bs / gridsize);
-
-        //    // create buttons
-        //    LetterPropGrid = new LetterProp[gridsize, gridsize];
-
-        //    RowDefinition[] rows = new RowDefinition[gridsize];
-        //    ColumnDefinition[] columns = new ColumnDefinition[gridsize];
-
-        //    for (int i = 0; i < columns.Length; i++)
-        //    {
-        //        columns[i] = new ColumnDefinition();
-        //        LetterGrid.ColumnDefinitions.Add(columns[i]);
-        //    }
-
-        //    for (int i = 0; i < rows.Length; i++)
-        //    {
-        //        rows[i] = new RowDefinition();
-        //        LetterGrid.RowDefinitions.Add(rows[i]);
-        //    }
-
-        //    LetterProp.InitProbability(level);
-
-        //    if(WordWarLogic.IsSavedGame())
-        //    {
-        //        bool gameloaded = await LoadGame();
-        //        if(!gameloaded)
-        //        {
-        //            NewLetterButtonGrid();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        WordWarLogic.SetSavedGame();
-        //        NewLetterButtonGrid();
-        //    }
-
-        //    UpdateManaScore();
-        //    UpdateStats();
-        //}
-
+        #endregion init
 
         private static void UpdateManaScore()
         {
@@ -266,24 +192,25 @@ namespace WordSpell
 
             //LetterTipPopup.IsOpen = false;
 
-            if (NextSpell != null)
-            {
-                SpellInfo.SpellOut so = CastSpell(NextSpell, lp);
-
-                if (so.si == null && so.worked)
-                {
-                    if (freeSpell)
-                    {
-                        Spells.RemoveAwardedSpells(NextSpell);
-                    }
-                    else
-                    {
-                        ChangeManna(-NextSpell.MannaPoints);
-                    }
-                }
-                NextSpell = so.si;
-            }
-            else
+            //if (NextSpell != null)
+            //{
+            //    SpellInfo.SpellOut so = CastSpell(NextSpell, lp);
+            //    lp.SpellInfo = so.si;
+            //    if (so.si == null && so.worked)
+            //    {
+            //        if (freeSpell)
+            //        {
+            //            Spells.RemoveAwardedSpells(NextSpell);
+            //        }
+            //        else
+            //        {
+            //            ChangeManna(-NextSpell.MannaPoints);
+            //        }
+            //    }
+            //    NextSpell = so.si;
+            //}
+            //else
+            if(!Spells.EvalSpell(lp))
             {
                 if (SelLetterList.Count >= 0)
                 {
@@ -344,7 +271,6 @@ namespace WordSpell
             foreach (WordScoreItem wsi_I in TryWordList)
             {
                 boardScript.AddTryList(wsi_I.word + " " + wsi_I.score.ToString());
-                //TryList.Items.Add(wsi_I.word + " " + wsi_I.score.ToString());
             }
         }
 
@@ -352,7 +278,6 @@ namespace WordSpell
         internal static void TurnOver()
         {
             boardScript.ClearTryList();
-            //TryList.Items.Clear();
             TryWordList.Clear();
         }
 
@@ -368,12 +293,6 @@ namespace WordSpell
             Manna = 0;
 
             UpdateStats();
-
-            //ButtonList.Clear();
-
-            //LetterGrid.Children.Clear();
-
-            //NewLetterButtonGrid();
         }
 
         internal static void SubmitWord()
@@ -611,6 +530,12 @@ namespace WordSpell
             UpdateManaScore();
         }
 
+        private static void ChangeManna(int manna)
+        {
+            Manna += manna;
+            UpdateManaScore();
+        }
+
         private static void CheckTopLongestWordScores(WordScoreItem wsi)
         {
             int indx = LongestWords.FindIndex(f => (f.word.Length < wsi.word.Length));
@@ -692,8 +617,6 @@ namespace WordSpell
                     return (BadFortuneMaterial);
             }
         }
-
-
 
         public static int ScoreManna()
         {

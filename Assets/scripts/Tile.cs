@@ -78,4 +78,10 @@ public class Tile : MonoBehaviour, IPointerClickHandler {
         AudioSource audio = GetComponent<AudioSource>();
         audio.Play();
     }
+
+    public void FinishSpell()
+    {
+        Spells.FinishSpellAnim();
+    }
+
 }

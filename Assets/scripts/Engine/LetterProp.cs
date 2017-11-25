@@ -23,6 +23,8 @@ namespace WordSpell
         int LetterFall = Animator.StringToHash("LetterFall");
         int LetterFallObj = Animator.StringToHash("LetterFallObj");
         int Idle = Animator.StringToHash("Idle");
+        int FlipBack = Animator.StringToHash("FlipBack");
+        int FlipForward = Animator.StringToHash("FlipForward");
         float letterFallCount = 0.0f;
 
         public TileTypes TileType
@@ -64,7 +66,6 @@ namespace WordSpell
             }
         }
 
-
         public float LetterFallCount
         {
             get
@@ -105,6 +106,8 @@ namespace WordSpell
                 tileScript.SetPos(i, j);
             }
         }
+
+        public SpellInfo SpellInfo { get; internal set; }
 
         public enum TileTypes
         {
@@ -209,8 +212,6 @@ namespace WordSpell
             J = _j;
             tt = _tt;
 
-            //CreateButton();
-
             letter = _letter;
         }
 
@@ -219,10 +220,8 @@ namespace WordSpell
             tt = CreateNewTile(level, levelup);
             Tf = _tf;
 
-            //LetterAnimator = Tf.GetChild(0).gameObject.GetComponent<Animator>();
             LetterAnimator = Tf.gameObject.GetComponent<Animator>();
 
-            //tileScript = (Tile)Tf.GetChild(0).gameObject.GetComponent(typeof(Tile));
             tileScript = (Tile)Tf.gameObject.GetComponent(typeof(Tile));
 
             tileScript.SetPos(I, J, this);
@@ -244,7 +243,6 @@ namespace WordSpell
                     BurnTile();
                     break;
                 case TileTypes.Normal:
-                    //Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
                     Tf.gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
                     break;
                 case TileTypes.WordDouble:
@@ -282,6 +280,21 @@ namespace WordSpell
             //                    Object.Instantiate();
             //Tf.GetChild(0).gameObject.SetActive(true);
             LetterAnimator.SetTrigger(Burning);
+        }
+
+        public void FlipTileBack()
+        {
+            LetterAnimator.SetTrigger(FlipBack);
+        }
+
+        public void FlipTileForward()
+        {
+            LetterAnimator.SetTrigger(FlipForward);
+        }
+
+        public void TileIdle()
+        {
+            LetterAnimator.SetTrigger(Idle);
         }
 
         public void UpdateLetterDisplay()
