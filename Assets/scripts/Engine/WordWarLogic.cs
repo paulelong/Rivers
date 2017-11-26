@@ -58,8 +58,6 @@ namespace WordSpell
 
         public static int Manna = 0;
 
-        private static SpellInfo NextSpell = null;
-
         //private static int[] Levels = { 0, 25, 60, 100, 160, 230, 310, 400, 500, 650, 850, 1000, 1300, 1600, 2000, 2500, 3000, 4600, 5200, 10000, 20000, 30000  };
         private static int[] Levels = { 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 1300, 1600, 2000, 5000, 10000 };
         private static bool levelup = false;
@@ -707,13 +705,13 @@ namespace WordSpell
 
                 LetterPropGrid[i, jp] = LetterPropGrid[i, jp + 1];
 
-                LetterOntop.LetterFallCount++;
+                LetterOntop.LetterDCount++;
             }
 
-            float fallCount = LetterPropGrid[i, gridsize - 1].LetterFallCount;
+            float fallCount = LetterPropGrid[i, gridsize - 1].LetterDCount;
             Transform lbi = boardScript.NewTile(i, gridsize - 1, fallCount);
             NewLetter(i, gridsize - 1, lbi);
-            LetterPropGrid[i, gridsize - 1].LetterFallCount = fallCount;
+            LetterPropGrid[i, gridsize - 1].LetterDCount = fallCount;
 
             RemoveTile(toRemove);
         }
@@ -725,17 +723,19 @@ namespace WordSpell
 
             //Rigidbody rb = toRemove.Tf.GetChild(0).GetComponent(typeof(Rigidbody)) as Rigidbody;
             Rigidbody rb = toRemove.Tf.GetComponent(typeof(Rigidbody)) as Rigidbody;
+            rb.maxAngularVelocity = 1f;
             rb.useGravity = true;
             rb.isKinematic = false;
 
-            float xf = (r.Next(100) - 50) / 150;
-            float yf = (r.Next(10) - 5) / 6;
-            rb.AddForce(new Vector3(xf, yf, -2.0f), ForceMode.VelocityChange);
+            float xf = (r.Next(100) - 50f) / 150f;
+            float yf = (r.Next(10) - 5f) / 1f;
+            float zf = (r.Next(100) / 30f);
+            rb.AddForce(new Vector3(xf, yf, -zf), ForceMode.VelocityChange);
 
             float xr = r.Next(100) / 10f;
             float yr = r.Next(100) / 10f;
-            float zr = r.Next(100) / 10f;
-            rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
+            float zr = r.Next(100) / 1f;
+            rb.AddRelativeTorque(new Vector3(xr, yr, 100f), ForceMode.Force);
         }
 
         public static void RemoveWordAndReplaceTiles()

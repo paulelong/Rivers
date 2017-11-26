@@ -352,27 +352,71 @@ namespace WordSpell
             }
             else
             {
-                if (v <= -1)
+                if (v == -1)
                 {
-                    SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I, lp.J - 1]);
-                    SwapLetters(WSGameState.LetterPropGrid[lp.I, lp.J - 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1]);
-                    SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J]);
-                    SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J], WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1]);
-                    SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I, lp.J + 1]);
-                    SwapLetters(WSGameState.LetterPropGrid[lp.I, lp.J + 1], WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1]);
-                    SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I - 1, lp.J]);
+                    // 
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J - 1].LetterUCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I, lp.J - 1].LetterLCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1].LetterLCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J].LetterDCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1].LetterDCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I, lp.J + 1].LetterRCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1].LetterRCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J].LetterUCount = 1.0f;
+
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I, lp.J - 1], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I, lp.J - 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J], WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I, lp.J + 1], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I, lp.J + 1], WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I - 1, lp.J], false);
+                }
+                else if(v == 1)
+                {
+                    // 
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J - 1].LetterRCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I, lp.J - 1].LetterRCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1].LetterUCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J].LetterUCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1].LetterLCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I, lp.J + 1].LetterLCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1].LetterDCount = 1.0f;
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J].LetterDCount = 1.0f;
+
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I - 1, lp.J], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J], WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I, lp.J + 1], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I, lp.J + 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J], WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1], false);
+                    SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I, lp.J - 1], false);
                 }
                 else
                 {
+                    // 
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J - 1].LetterRCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J - 1].LetterUCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I, lp.J - 1].LetterUCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1].LetterUCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1].LetterLCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J].LetterLCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1].LetterLCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1].LetterDCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I, lp.J + 1].LetterDCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1].LetterRCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1].LetterDCount = 2.0f;
+                    WSGameState.LetterPropGrid[lp.I - 1, lp.J].LetterRCount = 2.0f;
+
                     for (int vn = 0; vn < v; vn++)
                     {
-                        SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I - 1, lp.J]);
-                        SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J], WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1]);
-                        SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I, lp.J + 1]);
-                        SwapLetters(WSGameState.LetterPropGrid[lp.I, lp.J + 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1]);
-                        SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J]);
-                        SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J], WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1]);
-                        SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I, lp.J - 1]);
+                        SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I - 1, lp.J], false);
+                        SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J], WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1], false);
+                        SwapLetters(WSGameState.LetterPropGrid[lp.I - 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I, lp.J + 1], false);
+                        SwapLetters(WSGameState.LetterPropGrid[lp.I, lp.J + 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1], false);
+                        SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J + 1], WSGameState.LetterPropGrid[lp.I + 1, lp.J], false);
+                        SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J], WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1], false);
+                        SwapLetters(WSGameState.LetterPropGrid[lp.I + 1, lp.J - 1], WSGameState.LetterPropGrid[lp.I, lp.J - 1], false);
                     }
                 }
             }
@@ -413,7 +457,7 @@ namespace WordSpell
             }
         }
 
-        private static bool SwapLetters(LetterProp lpa, LetterProp lpb)
+        private static bool SwapLetters(LetterProp lpa, LetterProp lpb, bool move = true)
         {
             if (Math.Abs(lpa.I - lpb.I) - Math.Abs(lpa.J - lpb.J) > 1)
             {
@@ -430,9 +474,12 @@ namespace WordSpell
                 lpa.J = lpb.J;
                 lpb.J = tj;
 
-                Vector3 tv = lpa.Tf.position;
-                lpa.Tf.position = lpb.Tf.position;
-                lpb.Tf.position = tv;
+                if(move)
+                {
+                    Vector3 tv = lpa.Tf.position;
+                    lpa.Tf.position = lpb.Tf.position;
+                    lpb.Tf.position = tv;
+                }
 
                 WSGameState.LetterPropGrid[lpa.I, lpa.J] = lpa;
                 WSGameState.LetterPropGrid[lpb.I, lpb.J] = lpb;

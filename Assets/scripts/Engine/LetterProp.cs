@@ -25,7 +25,10 @@ namespace WordSpell
         int Idle = Animator.StringToHash("Idle");
         int FlipBack = Animator.StringToHash("FlipBack");
         int FlipForward = Animator.StringToHash("FlipForward");
-        float letterFallCount = 0.0f;
+        float letterDCount = 0.0f;
+        float letterUCount = 0.0f;
+        float letterRCount = 0.0f;
+        float letterLCount = 0.0f;
 
         public TileTypes TileType
         {
@@ -66,16 +69,16 @@ namespace WordSpell
             }
         }
 
-        public float LetterFallCount
+        public float LetterDCount
         {
             get
             {
-                return letterFallCount;
+                return letterDCount;
             }
 
             set
             {
-                letterFallCount = value;
+                letterDCount = value;
             }
         }
 
@@ -108,6 +111,45 @@ namespace WordSpell
         }
 
         public SpellInfo SpellInfo { get; internal set; }
+
+        public float LetterUCount
+        {
+            get
+            {
+                return letterUCount;
+            }
+
+            set
+            {
+                letterUCount = value;
+            }
+        }
+
+        public float LetterRCount
+        {
+            get
+            {
+                return letterRCount;
+            }
+
+            set
+            {
+                letterRCount = value;
+            }
+        }
+
+        public float LetterLCount
+        {
+            get
+            {
+                return letterLCount;
+            }
+
+            set
+            {
+                letterLCount = value;
+            }
+        }
 
         public enum TileTypes
         {
