@@ -24,8 +24,8 @@ namespace WordSpell
             LetterSwap,
             ChangeToVowel,
             ConvertLetter,
-            RotateL,
-            RotateR,
+            RotateCW,
+            RotateCCW,
             Rotate180,
             HintOnLetter,
             AnyLetter,
@@ -38,6 +38,22 @@ namespace WordSpell
         public int MannaPoints;
         public int SpellLevel;
         public bool Immediate;
+        public string ImageName;
+        private Sprite image = null;
+
+        const string ImagePath = "Images/Spells/";
+        public Sprite Image
+        {
+            get
+            {
+                if(image == null && ImageName != null)
+                {
+                    image = Resources.Load<Sprite>(ImagePath + ImageName);
+                }
+
+                return image;
+            }
+        }
     }
 
     class Spells
@@ -53,11 +69,11 @@ namespace WordSpell
             { new SpellInfo { spellType = SpellInfo.SpellType.WordHint, FriendlyName = "Hint",          MannaPoints = 10, SpellLevel = 11, Immediate = true }},
             { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2, FriendlyName = "Hint++",       MannaPoints = 14, SpellLevel = 14, Immediate = true }},
             { new SpellInfo { spellType = SpellInfo.SpellType.Burn, FriendlyName = "Burn" ,             MannaPoints = 6, SpellLevel = 6, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap, FriendlyName = "Swap",        MannaPoints = 6, SpellLevel = 5, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap, FriendlyName = "Swap",        MannaPoints = 6, SpellLevel = 5, Immediate = false, ImageName = "Swap" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 10, SpellLevel = 15, Immediate = true }},
             { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 12, SpellLevel = 7, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateL, FriendlyName = "Rotate CCW",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateR, FriendlyName = "Rotate CW",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCW, FriendlyName = "Rotate CW",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCCW, FriendlyName = "Rotate CCW",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.Rotate180, FriendlyName = "Rotate 180",  MannaPoints = 5, SpellLevel = 12, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.HintOnLetter, FriendlyName = "Letter Hint",  MannaPoints = 15, SpellLevel = 16, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter, FriendlyName = "Any Letter",  MannaPoints = 12, SpellLevel = 17, Immediate = false }},
@@ -268,11 +284,11 @@ namespace WordSpell
                     GetBestHint(200);
                     CompleteSpell();
                     break;
-                case SpellInfo.SpellType.RotateL:
+                case SpellInfo.SpellType.RotateCW:
                     so.worked = Rotate(lp, -1);
                     CompleteSpell();
                     break;
-                case SpellInfo.SpellType.RotateR:
+                case SpellInfo.SpellType.RotateCCW:
                     so.worked = Rotate(lp, 1);
                     CompleteSpell();
                     break;

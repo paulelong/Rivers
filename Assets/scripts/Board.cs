@@ -301,29 +301,31 @@ public class Board : MonoBehaviour
         TryListBox.Clear();
     }
 
-    public void AddSpellList(ListBox<GridLayoutGroup> spellbox, string spellName, int cost, Sprite image)
+    public void AddSpellList(ListBox<GridLayoutGroup> spellbox, SpellInfo si)
     {
         Transform item = spellbox.Add();
 
-        UnityEngine.UI.Text s = item.GetChild(0).GetComponent<UnityEngine.UI.Text>();
-        s.text = spellName;
+        //UnityEngine.UI.Text s = item.GetChild(0).GetComponent<UnityEngine.UI.Text>();
+        UnityEngine.UI.Text s = item.FindChild("Name").GetComponent<UnityEngine.UI.Text>();
+        s.text = si.FriendlyName;
 
-        UnityEngine.UI.Text c = item.GetChild(1).GetComponent<UnityEngine.UI.Text>();
-        if(cost > 0)
+//        UnityEngine.UI.Text c = item.GetChild(1).GetComponent<UnityEngine.UI.Text>();
+        UnityEngine.UI.Text c = item.Find("Panel/Cost").GetComponent<UnityEngine.UI.Text>();
+        if (si.MannaPoints > 0)
         {
-            c.text = cost.ToString();
+            c.text = si.MannaPoints.ToString();
         }
         else
         {
             c.text = "";
         }
 
-        UnityEngine.UI.Image i = item.GetChild(2).GetComponent<UnityEngine.UI.Image>();
-        i.sprite = image;
-        i.name = spellName;
+        //UnityEngine.UI.Image i = item.GetChild(2).GetComponent<UnityEngine.UI.Image>();
+        UnityEngine.UI.Image i = item.Find("Image").GetComponent<UnityEngine.UI.Image>();
+        i.sprite = si.Image;
 
         // Add the callback so we know we've been selected
-        EventTrigger trigger = item.GetChild(2).GetComponent<EventTrigger>();
+        EventTrigger trigger = i.gameObject.GetComponent<EventTrigger>();
 
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerClick;
@@ -342,14 +344,14 @@ public class Board : MonoBehaviour
 
         foreach (SpellInfo si in Spells.AvailableSpells)
         {
-            AddSpellList(SpellListBox, si.FriendlyName, si.MannaPoints, null);
+            AddSpellList(SpellListBox, si);
         }
 
         ClearSpellList(AwardedSpellListBox);
 
         foreach (SpellInfo si in Spells.AwardedSpells)
         {
-            AddSpellList(AwardedSpellListBox, si.FriendlyName, si.MannaPoints, null);
+            AddSpellList(AwardedSpellListBox, si);
         }
 
         SpellCanvas.SetActive(true);
