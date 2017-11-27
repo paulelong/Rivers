@@ -96,7 +96,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler {
 
     public void FinishSpell()
     {
-        Spells.FinishSpellAnim();
+        Spells.CastSpell();
     }
 
 }

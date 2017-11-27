@@ -56,8 +56,8 @@ namespace WordSpell
             { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap, FriendlyName = "Swap",        MannaPoints = 6, SpellLevel = 5, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 10, SpellLevel = 15, Immediate = true }},
             { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 12, SpellLevel = 7, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateL, FriendlyName = "Rotate Left",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateR, FriendlyName = "Rotate Right",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateL, FriendlyName = "Rotate CCW",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateR, FriendlyName = "Rotate CW",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.Rotate180, FriendlyName = "Rotate 180",  MannaPoints = 5, SpellLevel = 12, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.HintOnLetter, FriendlyName = "Letter Hint",  MannaPoints = 15, SpellLevel = 16, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter, FriendlyName = "Any Letter",  MannaPoints = 12, SpellLevel = 17, Immediate = false }},
@@ -159,7 +159,7 @@ namespace WordSpell
 
             if(NextSpell.Immediate)
             {
-                CastSpell(NextSpell);
+                CastSpell();
             }
         }
 
@@ -168,7 +168,7 @@ namespace WordSpell
             if(NextSpell != null)
             {
                 lp = _lp;
-                CastSpell(NextSpell);
+                CastSpell();
                 return true;
             }
             return false;
@@ -182,15 +182,16 @@ namespace WordSpell
             }
 
             NextSpell = null;
+            state = 0;
         }
 
-        public static SpellInfo.SpellOut CastSpell(SpellInfo si)
+        public static SpellInfo.SpellOut CastSpell()
         {
             SpellInfo.SpellOut so;
             so.si = null;
             so.worked = true;
 
-            switch (si.spellType)
+            switch (NextSpell.spellType)
             {
                 case SpellInfo.SpellType.DestroyLetter:
                     SpellDestroyLetter(lp);
@@ -198,13 +199,41 @@ namespace WordSpell
                     break;
                 case SpellInfo.SpellType.DestroyGroup:
                     SpellDestroyLetterGroupSmall(lp);
-                    CompleteSpell();
                     break;
                 case SpellInfo.SpellType.RandomVowels:
-                    CreateRandomVowels(5);
+                    switch(state)
+                    {
+                        case 0:
+                            CreateRandomVowels(5);
+                            state++;
+                            break;
+                        case 1:
+                            foreach (LetterProp lp in RandomLetterList)
+                            {
+                                lp.UpdateLetterDisplay();
+                                lp.FlipTileForward();
+                                lp.TileIdle();
+                            }
+                            CompleteSpell();
+                            RandomLetterList.Clear();
+                            state = 0;
+                            break;
+                    }
                     break;
                 case SpellInfo.SpellType.ChangeToVowel:
-                    ChangeToVowel(lp);
+                    switch(state)
+                    {
+                        case 0:
+                            ChangeToVowel(lp);
+                            state++;
+                            break;
+                        case 1:
+                            lp.UpdateLetterDisplay();
+                            lp.FlipTileForward();
+                            lp.TileIdle();
+                            CompleteSpell();
+                            break;
+                    }
                     break;
                 case SpellInfo.SpellType.Burn:
                     BurnTile(lp);
@@ -215,7 +244,7 @@ namespace WordSpell
                     {
                         LetterSwapFirst = lp;
                         LetterSwapStep = 1;
-                        so.si = si;
+                        so.si = NextSpell;
                         return so;
                     }
                     else
@@ -294,6 +323,7 @@ namespace WordSpell
                     case SpellInfo.SpellType.DestroyLetter:
                         break;
                     case SpellInfo.SpellType.DestroyGroup:
+                        CastSpell();
                         break;
                     case SpellInfo.SpellType.RandomVowels:
                         foreach (LetterProp lp in RandomLetterList)
@@ -516,27 +546,37 @@ namespace WordSpell
 
         private static void SpellDestroyLetterGroupSmall(LetterProp lp)
         {
-            if (lp.J - 1 >= 0)
+            switch (state)
             {
-                WSGameState.RemoveAndReplaceTile(lp.I, lp.J - 1);
-            }
-            WSGameState.RemoveAndReplaceTile(lp.I, lp.J);
+                case 0:
+                    lp.BlowupTile();
+                    state++;
+                    break;
+                case 1:
+                    if (lp.J - 1 >= 0)
+                    {
+                        WSGameState.RemoveAndReplaceTile(lp.I, lp.J - 1);
+                    }
+                    WSGameState.RemoveAndReplaceTile(lp.I, lp.J);
 
-            if (lp.J + 1 < WSGameState.gridsize)
-            {
-                WSGameState.RemoveAndReplaceTile(lp.I, lp.J + 1);
-            }
+                    if (lp.J + 1 < WSGameState.gridsize)
+                    {
+                        WSGameState.RemoveAndReplaceTile(lp.I, lp.J + 1);
+                    }
 
-            WSGameState.RemoveAndReplaceTile(lp.I, lp.J);
+                    WSGameState.RemoveAndReplaceTile(lp.I, lp.J);
 
-            if (lp.I - 1 >= 0)
-            {
-                WSGameState.RemoveAndReplaceTile(lp.I - 1, lp.J);
-            }
+                    if (lp.I - 1 >= 0)
+                    {
+                        WSGameState.RemoveAndReplaceTile(lp.I - 1, lp.J);
+                    }
 
-            if (lp.I + 1 < WSGameState.gridsize)
-            {
-                WSGameState.RemoveAndReplaceTile(lp.I + 1, lp.J);
+                    if (lp.I + 1 < WSGameState.gridsize)
+                    {
+                        WSGameState.RemoveAndReplaceTile(lp.I + 1, lp.J);
+                    }
+                    CompleteSpell();
+                    break;
             }
         }
 

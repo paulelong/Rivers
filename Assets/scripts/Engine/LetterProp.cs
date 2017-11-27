@@ -25,6 +25,8 @@ namespace WordSpell
         int Idle = Animator.StringToHash("Idle");
         int FlipBack = Animator.StringToHash("FlipBack");
         int FlipForward = Animator.StringToHash("FlipForward");
+        int Bomb = Animator.StringToHash("Bomb");
+
         float letterDCount = 0.0f;
         float letterUCount = 0.0f;
         float letterRCount = 0.0f;
@@ -337,6 +339,11 @@ namespace WordSpell
         public void TileIdle()
         {
             LetterAnimator.SetTrigger(Idle);
+        }
+
+        public void BlowupTile()
+        {
+            LetterAnimator.SetTrigger(Bomb);
         }
 
         public void UpdateLetterDisplay()
