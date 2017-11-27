@@ -66,19 +66,19 @@ namespace WordSpell
             { new SpellInfo { spellType = SpellInfo.SpellType.DestroyLetter, FriendlyName = "Snipe",    MannaPoints = 10, SpellLevel = 13, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.DestroyGroup, FriendlyName = "Bomb",      MannaPoints = 8, SpellLevel = 8, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.ChangeToVowel, FriendlyName = "Vowelize", MannaPoints = 7, SpellLevel = 10, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint, FriendlyName = "Hint",          MannaPoints = 10, SpellLevel = 11, Immediate = true }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2, FriendlyName = "Hint++",       MannaPoints = 14, SpellLevel = 14, Immediate = true }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.Burn, FriendlyName = "Burn" ,             MannaPoints = 6, SpellLevel = 6, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap, FriendlyName = "Swap",        MannaPoints = 6, SpellLevel = 5, Immediate = false, ImageName = "Swap" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint,     FriendlyName = "Hint",          MannaPoints = 10, SpellLevel = 11, Immediate = true }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2,    FriendlyName = "Hint++",       MannaPoints = 14, SpellLevel = 14, Immediate = true }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.Burn,         FriendlyName = "Burn" ,             MannaPoints = 6, SpellLevel = 6, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap,   FriendlyName = "Swap",        MannaPoints = 6, SpellLevel = 5, Immediate = false, ImageName = "Swap2" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 10, SpellLevel = 15, Immediate = true }},
             { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 12, SpellLevel = 7, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCW, FriendlyName = "Rotate CW",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCCW, FriendlyName = "Rotate CCW",  MannaPoints = 3, SpellLevel = 9, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.Rotate180, FriendlyName = "Rotate 180",  MannaPoints = 5, SpellLevel = 12, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCW,     FriendlyName = "Rotate CW",  MannaPoints = 3, SpellLevel = 9, Immediate = false, ImageName = "CWRotate"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCCW,    FriendlyName = "Rotate CCW",  MannaPoints = 3, SpellLevel = 9, Immediate = false, ImageName = "CCWRotate"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.Rotate180,    FriendlyName = "Rotate 180",  MannaPoints = 5, SpellLevel = 12, Immediate = false, ImageName = "Rotate180"  }},
             { new SpellInfo { spellType = SpellInfo.SpellType.HintOnLetter, FriendlyName = "Letter Hint",  MannaPoints = 15, SpellLevel = 16, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter, FriendlyName = "Any Letter",  MannaPoints = 12, SpellLevel = 17, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RowBGone, FriendlyName = "Row b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.ColumnBGone, FriendlyName = "Column b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter,    FriendlyName = "Any Letter",  MannaPoints = 12, SpellLevel = 17, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RowBGone,     FriendlyName = "Row b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.ColumnBGone,  FriendlyName = "Col b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false }},
         };
 
         internal static void RestFoundSpells()
@@ -90,11 +90,15 @@ namespace WordSpell
         public static List<SpellInfo> AwardedSpells = new List<SpellInfo>();
         private static SpellInfo NextSpell;
         private static LetterProp LetterSwapFirst;
-        private static int LetterSwapStep;
         private static bool awarded = false;
+        private static SpellCompletedSuccessfullyDelegate spellCompelteDelegate;
         private static int state = 0;
         private static LetterProp lp = null;
         private static List<LetterProp> RandomLetterList = new List<LetterProp>();
+
+        public static int LastManaCost { get; internal set; }
+
+        public delegate void SpellCompletedSuccessfullyDelegate();
 
         #region SpellManagement
 
@@ -168,10 +172,11 @@ namespace WordSpell
 
         #region SpellCasting
 
-        public static void ReadySpell(string spellname, bool _awarded)
+        public static void ReadySpell(string spellname, bool _awarded, SpellCompletedSuccessfullyDelegate _spellCompleteDelegate)
         {
             NextSpell = FindSpell(spellname);
             awarded = _awarded;
+            spellCompelteDelegate = _spellCompleteDelegate;
 
             if(NextSpell.Immediate)
             {
@@ -190,22 +195,30 @@ namespace WordSpell
             return false;
         }
 
-        static void CompleteSpell()
+        static void CompleteSpell(bool worked = true)
         {
-            if(awarded)
+            if(worked)
             {
-                AwardedSpells.Remove(NextSpell);
-            }
+                if (awarded)
+                {
+                    AwardedSpells.Remove(NextSpell);
+                }
 
+                LastManaCost = NextSpell.MannaPoints;
+
+                spellCompelteDelegate();
+            }
             NextSpell = null;
             state = 0;
         }
 
-        public static SpellInfo.SpellOut CastSpell()
+        public static void CastSpell()
         {
-            SpellInfo.SpellOut so;
-            so.si = null;
-            so.worked = true;
+
+            if(NextSpell == null)
+            {
+                return;
+            }
 
             switch (NextSpell.spellType)
             {
@@ -256,20 +269,15 @@ namespace WordSpell
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.LetterSwap:
-                    if (LetterSwapStep == 0)
+                    switch(state)
                     {
-                        LetterSwapFirst = lp;
-                        LetterSwapStep = 1;
-                        so.si = NextSpell;
-                        return so;
-                    }
-                    else
-                    {
-                        so.worked = SwapLetters(lp, LetterSwapFirst);
-                        LetterSwapFirst = null;
-                        LetterSwapStep = 0;
-                        so.si = null;
-                        CompleteSpell();
+                        case 0:
+                            LetterSwapFirst = lp;
+                            state++;
+                            break;
+                        case 1:
+                            CompleteSpell(SwapLetters(lp, LetterSwapFirst));
+                            break;
                     }
                     break;
                 case SpellInfo.SpellType.ConvertLetter:
@@ -285,16 +293,13 @@ namespace WordSpell
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.RotateCW:
-                    so.worked = Rotate(lp, -1);
-                    CompleteSpell();
+                    CompleteSpell(Rotate(lp, -1));
                     break;
                 case SpellInfo.SpellType.RotateCCW:
-                    so.worked = Rotate(lp, 1);
-                    CompleteSpell();
+                    CompleteSpell(Rotate(lp, 1));
                     break;
                 case SpellInfo.SpellType.Rotate180:
-                    so.worked = Rotate(lp, 4);
-                    CompleteSpell();
+                    CompleteSpell(Rotate(lp, 4));
                     break;
                 case SpellInfo.SpellType.HintOnLetter:
                     GetBestHint(lp);
@@ -306,7 +311,6 @@ namespace WordSpell
                     // if(result == ContentDialogResult.Primary)
                     {
                         //lp.letter = p.letter;
-                        so.worked = true;
                     }
                     CompleteSpell();
                     break;
@@ -326,8 +330,6 @@ namespace WordSpell
                     break;
             }
 
-            so.si = null;
-            return so;
         }
 
         public static void FinishSpellAnim()

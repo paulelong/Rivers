@@ -54,6 +54,12 @@ public class Board : MonoBehaviour
 
     int Selected = Animator.StringToHash("StartSel");
 
+    #region Constants
+    const string SpellNamePath = "TextPanel/Name";
+    const string SpellCostPath = "TextPanel/Cost";
+    const string SpellImagePath = "ButtonPanel/Image";
+    #endregion Constants
+
     // Use this for initialization
     void Start ()
     {
@@ -301,17 +307,18 @@ public class Board : MonoBehaviour
         TryListBox.Clear();
     }
 
-    public void AddSpellList(ListBox<GridLayoutGroup> spellbox, SpellInfo si)
+    public void AddSpellList(ListBox<GridLayoutGroup> spellbox, SpellInfo si, bool awarded = false)
     {
         Transform item = spellbox.Add();
+        item.transform.name = si.FriendlyName;
 
         //UnityEngine.UI.Text s = item.GetChild(0).GetComponent<UnityEngine.UI.Text>();
-        UnityEngine.UI.Text s = item.FindChild("Name").GetComponent<UnityEngine.UI.Text>();
+        UnityEngine.UI.Text s = item.Find(SpellNamePath).GetComponent<UnityEngine.UI.Text>();
         s.text = si.FriendlyName;
 
 //        UnityEngine.UI.Text c = item.GetChild(1).GetComponent<UnityEngine.UI.Text>();
-        UnityEngine.UI.Text c = item.Find("Panel/Cost").GetComponent<UnityEngine.UI.Text>();
-        if (si.MannaPoints > 0)
+        UnityEngine.UI.Text c = item.Find(SpellCostPath).GetComponent<UnityEngine.UI.Text>();
+        if (!awarded)
         {
             c.text = si.MannaPoints.ToString();
         }
@@ -321,16 +328,23 @@ public class Board : MonoBehaviour
         }
 
         //UnityEngine.UI.Image i = item.GetChild(2).GetComponent<UnityEngine.UI.Image>();
-        UnityEngine.UI.Image i = item.Find("Image").GetComponent<UnityEngine.UI.Image>();
-        i.sprite = si.Image;
+        //UnityEngine.UI.Image i = item.Find(SpellImagePath).GetComponent<UnityEngine.UI.Image>();
+        //i.sprite = si.Image;
 
         // Add the callback so we know we've been selected
-        EventTrigger trigger = i.gameObject.GetComponent<EventTrigger>();
+        //EventTrigger trigger = i.gameObject.GetComponent<EventTrigger>();
 
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.PointerClick;
-        entry.callback.AddListener((eventData) => { SelectSpell((PointerEventData)eventData); });
-        trigger.triggers.Add(entry);
+        //EventTrigger.Entry entry = new EventTrigger.Entry();
+        //entry.eventID = EventTriggerType.PointerClick;
+        //entry.callback.AddListener((eventData) => { SelectSpell((PointerEventData)eventData); });
+        //trigger.triggers.Add(entry);
+
+        UnityEngine.UI.Image i = item.Find(SpellImagePath).GetComponent<UnityEngine.UI.Image>();
+        i.sprite = si.Image;
+
+        Button b = item.Find(SpellImagePath).GetComponent<Button>();
+        //b.targetGraphic = si.Image;
+        b.onClick.AddListener(delegate { SelectSpell(si.FriendlyName, awarded); } );
     }
 
     public void ClearSpellList(ListBox<GridLayoutGroup> spellbox)
@@ -351,7 +365,7 @@ public class Board : MonoBehaviour
 
         foreach (SpellInfo si in Spells.AwardedSpells)
         {
-            AddSpellList(AwardedSpellListBox, si);
+            AddSpellList(AwardedSpellListBox, si, true);
         }
 
         SpellCanvas.SetActive(true);
@@ -362,17 +376,31 @@ public class Board : MonoBehaviour
         SpellCanvas.SetActive(false);
     }
 
+    void SelectSpell(string spellName, bool awarded)
+    {
+        SpellCanvas.SetActive(false);
+
+        // Awarded spells need to be removed from the list
+        Spells.ReadySpell(spellName, awarded, SpellSucceded);
+    }
+
     void SelectSpell(PointerEventData eventData)
     {
         SpellCanvas.SetActive(false);
 
         // Awarded spells need to be removed from the list
         string x = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name;
-        Spells.ReadySpell(eventData.pointerCurrentRaycast.gameObject.name, x == "AwardedSpells");
+        Spells.ReadySpell(eventData.pointerCurrentRaycast.gameObject.transform.parent.name, x == "AwardedSpells", SpellSucceded);
+    }
 
-        //SpellInfo si = Spells.FindSpell(eventData.pointerCurrentRaycast.gameObject.name);
-        //WSGameState.CastSpell(si);
+   public void OnClicked(Button button)
+   {
+       SpellCanvas.SetActive(false);
+   }
 
+    void SpellSucceded()
+    {
+        WSGameState.ChangeManna(Spells.LastManaCost);
     }
     
     public void IndicateGoodWord(bool good)

@@ -528,7 +528,7 @@ namespace WordSpell
             UpdateManaScore();
         }
 
-        private static void ChangeManna(int manna)
+        public static void ChangeManna(int manna)
         {
             Manna += manna;
             UpdateManaScore();
