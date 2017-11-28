@@ -399,7 +399,7 @@ namespace WordSpell
 
         internal static int ScoreWord()
         {
-            return EngLetterScoring.ScoreWord(GetCurrentWord());
+            return EngLetterScoring.ScoreWord(SelLetterList);
         }
 
         internal static string ScoreWordString()

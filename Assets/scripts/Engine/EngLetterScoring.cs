@@ -348,22 +348,22 @@ namespace WordSpell
             return values[Convert.ToChar(letter)];
         }
 
-        //internal static int ScoreWord(List<LetterProp> lplist)
-        //{
-        //    int _score = 0;
-        //    int wordMult = 1;
-        //    string word = "";
+        internal static int ScoreWord(List<LetterProp> lplist)
+        {
+            int _score = 0;
+            int wordMult = 1;
+            string word = "";
 
-        //    foreach (LetterProp lp in lplist)
-        //    {
-        //        string s = (lp.b.Content as string).ToLower();
-        //        word += s;
+            foreach (LetterProp lp in lplist)
+            {
+                string s = lp.ASCIIString.ToLower();
+                word += s;
 
-        //        _score += lp.GetLetterMult() * values[s[0]];
-        //        wordMult += lp.GetWordMult();
-        //    }
-        //    return _score * wordMult + LengthBonus(word);
-        //}
+                _score += lp.GetLetterMult() * values[s[0]];
+                wordMult += lp.GetWordMult();
+            }
+            return _score * wordMult + LengthBonus(word);
+        }
 
         //internal static int ScoreWord(List<Button> buttonList)
         //{
@@ -452,7 +452,7 @@ namespace WordSpell
         public static string GetWordTally(List<LetterProp> lp_list)
         {
             string curword = GetCurrentWord(lp_list);
-            return ScoreWord(curword) + "=>" + EngLetterScoring.ScoreWordString(lp_list);
+            return ScoreWord(lp_list) + "=>" + EngLetterScoring.ScoreWordString(lp_list);
         }
 
         //public static string GetCurrentWord(List<Button> buttonList)
