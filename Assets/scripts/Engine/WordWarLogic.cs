@@ -721,9 +721,10 @@ namespace WordSpell
         {
             toRemove.Tf.Translate(0.0f, 0.0f, -1f);
 
-            //Rigidbody rb = toRemove.Tf.GetChild(0).GetComponent(typeof(Rigidbody)) as Rigidbody;
+            Animator a = toRemove.Tf.GetComponent<Animator>();
+            a.enabled = false;
+
             Rigidbody rb = toRemove.Tf.GetComponent(typeof(Rigidbody)) as Rigidbody;
-            rb.maxAngularVelocity = 1f;
             rb.useGravity = true;
             rb.isKinematic = false;
 
@@ -733,9 +734,9 @@ namespace WordSpell
             rb.AddForce(new Vector3(xf, yf, -zf), ForceMode.VelocityChange);
 
             float xr = r.Next(100) / 10f;
-            float yr = r.Next(100) / 10f;
+            float yr =  r.Next(100) / 10f;
             float zr = r.Next(100) / 1f;
-            rb.AddRelativeTorque(new Vector3(xr, yr, 100f), ForceMode.Force);
+            rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
         }
 
         public static void RemoveWordAndReplaceTiles()
