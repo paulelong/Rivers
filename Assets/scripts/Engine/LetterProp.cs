@@ -315,7 +315,8 @@ namespace WordSpell
             //Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = BurningMat;
             Tf.gameObject.GetComponent<MeshRenderer>().material = BurningMat;
             Transform ll = boardScript.NewLavaLight();
-            ll.SetParent(Tf.GetChild(0), false);
+            ll.gameObject.SetActive(true);
+            ll.SetParent(Tf, false);
             ll.name = "Point light";
             // Need a point light
             //Tf.GetChild(0).gameObject.SetActive(true);
