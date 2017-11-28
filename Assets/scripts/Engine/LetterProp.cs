@@ -357,6 +357,12 @@ namespace WordSpell
             {
                 tm.text = this.ASCIIString;
             }
+
+            // Adjustments for letter widths so they are centered
+            if(this.ASCIIChar == 'W')
+            {
+                text.transform.position -= new Vector3(.15f, 0, 0);
+            }
         }
 
         public void SetSelected(bool _selected)
