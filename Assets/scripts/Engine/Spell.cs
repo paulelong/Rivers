@@ -63,8 +63,8 @@ namespace WordSpell
 
         static List<SpellInfo> AllSpells = new List<SpellInfo>
         {
-            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyLetter, FriendlyName = "Snipe",    MannaPoints = 10, SpellLevel = 13, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyGroup, FriendlyName = "Bomb",      MannaPoints = 8, SpellLevel = 8, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyLetter, FriendlyName = "Snipe",    MannaPoints = 10, SpellLevel = 13, Immediate = false, ImageName = "Snipe" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyGroup, FriendlyName = "Bomb",      MannaPoints = 8, SpellLevel = 8, Immediate = false, ImageName = "Bomb" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.ChangeToVowel, FriendlyName = "Vowelize", MannaPoints = 7, SpellLevel = 10, Immediate = false }},
             { new SpellInfo { spellType = SpellInfo.SpellType.WordHint,     FriendlyName = "Hint",          MannaPoints = 10, SpellLevel = 11, Immediate = true }},
             { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2,    FriendlyName = "Hint++",       MannaPoints = 14, SpellLevel = 14, Immediate = true }},
@@ -212,7 +212,7 @@ namespace WordSpell
             state = 0;
         }
 
-        public static void CastSpell()
+        public static void CastSpell(string s = null)
         {
 
             if(NextSpell == null)
@@ -306,13 +306,19 @@ namespace WordSpell
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.AnyLetter:
-                    //PickALetter p = new PickALetter();
-                    //var result = p.ShowAsync();
-                    // if(result == ContentDialogResult.Primary)
+                    switch(state)
                     {
-                        //lp.letter = p.letter;
+                        case 0:
+                            WSGameState.boardScript.SelectLetterToChnage();
+                            state++;
+                            break;
+                        case 1:
+                            WSGameState.boardScript.SelectLetterToChangeDone();
+                            lp.letter = (byte)s[0];
+                            lp.UpdateLetterDisplay();
+                            CompleteSpell();
+                            break;
                     }
-                    CompleteSpell();
                     break;
                 case SpellInfo.SpellType.ColumnBGone:
                     for (int i = WSGameState.gridsize - 1; i >= 0; i--)
