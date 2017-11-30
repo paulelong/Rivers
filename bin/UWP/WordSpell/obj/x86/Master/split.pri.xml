@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PriInfo>
+	<ResourceMap name="63187PaulysHotelandRecord.WordSpell2" version="1.0" primary="true">
+		<Qualifiers>
+			<AlternateForm>UNPLATED</AlternateForm>
+			<Scale>200</Scale>
+			<TargetSize>24</TargetSize>
+		</Qualifiers>
+		<ResourceMapSubtree name="Files">
+			<NamedResource name="Resource.res" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Resource.res">
+				<Candidate type="Path">
+					<Value>Resource.res</Value>
+				</Candidate>
+			</NamedResource>
+			<ResourceMapSubtree name="Assets">
+				<NamedResource name="SplashScreen.png" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Assets/SplashScreen.png">
+					<Candidate qualifiers="Scale-200" isDefault="true" type="Path">
+						<Value>Assets\SplashScreen.scale-200.png</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="Square150x150Logo.png" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Assets/Square150x150Logo.png">
+					<Candidate qualifiers="Scale-200" isDefault="true" type="Path">
+						<Value>Assets\Square150x150Logo.scale-200.png</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="Square44x44Logo.png" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Assets/Square44x44Logo.png">
+					<Candidate qualifiers="TargetSize-24, AlternateForm-UNPLATED" type="Path">
+						<Value>Assets\Square44x44Logo.targetsize-24_altform-unplated.png</Value>
+					</Candidate>
+					<Candidate qualifiers="Scale-200" isDefault="true" type="Path">
+						<Value>Assets\Square44x44Logo.scale-200.png</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="StoreLogo.png" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Assets/StoreLogo.png">
+					<Candidate type="Path">
+						<Value>Assets\StoreLogo.png</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="Wide310x150Logo.png" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Assets/Wide310x150Logo.png">
+					<Candidate qualifiers="Scale-200" isDefault="true" type="Path">
+						<Value>Assets\Wide310x150Logo.scale-200.png</Value>
+					</Candidate>
+				</NamedResource>
+			</ResourceMapSubtree>
+			<ResourceMapSubtree name="Data">
+				<NamedResource name="boot.config" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/boot.config">
+					<Candidate type="Path">
+						<Value>Data\boot.config</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="globalgamemanagers" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/globalgamemanagers">
+					<Candidate type="Path">
+						<Value>Data\globalgamemanagers</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="globalgamemanagers.assets" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/globalgamemanagers.assets">
+					<Candidate type="Path">
+						<Value>Data\globalgamemanagers.assets</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="globalgamemanagers.assets.resS" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/globalgamemanagers.assets.resS">
+					<Candidate type="Path">
+						<Value>Data\globalgamemanagers.assets.resS</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="level0" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/level0">
+					<Candidate type="Path">
+						<Value>Data\level0</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="managedAssemblies.txt" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/managedAssemblies.txt">
+					<Candidate type="Path">
+						<Value>Data\managedAssemblies.txt</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="resources.assets" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/resources.assets">
+					<Candidate type="Path">
+						<Value>Data\resources.assets</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="resources.assets.resS" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/resources.assets.resS">
+					<Candidate type="Path">
+						<Value>Data\resources.assets.resS</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="sharedassets0.assets" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/sharedassets0.assets">
+					<Candidate type="Path">
+						<Value>Data\sharedassets0.assets</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="sharedassets0.assets.resS" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/sharedassets0.assets.resS">
+					<Candidate type="Path">
+						<Value>Data\sharedassets0.assets.resS</Value>
+					</Candidate>
+				</NamedResource>
+				<NamedResource name="sharedassets0.resource" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/sharedassets0.resource">
+					<Candidate type="Path">
+						<Value>Data\sharedassets0.resource</Value>
+					</Candidate>
+				</NamedResource>
+				<ResourceMapSubtree name="Resources">
+					<NamedResource name="unity default resources" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/Resources/unity default resources">
+						<Candidate type="Path">
+							<Value>Data\Resources\unity default resources</Value>
+						</Candidate>
+					</NamedResource>
+					<NamedResource name="unity_builtin_extra" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Data/Resources/unity_builtin_extra">
+						<Candidate type="Path">
+							<Value>Data\Resources\unity_builtin_extra</Value>
+						</Candidate>
+					</NamedResource>
+				</ResourceMapSubtree>
+			</ResourceMapSubtree>
+			<ResourceMapSubtree name="Properties">
+				<NamedResource name="Default.rd.xml" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/Properties/Default.rd.xml">
+					<Candidate type="Path">
+						<Value>Properties\Default.rd.xml</Value>
+					</Candidate>
+				</NamedResource>
+			</ResourceMapSubtree>
+			<ResourceMapSubtree name="WinMetadata">
+				<NamedResource name="Windows.winmd" uri="ms-resource://63187PaulysHotelandRecord.WordSpell2/Files/WinMetadata/Windows.winmd">
+					<Candidate type="Path">
+						<Value>WinMetadata\Windows.winmd</Value>
+					</Candidate>
+				</NamedResource>
+			</ResourceMapSubtree>
+		</ResourceMapSubtree>
+	</ResourceMap>
+</PriInfo>

@@ -1,0 +1,10 @@
+/out:"E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\obj\ARM\Master\ilc\intermediate\SgGenerated\\"
+/int:"E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\obj\ARM\Master\ilc\intermediate\\"
+/ref:"E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\obj\ARM\Master\ilc\intermediate\PreMergeILTransformed\\"
+/ref:"E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\obj\ARM\Master\ilc\intermediate\TransformedSRWR\\"
+/ref:"E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\obj\ARM\Master\ilc\in\\"
+/ref:"E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\obj\ARM\Master\ilc\in\\"
+/ref:"E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\obj\ARM\Master\ilc\in\\"
+/ref:"C:\Program Files (x86)\MSBuild\15.0\.Net\.NetNative\15.0.24211\ARM\ilc\lib\Private\\"
+/ref:"E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\obj\ARM\Master\ilc\in\WinMetadata\\"
+/ca:System.Private.CoreLib

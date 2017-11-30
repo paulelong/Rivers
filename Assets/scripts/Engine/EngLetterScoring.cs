@@ -1,24 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
+//using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
-using System.Text;
-using UnityEngine;
 using System.IO;
+using System.Text;
+using System.Xml.Serialization;
+using UnityEngine;
 
 namespace WordSpell
 {
+    [XmlRootAttribute("StringList")]
+    public class SerializableStringList
+    {
+        public List<string> list = new List<string>();
+
+        public void Add(string s)
+        {
+            list.Add(s);
+        }
+
+        public int BinarySearch(string s)
+        {
+            return list.BinarySearch(s);
+        }
+    }
+
     class EngLetterScoring
     {
-        const string PartialLookupCache = "LookupCache.lst";
+        const string PartialLookupCache = "LookupCache.xml";
         const string DictionaryCache = "DictionaryCache.lst";
+#if UNITY_EDITOR
         static System.Random r = new System.Random(21);
+#else
+        static System.Random r = new System.Random();
+#endif
 
         static char[] Vowels = { 'A', 'E', 'I', 'O', 'U' };
         static char[] RequiredLettersForWord = { 'a', 'e', 'i', 'o', 'u', 'y' };
 
         static private List<string> DictionaryLookup = new List<string>();
-        static private List<string> PartialLookup = new List<string>();
+        static private SerializableStringList PartialLookup = new SerializableStringList();
 
         static public void LoadDictionary()
         {
@@ -37,110 +58,58 @@ namespace WordSpell
             }
 
             CreatePartialLookup();
-
-            // Build partial list for each unique letter combination.
-            //foreach (string s in DictionaryLookup)
-            //{
-            //    for (int i = 1; i <= s.Length; i++)
-            //    {
-            //        string partial = s.Substring(0, i);
-            //        if (PartialLookup.BinarySearch(partial) < 0)
-            //        {
-            //            PartialLookup.Add(partial);
-            //        }
-            //    }
-            //}
         }
-            //    try
-            //    {
-            //        DictionaryLookup = await WordWarLogic.LoadList<List<string>>(DictionaryCache);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Announcment a = new Announcment(DictionaryCache + " " + ex.Message);
-            //        await a.ShowAsync();
-            //    }
-
-            //    if(DictionaryLookup == null || DictionaryLookup.Count <= 0)
-            //    {
-            //        DictionaryLookup = new List<string>();
-
-            //        var folders = (await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFoldersAsync()).To‌​List();
-            //        StorageFile file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(@"Dictionaries\EngDictA.txt");
-
-            //        IList<String> dictlines = await FileIO.ReadLinesAsync(file);
-
-            //        foreach (String s in dictlines)
-            //        {
-            //            if (!s.Contains("'") && s.Length > 2 && s.IndexOfAny(RequiredLettersForWord) >= 0)
-            //            {
-            //                DictionaryLookup.Add(s);
-            //            }
-            //        }
-
-            //        try
-            //        {
-            //            await WordWarLogic.SaveList<List<string>>(DictionaryLookup, DictionaryCache);
-            //        }
-
-            //        catch (Exception ex)
-            //        {
-            //            Announcment a = new Announcment(DictionaryCache + " " + ex.Message);
-            //            await a.ShowAsync();
-            //        }
-            //    }
-
-            //    // Build partial list for each unique letter combination.
-            //    foreach (string s in DictionaryLookup)
-            //    {
-            //        for (int i = 1; i <= s.Length; i++)
-            //        {
-            //            string partial = s.Substring(0, i);
-            //            if (PartialLookup.BinarySearch(partial) < 0)
-            //            {
-            //                PartialLookup.Add(partial);
-            //            }
-            //        }
-            //    }
-            //}
-
-        static public bool IsWord(string word)
-        {
-//            DictionaryLookup.BinarySearch(word);
-            return (DictionaryLookup.BinarySearch(word.ToLower()) >= 0);
-        }
-
+ 
         static public void CreatePartialLookup()
         {
             string filePath = Application.persistentDataPath + "/" + PartialLookupCache;
             // Is it cached already?
             if (File.Exists(filePath))
             {
-                BinaryFormatter bf = new BinaryFormatter();
-                FileStream file = File.Open(filePath, FileMode.Open);
-                PartialLookup = (List<string>)bf.Deserialize(file);
-                file.Close();
+                FileStream fs = new FileStream(filePath, FileMode.Open);
+                try
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
+                    PartialLookup = (SerializableStringList)xs.Deserialize(fs);
+                    fs.Close();
+                }
+                catch(System.Xml.XmlException x)
+                {
+                    // Something went wrong, so let's rebuilld
+                    fs.Close();
+                    BuildPartialLookup(filePath);
+                }
             }
             else
             {
-                // Build partial list for each unique letter combination.
-                foreach (string s in DictionaryLookup)
+                BuildPartialLookup(filePath);
+            }
+        }
+
+        static private void BuildPartialLookup(string filePath)
+        {
+            // Build partial list for each unique letter combination.
+            foreach (string s in DictionaryLookup)
+            {
+                for (int i = 1; i <= s.Length; i++)
                 {
-                    for (int i = 1; i <= s.Length; i++)
+                    string partial = s.Substring(0, i);
+                    if (PartialLookup.BinarySearch(partial) < 0)
                     {
-                        string partial = s.Substring(0, i);
-                        if (PartialLookup.BinarySearch(partial) < 0)
-                        {
-                            PartialLookup.Add(partial);
-                        }
+                        PartialLookup.Add(partial);
                     }
                 }
-
-                BinaryFormatter bf = new BinaryFormatter();
-                FileStream file = File.Create(filePath);
-                bf.Serialize(file, PartialLookup);
-                file.Close();
             }
+
+            XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
+            TextWriter tw = new StreamWriter(filePath);
+            xs.Serialize(tw, PartialLookup);
+            tw.Close();
+        }
+
+        static public bool IsWord(string word)
+        {
+            return (DictionaryLookup.BinarySearch(word.ToLower()) >= 0);
         }
 
         internal static bool IsWord(StringBuilder curword)

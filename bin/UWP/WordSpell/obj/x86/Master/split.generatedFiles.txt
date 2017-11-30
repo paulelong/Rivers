@@ -1,0 +1,2 @@
+obj\x86\Master\split.pri
+obj\x86\Master\split.map.txt

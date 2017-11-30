@@ -1,0 +1,2 @@
+obj\x64\Master\Upload\filemap.pri
+obj\x64\Master\Upload\filemap.map.txt

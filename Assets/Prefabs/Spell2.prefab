@@ -209,7 +209,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Letter Hint
+  m_Text: 'Swap
+
+'
 --- !u!114 &114227881147423698
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -408,7 +410,7 @@ MonoBehaviour:
   m_MinHeight: -1
   m_PreferredWidth: -1
   m_PreferredHeight: -1
-  m_FlexibleWidth: -1
+  m_FlexibleWidth: 0.13
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
 --- !u!114 &114831852043626584
@@ -487,7 +489,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.73369527, g: 0.6960965, b: 0.75735295, a: 1}
     m_PressedColor: {r: 0.5565037, g: 0.2509191, b: 0.875, a: 1}
-    m_DisabledColor: {r: 0.6838235, g: 0.6838235, b: 0.6838235, a: 0.5019608}
+    m_DisabledColor: {r: 0.4852941, g: 0.48172575, b: 0.48172575, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:

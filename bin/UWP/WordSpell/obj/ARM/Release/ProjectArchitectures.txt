@@ -1,0 +1,1 @@
+E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\WordSpell.csproj;arm

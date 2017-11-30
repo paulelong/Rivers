@@ -126,8 +126,20 @@ public class Board : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                SubmitWord();
+                if(InputCanvas.activeSelf)
+                {
+                    SelectLetterToChangeDone();
+                }
+                else
+                {
+                    SubmitWord();
+                }
             }
+        }
+
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            WSGameState.Save();
         }
     }
 
@@ -326,23 +338,15 @@ public class Board : MonoBehaviour
             c.text = "";
         }
 
-        //UnityEngine.UI.Image i = item.Find(SpellImagePath).GetComponent<UnityEngine.UI.Image>();
-        //i.sprite = si.Image;
-
-        // Add the callback so we know we've been selected
-        //EventTrigger trigger = i.gameObject.GetComponent<EventTrigger>();
-
-        //EventTrigger.Entry entry = new EventTrigger.Entry();
-        //entry.eventID = EventTriggerType.PointerClick;
-        //entry.callback.AddListener((eventData) => { SelectSpell((PointerEventData)eventData); });
-        //trigger.triggers.Add(entry);
-
         UnityEngine.UI.Image i = item.Find(SpellImagePath).GetComponent<UnityEngine.UI.Image>();
         i.sprite = si.Image;
 
         Button b = item.Find(SpellImagePath).GetComponent<Button>();
-        //b.targetGraphic = si.Image;
         b.onClick.AddListener(delegate { SelectSpell(si.FriendlyName, awarded); } );
+        if(!awarded && si.MannaPoints > WSGameState.Manna)
+        {
+            b.enabled = false;
+        }
     }
 
     public void ClearSpellList(ListBox<GridLayoutGroup> spellbox)
@@ -382,29 +386,24 @@ public class Board : MonoBehaviour
         Spells.ReadySpell(spellName, awarded, SpellSucceded);
     }
 
-    //void SelectSpell(PointerEventData eventData)
-    //{
-    //    SpellCanvas.SetActive(false);
-
-    //    // Awarded spells need to be removed from the list
-    //    string x = eventData.pointerCurrentRaycast.gameObject.transform.parent.parent.parent.parent.name;
-    //    Spells.ReadySpell(eventData.pointerCurrentRaycast.gameObject.transform.parent.name, x == "AwardedSpells", SpellSucceded);
-    //}
-
-    public void SelectLetterToChnage()
+    public void SelectLetterToChange()
     {
-        MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = "Input a letter, then OK, to change the tile you selected.";
+        Text textField = InputCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
+        textField.text = "Input a letter, then OK, to change the tile you selected.";
 
         InputCanvas.SetActive(true);
+
+        InputField inf = InputCanvas.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<UnityEngine.UI.InputField>();
+        EventSystem.current.SetSelectedGameObject(inf.gameObject);
     }
 
     public void SelectLetterToChangeDone()
     {
         InputCanvas.SetActive(false);
 
-        Text t = InputCanvas.transform.GetChild(0).GetChild(1).GetChild(2).GetComponent<Text>();
+        Text t = InputCanvas.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(2).GetComponent<Text>();
 
-        Spells.CastSpell(t.text);
+        Spells.CastSpell(t.text.ToUpper());
     }
 
     void SpellSucceded()

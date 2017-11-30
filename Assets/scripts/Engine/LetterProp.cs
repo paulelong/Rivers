@@ -209,10 +209,10 @@ namespace WordSpell
         {
             NoramlMat = (Material)Resources.Load("Normal");
             LetterDoubleMat = (Material)Resources.Load("Double Letter");
-            LetterTripleMat = (Material)Resources.Load("Triple Letter");
+            LetterTripleMat = (Material)Resources.Load("LavenderGem");
             WordDoubleMat = (Material)Resources.Load("Double Word");
-            WordTripleMat = (Material)Resources.Load("Triple Word");
-            ManaMat = (Material)Resources.Load("Mana");
+            WordTripleMat = (Material)Resources.Load("PurpleGem");
+            ManaMat = (Material)Resources.Load("TurquoiseGem");
             BurningMat = (Material)Resources.Load("Burnt");
 
             LavaLight = (GameObject)Resources.Load("LavalLight");

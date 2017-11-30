@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("WordSpell")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DefaultCompany")]
+[assembly: AssemblyCompany("Paulys Hotel and Recording Studio")]
 [assembly: AssemblyProduct("WordSpell")]
-[assembly: AssemblyCopyright("Copyright © DefaultCompany 2015")]
+[assembly: AssemblyCopyright("Copyright © Paulys Hotel and Recording Studio 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -65,18 +65,18 @@ namespace WordSpell
         {
             { new SpellInfo { spellType = SpellInfo.SpellType.DestroyLetter, FriendlyName = "Snipe",    MannaPoints = 10, SpellLevel = 13, Immediate = false, ImageName = "Snipe" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.DestroyGroup, FriendlyName = "Bomb",      MannaPoints = 8, SpellLevel = 8, Immediate = false, ImageName = "Bomb" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.ChangeToVowel, FriendlyName = "Vowelize", MannaPoints = 7, SpellLevel = 10, Immediate = false }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint,     FriendlyName = "Hint",          MannaPoints = 10, SpellLevel = 11, Immediate = true,ImageName = "Hint" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2,    FriendlyName = "Hint++",       MannaPoints = 14, SpellLevel = 14, Immediate = true,ImageName = "HintPlus" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.Burn,         FriendlyName = "Burn" ,             MannaPoints = 6, SpellLevel = 6, Immediate = false, ImageName = "Burn"  }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap,   FriendlyName = "Swap",        MannaPoints = 6, SpellLevel = 5, Immediate = false, ImageName = "Swap" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 10, SpellLevel = 15, Immediate = true }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 12, SpellLevel = 7, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.ChangeToVowel, FriendlyName = "Vowelize", MannaPoints = 7, SpellLevel = 10, Immediate = false, ImageName = "Vowelize" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint,     FriendlyName = "Hint",      MannaPoints = 10, SpellLevel = 11, Immediate = true,ImageName = "Hint" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2,    FriendlyName = "Hint++",    MannaPoints = 14, SpellLevel = 14, Immediate = true,ImageName = "HintPlus" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.Burn,         FriendlyName = "Burn" ,     MannaPoints = 6, SpellLevel = 6, Immediate = false, ImageName = "Burn"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap,   FriendlyName = "Swap",      MannaPoints = 6, SpellLevel = 5, Immediate = false, ImageName = "Swap" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 10, SpellLevel = 15, Immediate = true, ImageName = "VowelDust" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 12, SpellLevel = 7, Immediate = false, ImageName = "ConvertLetter" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.RotateCW,     FriendlyName = "Rotate CW",  MannaPoints = 3, SpellLevel = 9, Immediate = false, ImageName = "CWRotate"  }},
             { new SpellInfo { spellType = SpellInfo.SpellType.RotateCCW,    FriendlyName = "Rotate CCW",  MannaPoints = 3, SpellLevel = 9, Immediate = false, ImageName = "CCWRotate"  }},
             { new SpellInfo { spellType = SpellInfo.SpellType.Rotate180,    FriendlyName = "Rotate 180",  MannaPoints = 5, SpellLevel = 12, Immediate = false, ImageName = "Rotate180"  }},
             { new SpellInfo { spellType = SpellInfo.SpellType.HintOnLetter, FriendlyName = "Letter Hint",  MannaPoints = 15, SpellLevel = 16, Immediate = false,ImageName = "HintLet" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter,    FriendlyName = "Any Letter",  MannaPoints = 12, SpellLevel = 17, Immediate = false }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter,    FriendlyName = "Any Letter",  MannaPoints = 12, SpellLevel = 17, Immediate = false, ImageName = "AnyLetter" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.RowBGone,     FriendlyName = "Row b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false, ImageName = "RowGone" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.ColumnBGone,  FriendlyName = "Col b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false, ImageName = "ColGone" }},
         };
@@ -202,9 +202,12 @@ namespace WordSpell
                 if (awarded)
                 {
                     AwardedSpells.Remove(NextSpell);
+                    LastManaCost = 0;
                 }
-
-                LastManaCost = NextSpell.MannaPoints;
+                else
+                {
+                    LastManaCost = -NextSpell.MannaPoints;
+                }
 
                 spellCompelteDelegate();
             }
@@ -281,8 +284,24 @@ namespace WordSpell
                     }
                     break;
                 case SpellInfo.SpellType.ConvertLetter:
-                    ConvertLetterTile(lp);
-                    CompleteSpell();
+                    switch(state)
+                    {
+                        case 0:
+                            ConvertLetterTile(lp);
+                            state++;
+                            break;
+                        case 1:
+                            foreach (LetterProp lp in RandomLetterList)
+                            {
+                                lp.UpdateLetterDisplay();
+                                lp.FlipTileForward();
+                                lp.TileIdle();
+                            }
+                            CompleteSpell();
+                            RandomLetterList.Clear();
+                            state = 0;
+                            break;
+                    }
                     break;
                 case SpellInfo.SpellType.WordHint:
                     GetBestHint(10);
@@ -309,13 +328,17 @@ namespace WordSpell
                     switch(state)
                     {
                         case 0:
-                            WSGameState.boardScript.SelectLetterToChnage();
+                            WSGameState.boardScript.SelectLetterToChange();
                             state++;
                             break;
                         case 1:
-                            WSGameState.boardScript.SelectLetterToChangeDone();
+                            lp.FlipTileBack();
                             lp.letter = (byte)s[0];
+                            state++;
+                            break;
+                        case 2:
                             lp.UpdateLetterDisplay();
+                            lp.FlipTileForward();
                             CompleteSpell();
                             break;
                     }
@@ -336,37 +359,6 @@ namespace WordSpell
                     break;
             }
 
-        }
-
-        public static void FinishSpellAnim()
-        {
-            if(NextSpell != null)
-            {
-                switch (NextSpell.spellType)
-                {
-                    case SpellInfo.SpellType.DestroyLetter:
-                        break;
-                    case SpellInfo.SpellType.DestroyGroup:
-                        CastSpell();
-                        break;
-                    case SpellInfo.SpellType.RandomVowels:
-                        foreach (LetterProp lp in RandomLetterList)
-                        {
-                            lp.UpdateLetterDisplay();
-                            lp.FlipTileForward();
-                            lp.TileIdle();
-                        }
-                        CompleteSpell();
-                        RandomLetterList.Clear();
-                        break;
-                    case SpellInfo.SpellType.ChangeToVowel:
-                        lp.UpdateLetterDisplay();
-                        lp.FlipTileForward();
-                        lp.TileIdle();
-                        CompleteSpell();
-                        break;
-                }
-            }
         }
 
         private static void ChangeToVowel(LetterProp lp)
@@ -498,6 +490,9 @@ namespace WordSpell
         private static void ConvertLetterTile(LetterProp lp)
         {
             byte changeletter = lp.letter;
+
+            RandomLetterList.Clear();
+
             for (int i = WSGameState.gridsize - 1; i >= 0; i--)
             {
                 for (int j = WSGameState.gridsize - 1; j >= 0; j--)
@@ -505,7 +500,9 @@ namespace WordSpell
 
                     if (WSGameState.LetterPropGrid[i, j].letter == changeletter)
                     {
+                        WSGameState.LetterPropGrid[i, j].FlipTileBack();
                         WSGameState.LetterPropGrid[i, j].letter = EngLetterScoring.GetRandomLetter(false, WSGameState.GetFortune());
+                        RandomLetterList.Add(WSGameState.LetterPropGrid[i, j]);
                     }
                 }
             }
@@ -551,6 +548,8 @@ namespace WordSpell
         {
             int n = v;
             int x = 20;  // Try at most to change 20 letters
+
+            RandomLetterList.Clear();
 
             while (n > 0 && x > 0)
             {

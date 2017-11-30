@@ -1,12 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
+using System.Xml.Serialization;
+using WordSpell;
+using UnityEngine;
 
 namespace WordSpell
 {
-    class GamePersistence
+    public class GamePersistence
     {
+        private const string SaveGamePath = "WordSpellSave.xml";
+
+       // [XmlRootAttribute("Letter")]
+        public class SimpleLetter
+        {
+            public void addletter(int _i, int _j, char _letter, LetterProp.TileTypes _tt)
+            {
+                i = _i;
+                j = _j;
+                letter = _letter;
+                tt = _tt;
+            }
+
+            public int i;
+            public int j;
+            public char letter;
+            public LetterProp.TileTypes tt;
+        }
+
+        //[XmlRootAttribute("StringList")]
+        public class GameData
+        {
+            public List<SimpleLetter> grid = new List<SimpleLetter>();
+
+            public void FillGameData(LetterProp[,] LetterPropGrid)
+            {
+                for (int i = 0; i < WSGameState.gridsize; i++)
+                {
+                    for (int j = 0; j < WSGameState.gridsize; j++)
+                    {
+                        SimpleLetter sl = new SimpleLetter();
+                        sl.addletter(i, j, LetterPropGrid[i, j].ASCIIChar, LetterPropGrid[i, j].TileType);
+                        grid.Add(sl);
+                    }
+                }
+            }
+        }
+
+        class BestScoreData
+        {
+        }
+
+        internal static void SaveGame(LetterProp[,] LetterPropGrid)
+        {
+            GameData gd = new GameData();
+            gd.FillGameData(LetterPropGrid);
+
+            string filePath = Application.persistentDataPath + "/" + SaveGamePath;
+
+            try
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(GameData));
+                TextWriter tw = new StreamWriter(filePath);
+                xs.Serialize(tw, gd);
+                tw.Close();
+            }
+            catch(Exception e)
+            {
+                string s = e.Message;
+            }
+        }
 
         //internal async static Task SaveGame()
         //{

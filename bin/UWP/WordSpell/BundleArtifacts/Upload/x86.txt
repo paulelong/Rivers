@@ -1,0 +1,2 @@
+MainPackage=E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\bin\x86\Master\Upload\WordSpell_1.1.2.0_x86_Master.appx
+SymbolPackage=E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\bin\x86\Master\Upload\WordSpell_1.1.2.0_Master\WordSpell_1.1.2.0_x86_Master.appxsym

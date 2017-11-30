@@ -8,12 +8,15 @@ Assets\Wide310x150Logo.scale-200.png
 Data\boot.config
 Data\globalgamemanagers
 Data\globalgamemanagers.assets
+Data\globalgamemanagers.assets.resS
 Data\level0
 Data\managedAssemblies.txt
 Data\resources.assets
+Data\resources.assets.resS
 Data\Resources\unity default resources
 Data\Resources\unity_builtin_extra
 Data\sharedassets0.assets
 Data\sharedassets0.assets.resS
+Data\sharedassets0.resource
 Properties\Default.rd.xml
 Resource.res

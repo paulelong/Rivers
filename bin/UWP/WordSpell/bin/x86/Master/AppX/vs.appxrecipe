@@ -19,7 +19,7 @@
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
     <LayoutDir>E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\bin\x86\Master\AppX</LayoutDir>
-    <RegisteredManifestChecksum>5D77189169EAC971D5A1F6DF005E1BFF4F5C33C5D832D45B79DDE2D9090C69A6</RegisteredManifestChecksum>
+    <RegisteredManifestChecksum>0775484EC74FD13D31B2D1FC046F5F08B1640DFB6563E263A404A46BA5ED89F7</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>WordSpell_1.0.0.0_x86__pzq3xp76mxafg</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>WordSpell_pzq3xp76mxafg!App</RegisteredUserModeAppID>
     <RegisteredPackageID>WordSpell</RegisteredPackageID>
@@ -31,13 +31,13 @@
     <AppXManifest Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\bin\x86\Master\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2017-11-17T22:54:27.995</Modified>
+      <Modified>2017-11-29T00:41:18.364</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\bin\x86\Master\WordSpell.exe">
       <PackagePath>entrypoint\WordSpell.exe</PackagePath>
-      <Modified>2017-11-17T22:53:14.854</Modified>
+      <Modified>2017-11-29T00:38:29.460</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Paul\.nuget\packages\microsoft.applicationinsights\1.0.0\lib\portable-win81+wpa81\Microsoft.ApplicationInsights.dll">
       <PackagePath>Microsoft.ApplicationInsights.dll</PackagePath>
@@ -463,45 +463,45 @@
       <PackagePath>System.Xml.XmlSerializer.dll</PackagePath>
       <Modified>2015-12-30T20:25:12.554</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityEngineProxy.dll">
+    <AppxPackagedFile Include="E:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityEngineProxy.dll">
       <PackagePath>UnityEngineProxy.dll</PackagePath>
-      <Modified>2017-08-18T18:53:46.000</Modified>
+      <Modified>2017-10-10T09:09:28.000</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Unprocessed\WinRTLegacy.dll">
       <PackagePath>WinRTLegacy.dll</PackagePath>
-      <Modified>2017-08-18T18:52:32.000</Modified>
+      <Modified>2017-10-10T09:06:06.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityPlayer.dll">
+    <AppxPackagedFile Include="E:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityPlayer.dll">
       <PackagePath>UnityPlayer.dll</PackagePath>
-      <Modified>2017-08-18T18:53:48.000</Modified>
+      <Modified>2017-10-10T09:09:30.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\BridgeInterface.dll">
+    <AppxPackagedFile Include="E:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\BridgeInterface.dll">
       <PackagePath>BridgeInterface.dll</PackagePath>
-      <Modified>2017-08-18T18:53:44.000</Modified>
+      <Modified>2017-10-10T09:09:26.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityEngineDelegates.dll">
+    <AppxPackagedFile Include="E:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityEngineDelegates.dll">
       <PackagePath>UnityEngineDelegates.dll</PackagePath>
-      <Modified>2017-08-18T18:53:46.000</Modified>
+      <Modified>2017-10-10T09:09:26.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\BridgeInterface.winmd">
+    <AppxPackagedFile Include="E:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\BridgeInterface.winmd">
       <PackagePath>BridgeInterface.winmd</PackagePath>
-      <Modified>2017-08-18T18:54:46.000</Modified>
+      <Modified>2017-10-10T09:10:24.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityEngineDelegates.winmd">
+    <AppxPackagedFile Include="E:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityEngineDelegates.winmd">
       <PackagePath>UnityEngineDelegates.winmd</PackagePath>
-      <Modified>2017-08-18T18:54:48.000</Modified>
+      <Modified>2017-10-10T09:10:26.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityPlayer.winmd">
+    <AppxPackagedFile Include="E:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\UnityPlayer.winmd">
       <PackagePath>UnityPlayer.winmd</PackagePath>
-      <Modified>2017-08-18T18:54:50.000</Modified>
+      <Modified>2017-10-10T09:10:28.000</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\WinRTBridge.winmd">
+    <AppxPackagedFile Include="E:\Program Files\Unity\Editor\Data\PlaybackEngines\MetroSupport\Players\UAP\dotnet\x86\Master\WinRTBridge.winmd">
       <PackagePath>WinRTBridge.winmd</PackagePath>
-      <Modified>2017-08-18T18:54:50.000</Modified>
+      <Modified>2017-10-10T09:10:28.000</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Resource.res">
       <PackagePath>Resource.res</PackagePath>
-      <Modified>2017-11-17T22:53:01.179</Modified>
+      <Modified>2017-11-29T00:38:10.907</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
@@ -539,43 +539,55 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\boot.config">
       <PackagePath>Data\boot.config</PackagePath>
-      <Modified>2017-11-17T22:52:30.538</Modified>
+      <Modified>2017-11-29T00:36:47.025</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\globalgamemanagers">
       <PackagePath>Data\globalgamemanagers</PackagePath>
-      <Modified>2017-11-17T22:51:45.543</Modified>
+      <Modified>2017-11-29T00:35:10.902</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\level0">
       <PackagePath>Data\level0</PackagePath>
-      <Modified>2017-11-17T22:51:43.828</Modified>
+      <Modified>2017-11-29T00:35:08.339</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\Resources\unity default resources">
       <PackagePath>Data\Resources\unity default resources</PackagePath>
-      <Modified>2017-08-18T16:17:50.000</Modified>
+      <Modified>2017-10-10T06:06:54.000</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\Resources\unity_builtin_extra">
       <PackagePath>Data\Resources\unity_builtin_extra</PackagePath>
-      <Modified>2017-11-17T22:52:30.536</Modified>
+      <Modified>2017-11-29T00:36:47.022</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\globalgamemanagers.assets">
       <PackagePath>Data\globalgamemanagers.assets</PackagePath>
-      <Modified>2017-11-17T22:51:45.905</Modified>
+      <Modified>2017-11-29T00:35:11.506</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\resources.assets">
       <PackagePath>Data\resources.assets</PackagePath>
-      <Modified>2017-11-17T22:51:45.930</Modified>
+      <Modified>2017-11-29T00:35:17.875</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\sharedassets0.assets">
       <PackagePath>Data\sharedassets0.assets</PackagePath>
-      <Modified>2017-11-17T22:52:23.128</Modified>
+      <Modified>2017-11-29T00:36:09.212</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\managedAssemblies.txt">
-      <PackagePath>Data\managedAssemblies.txt</PackagePath>
-      <Modified>2017-11-17T22:53:01.049</Modified>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\globalgamemanagers.assets.resS">
+      <PackagePath>Data\globalgamemanagers.assets.resS</PackagePath>
+      <Modified>2017-11-29T00:35:11.499</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\resources.assets.resS">
+      <PackagePath>Data\resources.assets.resS</PackagePath>
+      <Modified>2017-11-29T00:35:17.867</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\sharedassets0.assets.resS">
       <PackagePath>Data\sharedassets0.assets.resS</PackagePath>
-      <Modified>2017-11-17T22:52:23.122</Modified>
+      <Modified>2017-11-29T00:36:09.203</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\managedAssemblies.txt">
+      <PackagePath>Data\managedAssemblies.txt</PackagePath>
+      <Modified>2017-11-29T00:38:10.546</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Data\sharedassets0.resource">
+      <PackagePath>Data\sharedassets0.resource</PackagePath>
+      <Modified>2017-11-29T00:36:09.228</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.15063.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -584,43 +596,207 @@
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\bin\x86\Master\resources.pri">
       <PackagePath>resources.pri</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2017-11-17T22:53:17.487</Modified>
+      <Modified>2017-11-29T00:38:33.551</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.TilemapModule.dll">
+      <PackagePath>UnityEngine.TilemapModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:13.518</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.TextRenderingModule.dll">
+      <PackagePath>UnityEngine.TextRenderingModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:13.589</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UIModule.dll">
+      <PackagePath>UnityEngine.UIModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:13.742</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UIElementsModule.dll">
+      <PackagePath>UnityEngine.UIElementsModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:13.867</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.SpriteMaskModule.dll">
+      <PackagePath>UnityEngine.SpriteMaskModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:13.912</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.ScreenCaptureModule.dll">
+      <PackagePath>UnityEngine.ScreenCaptureModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:13.962</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.PhysicsModule.dll">
+      <PackagePath>UnityEngine.PhysicsModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.058</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.TerrainPhysicsModule.dll">
+      <PackagePath>UnityEngine.TerrainPhysicsModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.101</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.TerrainModule.dll">
+      <PackagePath>UnityEngine.TerrainModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.159</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.StyleSheetsModule.dll">
+      <PackagePath>UnityEngine.StyleSheetsModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.206</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UNETModule.dll">
+      <PackagePath>UnityEngine.UNETModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.274</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.VRModule.dll">
+      <PackagePath>UnityEngine.VRModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.365</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.VideoModule.dll">
+      <PackagePath>UnityEngine.VideoModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.441</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.VehiclesModule.dll">
+      <PackagePath>UnityEngine.VehiclesModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.477</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.WindModule.dll">
+      <PackagePath>UnityEngine.WindModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.518</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.WebModule.dll">
+      <PackagePath>UnityEngine.WebModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.576</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UnityWebRequestAudioModule.dll">
+      <PackagePath>UnityEngine.UnityWebRequestAudioModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.614</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UnityConnectModule.dll">
+      <PackagePath>UnityEngine.UnityConnectModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.726</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UnityAnalyticsModule.dll">
+      <PackagePath>UnityEngine.UnityAnalyticsModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.777</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UnityWebRequestWWWModule.dll">
+      <PackagePath>UnityEngine.UnityWebRequestWWWModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.833</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UnityWebRequestTextureModule.dll">
+      <PackagePath>UnityEngine.UnityWebRequestTextureModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.881</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UnityWebRequestModule.dll">
+      <PackagePath>UnityEngine.UnityWebRequestModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.934</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.ClothModule.dll">
+      <PackagePath>UnityEngine.ClothModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:14.972</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.AudioModule.dll">
+      <PackagePath>UnityEngine.AudioModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:15.050</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.ARModule.dll">
+      <PackagePath>UnityEngine.ARModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:15.124</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.DirectorModule.dll">
+      <PackagePath>UnityEngine.DirectorModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:15.180</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.CrashReportingModule.dll">
+      <PackagePath>UnityEngine.CrashReportingModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:15.219</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.CoreModule.dll">
+      <PackagePath>UnityEngine.CoreModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:15.884</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.AccessibilityModule.dll">
+      <PackagePath>UnityEngine.AccessibilityModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:15.916</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\Assembly-CSharp.dll">
       <PackagePath>Assembly-CSharp.dll</PackagePath>
-      <Modified>2017-11-17T22:54:25.968</Modified>
+      <Modified>2017-11-29T00:41:16.001</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.AnimationModule.dll">
+      <PackagePath>UnityEngine.AnimationModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.069</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.AIModule.dll">
+      <PackagePath>UnityEngine.AIModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.132</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.dll">
       <PackagePath>UnityEngine.dll</PackagePath>
-      <Modified>2017-11-17T22:54:26.845</Modified>
+      <Modified>2017-11-29T00:37:28.726</Modified>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.Analytics.dll">
-      <PackagePath>UnityEngine.Analytics.dll</PackagePath>
-      <Modified>2017-11-17T22:54:26.880</Modified>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.ParticlesLegacyModule.dll">
+      <PackagePath>UnityEngine.ParticlesLegacyModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.180</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.JSONSerializeModule.dll">
+      <PackagePath>UnityEngine.JSONSerializeModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.225</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.Physics2DModule.dll">
+      <PackagePath>UnityEngine.Physics2DModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.300</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.PerformanceReportingModule.dll">
+      <PackagePath>UnityEngine.PerformanceReportingModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.334</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.ParticleSystemModule.dll">
+      <PackagePath>UnityEngine.ParticleSystemModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.413</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.GridModule.dll">
+      <PackagePath>UnityEngine.GridModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.463</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.GameCenterModule.dll">
+      <PackagePath>UnityEngine.GameCenterModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.532</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.InputModule.dll">
+      <PackagePath>UnityEngine.InputModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.583</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.IMGUIModule.dll">
+      <PackagePath>UnityEngine.IMGUIModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.670</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.ImageConversionModule.dll">
+      <PackagePath>UnityEngine.ImageConversionModule.dll</PackagePath>
+      <Modified>2017-11-29T00:41:16.726</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.Timeline.dll">
       <PackagePath>UnityEngine.Timeline.dll</PackagePath>
-      <Modified>2017-11-17T22:54:26.976</Modified>
+      <Modified>2017-11-29T00:41:16.845</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\nunit.framework.dll">
       <PackagePath>nunit.framework.dll</PackagePath>
-      <Modified>2017-11-17T22:54:27.090</Modified>
+      <Modified>2017-11-29T00:41:16.982</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.UI.dll">
       <PackagePath>UnityEngine.UI.dll</PackagePath>
-      <Modified>2017-11-17T22:54:27.280</Modified>
+      <Modified>2017-11-29T00:41:17.177</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.Analytics.dll">
+      <PackagePath>UnityEngine.Analytics.dll</PackagePath>
+      <Modified>2017-11-29T00:41:17.232</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.HoloLens.dll">
       <PackagePath>UnityEngine.HoloLens.dll</PackagePath>
-      <Modified>2017-11-17T22:54:27.337</Modified>
+      <Modified>2017-11-29T00:41:17.311</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\UnityEngine.Networking.dll">
       <PackagePath>UnityEngine.Networking.dll</PackagePath>
-      <Modified>2017-11-17T22:54:27.488</Modified>
+      <Modified>2017-11-29T00:41:17.492</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="E:\users\Paul\Documents\src\WordSpell\bin\UWP\WordSpell\bin\x86\Master\Core\WordSpell.exe">
       <PackagePath>WordSpell.exe</PackagePath>
-      <Modified>2017-11-17T22:54:27.985</Modified>
+      <Modified>2017-11-29T00:41:18.349</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+
 namespace WordSpell
 {
     partial class WSGameState
@@ -58,8 +59,12 @@ namespace WordSpell
 
         public static int Manna = 0;
 
-        //private static int[] Levels = { 0, 25, 60, 100, 160, 230, 310, 400, 500, 650, 850, 1000, 1300, 1600, 2000, 2500, 3000, 4600, 5200, 10000, 20000, 30000  };
+#if UNITY_EDITOR
         private static int[] Levels = { 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 1300, 1600, 2000, 5000, 10000 };
+#else
+        private static int[] Levels = { 0, 25, 60, 100, 160, 230, 310, 400, 500, 650, 850, 1000, 1300, 1600, 2000, 2500, 3000, 4600, 5200, 10000, 20000, 30000  };
+#endif
+
         private static bool levelup = false;
 
         public static int totalScore;
@@ -121,6 +126,11 @@ namespace WordSpell
             return FortuneLevel.Bad;
         }
 
+        internal static void Save()
+        {
+            GamePersistence.SaveGame(LetterPropGrid);
+        }
+
         #region Init
 
         public static void InitGameGlobal()
@@ -143,8 +153,10 @@ namespace WordSpell
             Replay();
 
             // Stuff useful for development, don't ship
+#if UNITY_EDITOR
             Spells.AwardAllSpells();
-            r = new System.Random(20);
+#endif
+            r = new System.Random();
 
             LetterProp.InitProbability(level);
 
@@ -153,12 +165,11 @@ namespace WordSpell
             Spells.UpdateSpellsForLevel(level);
         }
 
-        #endregion init
+#endregion init
 
         private static void UpdateManaScore()
         {
             boardScript.SetMana(Manna.ToString());
-            //MannaScoreText.Text = "M: " + Manna.ToString();
         }
 
         internal static void UpdateFortune()
@@ -188,26 +199,6 @@ namespace WordSpell
         {
             LetterProp lp = LetterPropGrid[i, j];
 
-            //LetterTipPopup.IsOpen = false;
-
-            //if (NextSpell != null)
-            //{
-            //    SpellInfo.SpellOut so = CastSpell(NextSpell, lp);
-            //    lp.SpellInfo = so.si;
-            //    if (so.si == null && so.worked)
-            //    {
-            //        if (freeSpell)
-            //        {
-            //            Spells.RemoveAwardedSpells(NextSpell);
-            //        }
-            //        else
-            //        {
-            //            ChangeManna(-NextSpell.MannaPoints);
-            //        }
-            //    }
-            //    NextSpell = so.si;
-            //}
-            //else
             if(!Spells.EvalSpell(lp))
             {
                 if (SelLetterList.Count >= 0)
