@@ -9,11 +9,36 @@ using UnityEngine;
 
 namespace WordSpell
 {
+    public class WordScoreItem
+    {
+        public string word { get; set; }
+        public string wordscorestring { get; set; }
+        public int score { get; set; }
+        public int simplescore { get; set; }
+    }
+
+    public class GameStats
+    {
+        public int score = 0;
+        public int level = 1;
+        public int mana = 0;
+        public List<WordScoreItem> history = new List<WordScoreItem>();
+        public List<WordScoreItem> fortune = new List<WordScoreItem>();
+    }
+
+    public class OverallStats
+    {
+        public List<WordScoreItem> BestWordScores = new List<WordScoreItem>();
+        public List<WordScoreItem> BestWordScoresSimple = new List<WordScoreItem>();
+        public List<WordScoreItem> LongestWords = new List<WordScoreItem>();
+        public List<int> BestGameScores = new List<int>();
+    }
+
     public class GamePersistence
     {
         private const string SaveGamePath = "WordSpellSave.xml";
 
-       // [XmlRootAttribute("Letter")]
+        // [XmlRootAttribute("Letter")]
         public class SimpleLetter
         {
             public void addletter(int _i, int _j, char _letter, LetterProp.TileTypes _tt)
@@ -34,9 +59,12 @@ namespace WordSpell
         public class GameData
         {
             public List<SimpleLetter> grid = new List<SimpleLetter>();
+            public GameStats gs = new GameStats();
 
-            public void FillGameData(LetterProp[,] LetterPropGrid)
+            public void FillGameData(LetterProp[,] LetterPropGrid, GameStats _gs)
             {
+                gs = _gs;
+
                 for (int i = 0; i < WSGameState.gridsize; i++)
                 {
                     for (int j = 0; j < WSGameState.gridsize; j++)
@@ -53,10 +81,10 @@ namespace WordSpell
         {
         }
 
-        internal static void SaveGame(LetterProp[,] LetterPropGrid)
+        internal static void SaveGame(LetterProp[,] LetterPropGrid, GameStats gs)
         {
             GameData gd = new GameData();
-            gd.FillGameData(LetterPropGrid);
+            gd.FillGameData(LetterPropGrid, gs);
 
             string filePath = Application.persistentDataPath + "/" + SaveGamePath;
 

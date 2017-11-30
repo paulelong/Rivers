@@ -343,7 +343,7 @@ public class Board : MonoBehaviour
 
         Button b = item.Find(SpellImagePath).GetComponent<Button>();
         b.onClick.AddListener(delegate { SelectSpell(si.FriendlyName, awarded); } );
-        if(!awarded && si.MannaPoints > WSGameState.Manna)
+        if(!awarded && WSGameState.EnoughMana(si.MannaPoints))
         {
             b.enabled = false;
         }
