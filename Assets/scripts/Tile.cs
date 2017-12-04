@@ -4,11 +4,20 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using WordSpell;
 
-public class Tile : MonoBehaviour, IPointerClickHandler {
+public class Tile : MonoBehaviour, IPointerClickHandler
+{
+    public AudioClip music;
+    public AudioClip music2;
+    public AudioClip SelectSound;
+
+    static AudioClip[] AmbientSongs;
+
+    System.Random r = new System.Random();
 
     int i, j;
     LetterProp lp;
     float fallrate = 0.1f;
+    float spinrate = 5f;
 
     public int I
     {
@@ -36,15 +45,20 @@ public class Tile : MonoBehaviour, IPointerClickHandler {
         }
     }
 
+    public static void LoadMusic()
+    {
+        AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
+    }
+
     // Use this for initialization
     void Start ()
     {
-
+        LoadMusic();
     }
 
     // Update is called once per frame
     void Update () {
-        if(gameObject.transform.position.y < -10)
+        if(gameObject.transform.position.y < -150)
         {
             Destroy(gameObject);
         }
@@ -71,6 +85,34 @@ public class Tile : MonoBehaviour, IPointerClickHandler {
                 lp.LetterRCount -= fallrate;
                 gameObject.transform.position += new Vector3(fallrate, 0, 0);
             }
+            if(lp.LetterRotHL > 0.01f)
+            {
+                lp.LetterRotHL -= spinrate;
+                //gameObject.transform.Rotate(axis, Time.deltaTime);
+                gameObject.transform.RotateAround(lp.LetterRotHLAxis, Vector3.up, spinrate);
+                gameObject.transform.Rotate(Vector3.up, spinrate);
+            }
+            if (lp.LetterRotHR > 0.01f)
+            {
+                lp.LetterRotHR -= spinrate;
+                //gameObject.transform.Rotate(axis, -spinrate);
+                gameObject.transform.RotateAround(lp.LetterRotHRAxis, Vector3.up, -spinrate);
+                gameObject.transform.Rotate(Vector3.up, -spinrate);
+            }
+            if (lp.LetterRotVU > 0.01f)
+            {
+                lp.LetterRotVU -= spinrate;
+                //gameObject.transform.Rotate(axis, Time.deltaTime);
+                gameObject.transform.RotateAround(lp.LetterRotVUAxis, Vector3.right, spinrate);
+                gameObject.transform.Rotate(Vector3.right, spinrate);
+            }
+            if (lp.LetterRotVD > 0.01f)
+            {
+                lp.LetterRotVD -= spinrate;
+                //gameObject.transform.Rotate(axis, -spinrate);
+                gameObject.transform.RotateAround(lp.LetterRotVDAxis, Vector3.right, -spinrate);
+                gameObject.transform.Rotate(Vector3.right, -spinrate);
+            }
         }
     }
 
@@ -91,7 +133,8 @@ public class Tile : MonoBehaviour, IPointerClickHandler {
     {
         WSGameState.LetterClick(I, J);
         AudioSource audio = GetComponent<AudioSource>();
-        audio.Play();
+        PlaySelect();
+        Debug.Log(lp.ASCIIString + " " + I.ToString() + "-" + J.ToString() + " " + lp.I + "-" + lp.J+  " " + lp.Tf.position);
     }
 
     public void FinishSpell()
@@ -99,4 +142,26 @@ public class Tile : MonoBehaviour, IPointerClickHandler {
         Spells.CastSpell();
     }
 
+    public void NewSong()
+    {
+        if(AmbientSongs != null)
+        {
+            int rs = r.Next(AmbientSongs.Length);
+            AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
+            asrc.clip = AmbientSongs[rs];
+            asrc.PlayDelayed(4);
+        }
+    }
+
+    public void PlayMusic()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(music);
+    }
+
+    public void PlaySelect()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(SelectSound);
+    }
 }

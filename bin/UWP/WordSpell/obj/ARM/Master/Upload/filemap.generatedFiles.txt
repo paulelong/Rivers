@@ -1,2 +1,0 @@
-obj\ARM\Master\Upload\filemap.pri
-obj\ARM\Master\Upload\filemap.map.txt

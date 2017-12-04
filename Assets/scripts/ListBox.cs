@@ -33,6 +33,15 @@ namespace WordSpell
             return (listItem);
         }
 
+        public void AddText(string s)
+        {
+            Transform item = Add();
+
+            UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
+
+            t.text = s;
+        }
+
         public void Clear()
         {
             //UnityEngine.UI.VerticalLayoutGroup l = list.GetComponent(typeof(UnityEngine.UI.VerticalLayoutGroup)) as UnityEngine.UI.VerticalLayoutGroup;

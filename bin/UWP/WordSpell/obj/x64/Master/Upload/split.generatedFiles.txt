@@ -1,2 +1,0 @@
-obj\x64\Master\Upload\split.pri
-obj\x64\Master\Upload\split.map.txt

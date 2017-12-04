@@ -1,2 +1,0 @@
-obj\x64\Master\filemap.pri
-obj\x64\Master\filemap.map.txt

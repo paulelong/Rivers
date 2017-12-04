@@ -61,7 +61,7 @@ namespace WordSpell
         private const int SpellPerRow = 3;
         static System.Random r = new System.Random();
 
-        static List<SpellInfo> AllSpells = new List<SpellInfo>
+        static List<SpellInfo> allSpells = new List<SpellInfo>
         {
             { new SpellInfo { spellType = SpellInfo.SpellType.DestroyLetter, FriendlyName = "Snipe",    MannaPoints = 10, SpellLevel = 13, Immediate = false, ImageName = "Snipe" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.DestroyGroup, FriendlyName = "Bomb",      MannaPoints = 8, SpellLevel = 8, Immediate = false, ImageName = "Bomb" }},
@@ -81,13 +81,13 @@ namespace WordSpell
             { new SpellInfo { spellType = SpellInfo.SpellType.ColumnBGone,  FriendlyName = "Col b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false, ImageName = "ColGone" }},
         };
 
-        internal static void RestFoundSpells()
+        public static List<SpellInfo> AllSpells
         {
-            AwardedSpells.Clear();
+            get { return allSpells;  }
         }
 
         public static List<SpellInfo> AvailableSpells = new List<SpellInfo>();
-        public static List<SpellInfo> AwardedSpells = new List<SpellInfo>();
+        //public static List<SpellInfo> AwardedSpells = new List<SpellInfo>();
         private static SpellInfo NextSpell;
         private static LetterProp LetterSwapFirst;
         private static bool awarded = false;
@@ -95,6 +95,8 @@ namespace WordSpell
         private static int state = 0;
         private static LetterProp lp = null;
         private static List<LetterProp> RandomLetterList = new List<LetterProp>();
+
+        public static SpellInfo LastSuccessfulSpell;
 
         public static int LastManaCost { get; internal set; }
 
@@ -110,7 +112,7 @@ namespace WordSpell
 
             for (int i = v; i >= 0; i--)
             {
-                foreach (SpellInfo si in AllSpells)
+                foreach (SpellInfo si in allSpells)
                 {
                     if (si.SpellLevel <= (level + i + 5))
                     {
@@ -121,40 +123,20 @@ namespace WordSpell
 
             int itemnumber = r.Next(inplay.Count);
             SpellInfo rsi = inplay[itemnumber];
-            AwardedSpells.Add(rsi);
 
             return rsi;
         }
 
-        public static void AwardAllSpells()
-        {
-            foreach (SpellInfo si in AllSpells)
-            {
-                AwardedSpells.Add(si);
-            }
-        }
-
         public static SpellInfo FindSpell(string name)
         {
-            return( AllSpells.Find(x => (x.FriendlyName == name)) );
+            return( allSpells.Find(x => (x.FriendlyName == name)) );
         }
 
-        internal static void RemoveAwardedSpells(SpellInfo selectedSpell)
-        {
-            foreach(SpellInfo si in AwardedSpells)
-            {
-                if(si.spellType == selectedSpell.spellType)
-                {
-                    AwardedSpells.Remove(si);
-                    break;
-                }
-            }
-        }
 
         internal static void UpdateSpellsForLevel(int level)
         {
             AvailableSpells.Clear();
-            foreach (SpellInfo si in AllSpells)
+            foreach (SpellInfo si in allSpells)
             {
                 if (level >= si.SpellLevel)
                 {
@@ -201,7 +183,7 @@ namespace WordSpell
             {
                 if (awarded)
                 {
-                    AwardedSpells.Remove(NextSpell);
+                    LastSuccessfulSpell = NextSpell;
                     LastManaCost = 0;
                 }
                 else
@@ -227,9 +209,11 @@ namespace WordSpell
             {
                 case SpellInfo.SpellType.DestroyLetter:
                     SpellDestroyLetter(lp);
+                    WSGameState.boardScript.PlaySnipeSound();
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.DestroyGroup:
+                    lp.AnimationEnabled = true;
                     SpellDestroyLetterGroupSmall(lp);
                     break;
                 case SpellInfo.SpellType.RandomVowels:
@@ -242,6 +226,7 @@ namespace WordSpell
                         case 1:
                             foreach (LetterProp lp in RandomLetterList)
                             {
+                                lp.AnimationEnabled = true;
                                 lp.UpdateLetterDisplay();
                                 lp.FlipTileForward();
                                 lp.TileIdle();
@@ -253,7 +238,9 @@ namespace WordSpell
                     }
                     break;
                 case SpellInfo.SpellType.ChangeToVowel:
-                    switch(state)
+                    lp.AnimationEnabled = true;
+
+                    switch (state)
                     {
                         case 0:
                             ChangeToVowel(lp);
@@ -279,12 +266,21 @@ namespace WordSpell
                             state++;
                             break;
                         case 1:
-                            CompleteSpell(SwapLetters(lp, LetterSwapFirst));
+                            if(SwapLetters(lp, LetterSwapFirst, false))
+                            {
+                                WSGameState.boardScript.PlaySwapSound();
+
+                                SwapMovement(lp, LetterSwapFirst);
+
+                                CompleteSpell();
+                            }
                             break;
                     }
                     break;
                 case SpellInfo.SpellType.ConvertLetter:
-                    switch(state)
+                    lp.AnimationEnabled = true;
+
+                    switch (state)
                     {
                         case 0:
                             ConvertLetterTile(lp);
@@ -325,7 +321,8 @@ namespace WordSpell
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.AnyLetter:
-                    switch(state)
+                    lp.AnimationEnabled = true;
+                    switch (state)
                     {
                         case 0:
                             WSGameState.boardScript.SelectLetterToChange();
@@ -359,6 +356,59 @@ namespace WordSpell
                     break;
             }
 
+        }
+
+        private static void SwapMovement(LetterProp lp1, LetterProp lp2)
+        {
+            LetterProp _lp1, _lp2;
+
+            // On top
+            if(lp1.I == lp2.I)
+            {
+                if (lp1.J < lp2.J)
+                {
+                    _lp1 = lp1;
+                    _lp2 = lp2;
+                }
+                else
+                {
+                    _lp1 = lp2;
+                    _lp2 = lp1;
+                }
+
+                _lp1.LetterRotVU = 180f;
+                _lp1.LetterRotVUAxis = lp.Tf.position - new Vector3(0.5f, 0, 0);
+                _lp1.LetterRotVUCAxis = lp.Tf.position;
+                _lp1.AnimationEnabled = false;
+
+                _lp2.LetterRotVD = 180f;
+                _lp2.LetterRotVDAxis = LetterSwapFirst.Tf.position + new Vector3(0.5f, 0, 0);
+                _lp2.LetterRotVDCAxis = LetterSwapFirst.Tf.position;
+                _lp2.AnimationEnabled = false;
+            } // Side by side
+            else
+            {
+                if(lp1.I < lp2.I)
+                {
+                    _lp1 = lp1;
+                    _lp2 = lp2;
+                }
+                else
+                {
+                    _lp1 = lp2;
+                    _lp2 = lp1;
+                }
+
+                _lp1.LetterRotHL = 180f;
+                _lp1.LetterRotHLAxis = _lp1.Tf.position - new Vector3(0.5f, 0, 0);
+                _lp1.LetterRotHLCAxis = _lp1.Tf.position;
+                _lp1.AnimationEnabled = false;
+
+                _lp2.LetterRotHR = 180f;
+                _lp2.LetterRotHRAxis = _lp2.Tf.position + new Vector3(0.5f, 0, 0);
+                _lp2.LetterRotHLCAxis = _lp2.Tf.position;
+                _lp2.AnimationEnabled = false;
+            }
         }
 
         private static void ChangeToVowel(LetterProp lp)
@@ -541,6 +591,7 @@ namespace WordSpell
 
         private static void BurnTile(LetterProp lp)
         {
+            lp.AnimationEnabled = true;
             lp.ChangeTileTo(LetterProp.TileTypes.Burning);
         }
 

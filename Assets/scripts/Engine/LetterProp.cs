@@ -32,9 +32,43 @@ namespace WordSpell
         float letterRCount = 0.0f;
         float letterLCount = 0.0f;
 
+        float letterRotHR = 0.0f;
+        float letterRotHL = 0.0f;
+        float letterRotVU = 0.0f;
+        float letterRotVD = 0.0f;
+
+        Vector3 letterRotHRAxis ;
+        Vector3 letterRotHLAxis ;
+        Vector3 letterRotVUAxis ;
+        Vector3 letterRotVDAxis ;
+
+        Vector3 letterRotHRCAxis;
+        Vector3 letterRotHLCAxis;
+        Vector3 letterRotVUCAxis;
+        Vector3 letterRotVDCAxis;
+
+        public bool AnimationEnabled
+        {
+            set
+            {
+                Animator a = Tf.GetComponent<Animator>();
+                a.enabled = value;
+            }
+            get
+            {
+                Animator a = Tf.GetComponent<Animator>();
+                return(a.enabled);
+            }
+        }
+
         public TileTypes TileType
         {
             get { return tt;  }
+            set
+            {
+                tt = value;
+                UpdateMaterial();
+            }
         }
 
         static Dictionary<TileTypes, TileTypeProperties> SortedTiles = new Dictionary<TileTypes, TileTypeProperties>();
@@ -51,6 +85,7 @@ namespace WordSpell
             set
             {
                 _letter = value;
+                //UpdateLetterDisplay();
                 //b.Content = Convert.ToChar(_letter).ToString();
             }
         }
@@ -153,6 +188,175 @@ namespace WordSpell
             }
         }
 
+        public float LetterRotHR
+        {
+            get
+            {
+                return letterRotHR;
+            }
+
+            set
+            {
+                letterRotHR = value;
+            }
+        }
+
+        public float LetterRotHL
+        {
+            get
+            {
+                return letterRotHL;
+            }
+
+            set
+            {
+                letterRotHL = value;
+            }
+        }
+
+        public float LetterRotVU
+        {
+            get
+            {
+                return letterRotVU;
+            }
+
+            set
+            {
+                letterRotVU = value;
+            }
+        }
+
+        public float LetterRotVD
+        {
+            get
+            {
+                return letterRotVD;
+            }
+
+            set
+            {
+                letterRotVD = value;
+            }
+        }
+
+        public Vector3 LetterRotHRAxis
+        {
+            get
+            {
+                return letterRotHRAxis;
+            }
+
+            set
+            {
+                letterRotHRAxis = value;
+            }
+        }
+
+        public Vector3 LetterRotHLAxis
+        {
+            get
+            {
+                return letterRotHLAxis;
+            }
+
+            set
+            {
+                letterRotHLAxis = value;
+            }
+        }
+
+        public Vector3 LetterRotVUAxis
+        {
+            get
+            {
+                return letterRotVUAxis;
+            }
+
+            set
+            {
+                letterRotVUAxis = value;
+            }
+        }
+
+        public Vector3 LetterRotVDAxis
+        {
+            get
+            {
+                return letterRotVDAxis;
+            }
+
+            set
+            {
+                letterRotVDAxis = value;
+            }
+        }
+
+        public Vector3 LetterRotHRCAxis
+        {
+            get
+            {
+                return letterRotHRCAxis;
+            }
+
+            set
+            {
+                letterRotHRCAxis = value;
+            }
+        }
+
+        public Vector3 LetterRotHLCAxis
+        {
+            get
+            {
+                return letterRotHLCAxis;
+            }
+
+            set
+            {
+                letterRotHLCAxis = value;
+            }
+        }
+
+        public Vector3 LetterRotVUCAxis
+        {
+            get
+            {
+                return letterRotVUCAxis;
+            }
+
+            set
+            {
+                letterRotVUCAxis = value;
+            }
+        }
+
+        public Vector3 LetterRotVDCAxis
+        {
+            get
+            {
+                return letterRotVDCAxis;
+            }
+
+            set
+            {
+                letterRotVDCAxis = value;
+            }
+        }
+
+        public bool MusicHolderRole
+        {
+            get
+            {
+                return musicHolder;
+            }
+
+            set
+            {
+                musicHolder = value;
+            }
+        }
+
         public enum TileTypes
         {
             WordDouble,
@@ -161,6 +365,7 @@ namespace WordSpell
             LetterTriple,
             Burning,
             Manna,
+            Speaker,
             Normal,
         };
 
@@ -190,6 +395,7 @@ namespace WordSpell
             {TileTypes.WordTriple, new TileTypeProperties { prob2 = 4, probability = 0.03, foreground = Color.black, background = Color.green, depthmod = 0.01, level = 6, levelmod = 0.2 }},
             {TileTypes.Burning, new TileTypeProperties{ prob2 = 10, probability = 0.12, background = Color.black, foreground = Color.red, depthmod = 1.0, level = 3, levelmod = 0.5 }},
             {TileTypes.Manna, new TileTypeProperties{ prob2 = 8, probability = 0.15, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 5, levelmod = 0.4 }},
+            {TileTypes.Speaker, new TileTypeProperties{ prob2 = 0, probability = 0.0, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 1, levelmod = 0.4 }},
         };
 
         static Material NoramlMat;
@@ -199,11 +405,13 @@ namespace WordSpell
         static Material WordTripleMat;
         static Material ManaMat;
         static Material BurningMat;
+        static Material Jeans;
 
         internal GameObject SelectorObject;
         static GameObject LavaLight;
 
         static private Board boardScript;
+        private bool musicHolder;
 
         public static void LoadMaterials()
         {
@@ -214,6 +422,7 @@ namespace WordSpell
             WordTripleMat = (Material)Resources.Load("PurpleGem");
             ManaMat = (Material)Resources.Load("TurquoiseGem");
             BurningMat = (Material)Resources.Load("Burnt");
+            Jeans = (Material)Resources.Load("Jeans");
 
             LavaLight = (GameObject)Resources.Load("LavalLight");
         }
@@ -261,8 +470,8 @@ namespace WordSpell
 
         public LetterProp(int level, bool levelup, int _i, int _j, Transform _tf)
         {
-            tt = CreateNewTile(level, levelup);
             Tf = _tf;
+            tt = CreateNewTile(level, levelup);
 
             LetterAnimator = Tf.gameObject.GetComponent<Animator>();
 
@@ -279,11 +488,23 @@ namespace WordSpell
             UpdateMaterial();
         }
 
+        public void PlayBackgroundMusic()
+        {
+            TileType = LetterProp.TileTypes.Speaker;
+
+            MusicHolderRole = true;
+            
+            Tile t = (Tile)Tf.gameObject.GetComponent(typeof(Tile));
+            t.NewSong();
+
+        }
+
         public void UpdateMaterial()
         {
             switch(tt)
             {
                 case TileTypes.Burning:
+                    AnimationEnabled = true;
                     BurnTile();
                     break;
                 case TileTypes.Normal:
@@ -303,6 +524,9 @@ namespace WordSpell
                     break;
                 case TileTypes.Manna:
                     Tf.gameObject.GetComponent<MeshRenderer>().material = ManaMat;
+                    break;
+                case TileTypes.Speaker:
+                    Tf.gameObject.GetComponent<MeshRenderer>().material = Jeans;
                     break;
                 default:
                     Tf.gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
@@ -361,7 +585,11 @@ namespace WordSpell
             // Adjustments for letter widths so they are centered
             if(this.ASCIIChar == 'W')
             {
-                text.transform.position -= new Vector3(.15f, 0, 0);
+                text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.6f);
+            }
+            else
+            {
+                text.transform.localPosition = new Vector3(-0.15f, 0.3f, -0.6f);
             }
         }
 

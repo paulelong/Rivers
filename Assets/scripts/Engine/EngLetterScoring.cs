@@ -66,17 +66,18 @@ namespace WordSpell
             // Is it cached already?
             if (File.Exists(filePath))
             {
-                FileStream fs = new FileStream(filePath, FileMode.Open);
                 try
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
-                    PartialLookup = (SerializableStringList)xs.Deserialize(fs);
-                    fs.Close();
+
+                    using(FileStream fs = new FileStream(filePath, FileMode.Open)                    )
+                    {
+                        PartialLookup = (SerializableStringList)xs.Deserialize(fs);
+                    }
                 }
                 catch(System.Xml.XmlException x)
                 {
                     // Something went wrong, so let's rebuilld
-                    fs.Close();
                     BuildPartialLookup(filePath);
                 }
             }
@@ -102,9 +103,11 @@ namespace WordSpell
             }
 
             XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
-            TextWriter tw = new StreamWriter(filePath);
-            xs.Serialize(tw, PartialLookup);
-            tw.Close();
+
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            {
+                xs.Serialize(fs, PartialLookup);
+            }
         }
 
         static public bool IsWord(string word)

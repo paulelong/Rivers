@@ -10,23 +10,41 @@ namespace WordSpell
 {
     partial class WSGameState
     {
+        #region Members
         static GameStats gs = new GameStats();
         static OverallStats os = new OverallStats();
-
-        //static List<WordScoreItem> BestWordScores = new List<WordScoreItem>();
-        //static List<WordScoreItem> BestWordScoresSimple = new List<WordScoreItem>();
-        //static List<WordScoreItem> LongestWords = new List<WordScoreItem>();
-        //static List<int> BestGameScores = new List<int>();
-
         static List<WordScoreItem> TryWordList = new List<WordScoreItem>();
 
-        const string BestWordScoreFileName = "BestWordScores.txt";
-        const string BestWordScoresSimpleFileName = "BestWordScoresSimple.txt";
-        const string BestLongestWordsFileName = "BestLongestWords.txt";
-        const string BestOverallScoresFileName = "BestOverallScores.txt";
-        const string AllWordScoresFileName = "AllWordScores.txt";
-        const string FortuneScoresFileName = "FortuneScores.txt";
-        const string HistoryScoresFileName = "HistoryScores.txt";
+        #endregion Members
+
+
+        #region Properties
+        #endregion Properties
+
+        static public List<SpellInfo> AwardedSpells
+        {
+            get { return gs.awarded;  }
+        }
+
+        static public List<WordScoreItem> LongestWords
+        {
+            get { return os.LongestWords; }
+        }
+
+        static public List<int> BestGameScores
+        {
+            get { return os.BestGameScores; }
+        }
+
+        static public List<WordScoreItem> BestWordScores
+        {
+            get { return os.BestWordScores; }
+        }
+
+        static public List<WordScoreItem> BestWordScoresSimple
+        {
+            get { return os.BestWordScoresSimple; }
+        }
 
         static public Board boardScript;
 
@@ -36,15 +54,11 @@ namespace WordSpell
 
         public const int gridsize = 9;
 
-        //private static int level = 1;
-
         static System.Random r;
 
         public static int CurrentLevel { get { return gs.level; } private set { } }
 
         public static double TotalEfficiency { get; internal set; }
-
-        //public static int Manna = 0;
 
 #if UNITY_EDITOR
         private static int[] Levels = { 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 1300, 1600, 2000, 5000, 10000 };
@@ -113,8 +127,15 @@ namespace WordSpell
             return FortuneLevel.Bad;
         }
 
+        internal static void NewMusicTile()
+        {
+            int ti = r.Next(gridsize);
+            LetterPropGrid[ti, gridsize - 1].PlayBackgroundMusic();
+        }
+
         #region Init
 
+        #region Persistence
         internal static void Save()
         {
             GamePersistence.SaveGame(LetterPropGrid, gs);
@@ -122,8 +143,51 @@ namespace WordSpell
 
         internal static void Load()
         {
-            //GamePersistence.SaveGame(LetterPropGrid);
+            GameStats _gs;
+            _gs = GamePersistence.LoadGame(LetterPropGrid);
+            if(_gs != null)
+            {
+                Deselect(null);
+                gs = _gs;
+                UpdateStats();
+                UpdateFortune();
+
+                foreach(WordScoreItem wsi in gs.history)
+                {
+                    boardScript.AddHistory(wsi.word + " " + wsi.wordscorestring);
+                }
+
+                // Activate any tile specific work, like music.
+                for (int i = 0; i < gridsize; i++)
+                {
+                    for(int j = 0; j< gridsize; j++)
+                    {
+                        if(LetterPropGrid[i, j].TileType == LetterProp.TileTypes.Speaker)
+                        {
+                            LetterPropGrid[i, j].PlayBackgroundMusic();
+                        }
+                    }
+
+                }
+
+            }
         }
+
+        internal static void LoadStats()
+        {
+            OverallStats _os = GamePersistence.LoadOverallStats();
+            if(_os != null)
+            {
+                os = _os;
+            }
+        }
+
+        internal static void SaveStats()
+        {
+            GamePersistence.SaveOverallStats(os);
+        }
+
+        #endregion Persistence
 
         public static void InitGameGlobal()
         {
@@ -146,7 +210,7 @@ namespace WordSpell
 
             // Stuff useful for development, don't ship
 #if UNITY_EDITOR
-            Spells.AwardAllSpells();
+            AwardAllSpells();
 #endif
             r = new System.Random();
 
@@ -157,7 +221,7 @@ namespace WordSpell
             Spells.UpdateSpellsForLevel(gs.level);
         }
 
-#endregion init
+        #endregion init
 
         private static void UpdateManaScore()
         {
@@ -303,6 +367,8 @@ namespace WordSpell
                     bool gameOver = ProcessLetters();
                     if (gameOver)
                     {
+                        GamePersistence.SaveOverallStats(os);
+                        GamePersistence.ResetGameData();
                         RemoveGameBoard();
 
                         //SaveStats();
@@ -374,6 +440,9 @@ namespace WordSpell
                     RemoveTile(LetterPropGrid[i, j]);
                 }
             }
+
+            boardScript.ClearHistory();
+            boardScript.ClearTryList();
         }
 
         internal static bool CheckNextLevel(int totalScore)
@@ -501,6 +570,7 @@ namespace WordSpell
                     si = Spells.GetSpell(0, gs.level);
                 }
 
+                AwardedSpells.Add(si);
                 ss.si = si;
             }
 
@@ -509,6 +579,26 @@ namespace WordSpell
             UpdateStats();
 
             return ss;
+        }
+
+        internal static void AwardAllSpells()
+        {
+            foreach (SpellInfo si in Spells.AllSpells)
+            {
+                AwardedSpells.Add(si);
+            }
+        }
+
+        internal static void RemoveAwardedSpells(SpellInfo selectedSpell)
+        {
+            foreach (SpellInfo si in AwardedSpells)
+            {
+                if (si.spellType == selectedSpell.spellType)
+                {
+                    AwardedSpells.Remove(si);
+                    break;
+                }
+            }
         }
 
         private static void UpdateStats()
@@ -718,8 +808,9 @@ namespace WordSpell
         {
             toRemove.Tf.Translate(0.0f, 0.0f, -1f);
 
-            Animator a = toRemove.Tf.GetComponent<Animator>();
-            a.enabled = false;
+            //Animator a = toRemove.Tf.GetComponent<Animator>();
+            //a.enabled = false;
+            toRemove.AnimationEnabled = false;
 
             Rigidbody rb = toRemove.Tf.GetComponent(typeof(Rigidbody)) as Rigidbody;
             rb.useGravity = true;
@@ -734,6 +825,11 @@ namespace WordSpell
             float yr =  r.Next(100) / 10f;
             float zr = r.Next(100) / 1f;
             rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
+
+            if(toRemove.MusicHolderRole)
+            {
+                LetterPropGrid[4, 8].PlayBackgroundMusic();
+            }
         }
 
         public static void RemoveWordAndReplaceTiles()

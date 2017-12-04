@@ -29,16 +29,28 @@ public class Board : MonoBehaviour
     public GameObject SpelllList;
     public GameObject AwardedSpellList;
 
+    public GameObject BestWordList;
+    public GameObject BestWordSimpleList;
+    public GameObject HighScoresList;
+    public GameObject LongestList;
+
     public Transform GameArea;
 
     public AudioClip SubmitWordSound;
     public AudioClip NewLevelSound;
     public AudioClip GameOverSound;
+    public AudioClip SwapSound;
+    public AudioClip SnipeSound;
 
     ListBox<UnityEngine.UI.VerticalLayoutGroup> TryListBox;
     ListBox<UnityEngine.UI.VerticalLayoutGroup> HistoryListBox;
     ListBox<UnityEngine.UI.GridLayoutGroup> SpellListBox;
     ListBox<UnityEngine.UI.GridLayoutGroup> AwardedSpellListBox;
+
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> BestWordListBox;
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> BestWordSimpleListBox;
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> HighScoresListBox;
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> LongestListBox;
 
     private bool MsgShowing = false;
 
@@ -71,8 +83,22 @@ public class Board : MonoBehaviour
         SpellListBox = new ListBox<GridLayoutGroup>(SpelllList, SpellPrefab);
         AwardedSpellListBox = new ListBox<GridLayoutGroup>(AwardedSpellList, SpellPrefab);
 
+        BestWordListBox = new ListBox<VerticalLayoutGroup>(BestWordList, TextPrefab);
+        BestWordSimpleListBox = new ListBox<VerticalLayoutGroup>(BestWordSimpleList, TextPrefab);
+        HighScoresListBox = new ListBox<VerticalLayoutGroup>(HighScoresList, TextPrefab);
+        LongestListBox = new ListBox<VerticalLayoutGroup>(LongestList, TextPrefab);
+
         LocateCamera();
-	}
+
+        StartCanvas.SetActive(true);
+
+        LoadStats();
+
+        if (GamePersistence.SavedGameExists())
+        {
+            StartGame();
+        }
+    }
 
     void LocateCamera()
     {
@@ -106,14 +132,43 @@ public class Board : MonoBehaviour
         }
 
         BoardCam.transform.position = new Vector3(0, gridYoff, CamZ);
-        BoardCam.orthographicSize = (aspect * -11.0f) + 15.23f;
- 
-
-        StartCanvas.SetActive(true);
+        BoardCam.orthographicSize = (aspect * -11.0f) + 15.23f; 
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    void LoadStats()
+    {
+        WSGameState.LoadStats();
+
+        // Clear all lists
+        LongestListBox.Clear();
+        HighScoresListBox.Clear();
+        BestWordListBox.Clear();
+        BestWordSimpleListBox.Clear();
+
+        foreach(WordScoreItem wsi in WSGameState.LongestWords)
+        {
+            LongestListBox.AddText(wsi.word);
+        }
+
+        foreach (int i in WSGameState.BestGameScores)
+        {
+            HighScoresListBox.AddText(i.ToString());
+        }
+
+        foreach (WordScoreItem wsi in WSGameState.BestWordScores)
+        {
+            BestWordListBox.AddText(wsi.word);
+        }
+
+        foreach (WordScoreItem wsi in WSGameState.BestWordScoresSimple)
+        {
+            BestWordSimpleListBox.AddText(wsi.word);
+        }
+    }
+
+    // Update is called once per frame
+    void Update ()
+    {
         if(MsgShowing)
         {
             if (Input.GetKeyDown(KeyCode.Return))
@@ -141,6 +196,11 @@ public class Board : MonoBehaviour
         {
             WSGameState.Save();
         }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            WSGameState.Load();
+        }
     }
 
     // Handlers
@@ -166,6 +226,8 @@ public class Board : MonoBehaviour
                 WSGameState.NewLetter(i, j, lbi);
             }
         }
+
+        WSGameState.Load();
     }
 
     IEnumerator EndGameDelay()
@@ -183,6 +245,16 @@ public class Board : MonoBehaviour
     public void EndGanme()
     {
         StartCoroutine(EndGameDelay());
+    }
+
+    public void OnApplicationQuit()
+    {
+        if(!StartCanvas.activeSelf)
+        {
+            WSGameState.Save();
+        }
+
+        WSGameState.SaveStats();
     }
 
     public Transform NewTile(int i, int j, float newtilepos = 0)
@@ -247,6 +319,7 @@ public class Board : MonoBehaviour
     // Button commands
     public void QuitGame()
     {
+        WSGameState.Save();
         Application.Quit();
     }
 
@@ -261,8 +334,8 @@ public class Board : MonoBehaviour
         IndicateGoodWord(false);
     }
 
-    // ----------------------------
-    // Status settings
+    // ----------------------------------------------------------
+    // Status settings to control UI element values
 
     /// <summary>
     /// 
@@ -294,11 +367,7 @@ public class Board : MonoBehaviour
 
     public void AddHistory(string s)
     {
-        Transform item = HistoryListBox.Add();
-
-        UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
-
-        t.text = s;
+        HistoryListBox.AddText(s);
     }
 
     public void ClearHistory()
@@ -308,11 +377,7 @@ public class Board : MonoBehaviour
 
     public void AddTryList(string s)
     {
-        Transform item = TryListBox.Add();
-
-        UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
-
-        t.text = s;
+        TryListBox.AddText(s);
     }
 
     public void ClearTryList()
@@ -365,7 +430,7 @@ public class Board : MonoBehaviour
 
         ClearSpellList(AwardedSpellListBox);
 
-        foreach (SpellInfo si in Spells.AwardedSpells)
+        foreach (SpellInfo si in WSGameState.AwardedSpells)
         {
             AddSpellList(AwardedSpellListBox, si, true);
         }
@@ -409,11 +474,11 @@ public class Board : MonoBehaviour
     void SpellSucceded()
     {
         WSGameState.ChangeManna(Spells.LastManaCost);
+        WSGameState.AwardedSpells.Remove(Spells.LastSuccessfulSpell);
     }
     
     public void IndicateGoodWord(bool good)
     {
-        //UnityEngine.UI.Button t = tgo.GetComponent(typeof(UnityEngine.UI.Button)) as UnityEngine.UI.Button;
         if (good)
         {
             var theColor = tgo.GetComponent<UnityEngine.UI.Button>().colors;
@@ -447,6 +512,17 @@ public class Board : MonoBehaviour
     {
         AudioSource audio = GetComponent<AudioSource>();
         audio.PlayOneShot(GameOverSound);
-//        yield WaitForSeconds(3);
     }
+
+    public void PlaySwapSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(SwapSound);
+    }
+    public void PlaySnipeSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(SnipeSound);
+    }
+
 }

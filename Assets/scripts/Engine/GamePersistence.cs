@@ -24,6 +24,7 @@ namespace WordSpell
         public int mana = 0;
         public List<WordScoreItem> history = new List<WordScoreItem>();
         public List<WordScoreItem> fortune = new List<WordScoreItem>();
+        public List<SpellInfo> awarded = new List<SpellInfo>();
     }
 
     public class OverallStats
@@ -37,11 +38,12 @@ namespace WordSpell
     public class GamePersistence
     {
         private const string SaveGamePath = "WordSpellSave.xml";
+        private const string OverallStatsPath = "WordSpellStats.xml";
 
         // [XmlRootAttribute("Letter")]
         public class SimpleLetter
         {
-            public void addletter(int _i, int _j, char _letter, LetterProp.TileTypes _tt)
+            public void addletter(int _i, int _j, byte _letter, LetterProp.TileTypes _tt)
             {
                 i = _i;
                 j = _j;
@@ -51,7 +53,7 @@ namespace WordSpell
 
             public int i;
             public int j;
-            public char letter;
+            public byte letter;
             public LetterProp.TileTypes tt;
         }
 
@@ -70,15 +72,24 @@ namespace WordSpell
                     for (int j = 0; j < WSGameState.gridsize; j++)
                     {
                         SimpleLetter sl = new SimpleLetter();
-                        sl.addletter(i, j, LetterPropGrid[i, j].ASCIIChar, LetterPropGrid[i, j].TileType);
+                        sl.addletter(i, j, LetterPropGrid[i, j].letter, LetterPropGrid[i, j].TileType);
                         grid.Add(sl);
                     }
                 }
             }
-        }
 
-        class BestScoreData
-        {
+            internal GameStats ReplaceGameData(LetterProp[,] LetterPropGrid)
+            {
+
+                foreach (SimpleLetter sl in grid)
+                {
+                    LetterPropGrid[sl.i, sl.j].letter = sl.letter;
+                    LetterPropGrid[sl.i, sl.j].TileType = sl.tt;
+                    LetterPropGrid[sl.i, sl.j].UpdateLetterDisplay();
+                }
+
+                return (gs);
+            }
         }
 
         internal static void SaveGame(LetterProp[,] LetterPropGrid, GameStats gs)
@@ -91,13 +102,125 @@ namespace WordSpell
             try
             {
                 XmlSerializer xs = new XmlSerializer(typeof(GameData));
-                TextWriter tw = new StreamWriter(filePath);
-                xs.Serialize(tw, gd);
-                tw.Close();
+
+                using(FileStream tw = new FileStream(filePath, FileMode.Create))
+                {
+                    xs.Serialize(tw, gd);
+                }
             }
             catch(Exception e)
             {
                 string s = e.Message;
+            }
+        }
+
+        internal static GameStats LoadGame(LetterProp[,] LetterPropGrid)
+        {
+            GameData gd = null;
+            string filePath = Application.persistentDataPath + "/" + SaveGamePath;
+
+            if(File.Exists(filePath))
+            {
+                try
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(GameData));
+                    using (FileStream fs = new FileStream(filePath, FileMode.Open))
+                    {
+                        gd = (GameData)xs.Deserialize(fs);
+                    }
+  
+                    return (gd.ReplaceGameData(LetterPropGrid));
+                }
+                catch (Exception e)
+                {
+                    string s = e.Message;
+                }
+            }
+
+
+            return null;
+        }
+
+        internal static bool SavedGameExists()
+        {
+            string filePath = Application.persistentDataPath + "/" + SaveGamePath;
+
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(GameData));
+                    using (FileStream fs = new FileStream(filePath, FileMode.Open))
+                    {
+                        xs.Deserialize(fs);
+                    }
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        internal static void SaveOverallStats(OverallStats os)
+        {
+            string filePath = Application.persistentDataPath + "/" + OverallStatsPath;
+
+            try
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(OverallStats));
+                using (FileStream tw = new FileStream(filePath, FileMode.Create))
+                {
+                    xs.Serialize(tw, os);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        internal static OverallStats LoadOverallStats()
+        {
+            string filePath = Application.persistentDataPath + "/" + OverallStatsPath;
+
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(OverallStats));
+                    using (FileStream fs = new FileStream(filePath, FileMode.Open))
+                    {
+                        OverallStats os = (OverallStats)xs.Deserialize(fs);
+                        return (os);
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+
+            return null;
+        }
+
+        internal static void ResetGameData()
+        {
+            string filePath = Application.persistentDataPath + "/" + SaveGamePath;
+
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    File.Delete(filePath);
+                }
+                catch(Exception e)
+                {
+                    string s = e.Message;
+                }
             }
         }
 
@@ -217,7 +340,7 @@ namespace WordSpell
         //        return false;
         //    }
         //}
-        
+
         //public static bool IsSavedGame()
         //{
         //    var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;

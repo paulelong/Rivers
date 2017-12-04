@@ -1,2 +1,0 @@
-obj\ARM\Master\split.pri
-obj\ARM\Master\split.map.txt
