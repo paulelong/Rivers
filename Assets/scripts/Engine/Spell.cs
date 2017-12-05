@@ -365,7 +365,7 @@ namespace WordSpell
             // On top
             if(lp1.I == lp2.I)
             {
-                if (lp1.J < lp2.J)
+                if (lp1.J > lp2.J)
                 {
                     _lp1 = lp1;
                     _lp2 = lp2;
@@ -377,13 +377,13 @@ namespace WordSpell
                 }
 
                 _lp1.LetterRotVU = 180f;
-                _lp1.LetterRotVUAxis = lp.Tf.position - new Vector3(0.5f, 0, 0);
-                _lp1.LetterRotVUCAxis = lp.Tf.position;
+                _lp1.LetterRotVUAxis = _lp1.Tf.position + new Vector3(0, 0.5f, 0);
+                _lp1.LetterRotVUCAxis = _lp1.Tf.position;
                 _lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotVD = 180f;
-                _lp2.LetterRotVDAxis = LetterSwapFirst.Tf.position + new Vector3(0.5f, 0, 0);
-                _lp2.LetterRotVDCAxis = LetterSwapFirst.Tf.position;
+                _lp2.LetterRotVDAxis = _lp2.Tf.position - new Vector3(0, 0.5f, 0);
+                _lp2.LetterRotVDCAxis = _lp2.Tf.position;
                 _lp2.AnimationEnabled = false;
             } // Side by side
             else

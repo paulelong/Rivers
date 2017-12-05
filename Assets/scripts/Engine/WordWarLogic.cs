@@ -169,7 +169,10 @@ namespace WordSpell
                     }
 
                 }
-
+            }
+            else
+            {
+                NewMusicTile();
             }
         }
 
@@ -219,6 +222,8 @@ namespace WordSpell
             LetterPropGrid = new LetterProp[gridsize, gridsize];
 
             Spells.UpdateSpellsForLevel(gs.level);
+
+            //NewMusicTile();
         }
 
         #endregion init

@@ -474,7 +474,9 @@ public class Board : MonoBehaviour
     void SpellSucceded()
     {
         WSGameState.ChangeManna(Spells.LastManaCost);
-        WSGameState.AwardedSpells.Remove(Spells.LastSuccessfulSpell);
+
+        SpellInfo si = WSGameState.AwardedSpells.Find(x => (x.spellType == Spells.LastSuccessfulSpell.spellType));
+        WSGameState.AwardedSpells.Remove(si);
     }
     
     public void IndicateGoodWord(bool good)
