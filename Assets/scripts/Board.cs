@@ -7,12 +7,39 @@ using WordSpell;
 
 public class Board : MonoBehaviour
 {
+    #region Fields
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> TryListBox;
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> HistoryListBox;
+    ListBox<UnityEngine.UI.GridLayoutGroup> SpellListBox;
+    ListBox<UnityEngine.UI.GridLayoutGroup> AwardedSpellListBox;
+
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> BestWordListBox;
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> BestWordSimpleListBox;
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> HighScoresListBox;
+    ListBox<UnityEngine.UI.VerticalLayoutGroup> LongestListBox;
+    #endregion Fields
+
+    #region Constants
+    const float gridYoff = -1.7f;
+    const int numgrid = 9;
+    const float inc = 1f; // (float)(size * scale_factor);
+    const int half_offset = WSGameState.gridsize / 2;
+
+    const string SpellNamePath = "TextPanel/Name";
+    const string SpellCostPath = "TextPanel/Cost";
+    const string SpellImagePath = "ButtonPanel/Image";
+    #endregion Constants
+
     // Passed in from Board scene
+    #region Unity Objects
     public Transform LetterBoxPrefab;
     public GameObject SelectPrefab;
     public Transform LavaLightPrefab;
     public Transform SpellPrefab;
     public Transform TextPrefab;
+
+    // Canvas
+    public GameObject GameControlCanvas;
     public GameObject StartCanvas;
     public GameObject MsgCanvas;
     public GameObject SpellCanvas;
@@ -41,37 +68,8 @@ public class Board : MonoBehaviour
     public AudioClip GameOverSound;
     public AudioClip SwapSound;
     public AudioClip SnipeSound;
+    #endregion Unity Objects
 
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> TryListBox;
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> HistoryListBox;
-    ListBox<UnityEngine.UI.GridLayoutGroup> SpellListBox;
-    ListBox<UnityEngine.UI.GridLayoutGroup> AwardedSpellListBox;
-
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> BestWordListBox;
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> BestWordSimpleListBox;
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> HighScoresListBox;
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> LongestListBox;
-
-    private bool MsgShowing = false;
-
-    const int numgrid = 9;
-    const float scale_factor = 2500;
-    private const int aspect_scale = 1;
-
-    //int yoff = 1;
-    int half_offset = WSGameState.gridsize / 2;
-    float inc = 1f; // (float)(size * scale_factor);
-    float gridYoff = 0f;
-    float aspect;
-    float CamZ;
-
-    int Selected = Animator.StringToHash("StartSel");
-
-    #region Constants
-    const string SpellNamePath = "TextPanel/Name";
-    const string SpellCostPath = "TextPanel/Cost";
-    const string SpellImagePath = "ButtonPanel/Image";
-    #endregion Constants
 
     // Use this for initialization
     void Start ()
@@ -106,7 +104,7 @@ public class Board : MonoBehaviour
         int h = Screen.height;
         float dpi = Screen.dpi;
 
-        aspect = (float)w / (float)h;
+        float aspect = (float)w / (float)h;
         if (aspect > 0.65f)
         {
             aspect = 0.65f;
@@ -123,9 +121,7 @@ public class Board : MonoBehaviour
         // off_fit = lm(off ~ ratios)
         // sz_fit = lm(sz ~ ratios)
 
-        gridYoff = (aspect * 15.09f) + -10.21f;
-        gridYoff = -1.7f;
-        CamZ = (aspect * 23.54f) - 27.69f;
+        float CamZ = (aspect * 23.54f) - 27.69f;
         if(CamZ > -13.4f)
         {
             CamZ = -13.4f;
@@ -139,42 +135,20 @@ public class Board : MonoBehaviour
     {
         WSGameState.LoadStats();
 
-        // Clear all lists
-        LongestListBox.Clear();
-        HighScoresListBox.Clear();
-        BestWordListBox.Clear();
-        BestWordSimpleListBox.Clear();
-
-        foreach(WordScoreItem wsi in WSGameState.LongestWords)
-        {
-            LongestListBox.AddText(wsi.word);
-        }
-
-        foreach (int i in WSGameState.BestGameScores)
-        {
-            HighScoresListBox.AddText(i.ToString());
-        }
-
-        foreach (WordScoreItem wsi in WSGameState.BestWordScores)
-        {
-            BestWordListBox.AddText(wsi.word);
-        }
-
-        foreach (WordScoreItem wsi in WSGameState.BestWordScoresSimple)
-        {
-            BestWordSimpleListBox.AddText(wsi.word);
-        }
+        LongestListBox.CreateList(WSGameState.LongestWords);
+        HighScoresListBox.CreateList(WSGameState.BestGameScores);
+        BestWordListBox.CreateList(WSGameState.BestWordScores);
+        BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple);
     }
 
     // Update is called once per frame
     void Update ()
     {
-        if(MsgShowing)
+        if(MsgCanvas.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 MsgCanvas.SetActive(false);
-                MsgShowing = false;
             }
         }
         else
@@ -208,12 +182,12 @@ public class Board : MonoBehaviour
     public void OnMouseClick()
     {
         MsgCanvas.SetActive(false);
-        MsgShowing = false;
     }
 
     public void StartGame()
     {
         StartCanvas.SetActive(false);
+        GameControlCanvas.SetActive(true);
 
         WSGameState.InitNewGame();
 
@@ -278,7 +252,6 @@ public class Board : MonoBehaviour
     {
         MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = text;
         MsgCanvas.SetActive(true);
-        MsgShowing = true;
     }
 
 

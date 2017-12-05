@@ -19,32 +19,67 @@ namespace WordSpell
 
 
         #region Properties
-        #endregion Properties
 
         static public List<SpellInfo> AwardedSpells
         {
-            get { return gs.awarded;  }
+            get { return gs.awarded; }
         }
 
-        static public List<WordScoreItem> LongestWords
+        static public List<string> LongestWords
         {
-            get { return os.LongestWords; }
+            get
+            {
+                List<string> longestWordStrings = new List<string>();
+                foreach (WordScoreItem wsi in os.LongestWords)
+                {
+                    longestWordStrings.Add(wsi.word + " " + wsi.word.Length.ToString());
+                }
+                return longestWordStrings;
+            }
         }
 
-        static public List<int> BestGameScores
+        static public List<string> BestGameScores
         {
-            get { return os.BestGameScores; }
+            get 
+            {
+                List<string> bestGameScores = new List<string>();
+
+                foreach (int i in os.BestGameScores)
+                {
+                    bestGameScores.Add(i.ToString());
+                }
+                return bestGameScores; 
+            }
         }
 
-        static public List<WordScoreItem> BestWordScores
+        static public List<string> BestWordScores
         {
-            get { return os.BestWordScores; }
+            get
+            {
+                List<string> bestWordStrings = new List<string>();
+                foreach (WordScoreItem wsi in os.BestWordScores)
+                {
+                    bestWordStrings.Add(wsi.word + " " + wsi.wordscorestring);
+                }
+                return bestWordStrings;
+            }
         }
 
-        static public List<WordScoreItem> BestWordScoresSimple
+        static public List<string> BestWordScoresSimple
         {
-            get { return os.BestWordScoresSimple; }
+            get
+            {
+                List<string> bestWordScoresSimple = new List<string>();
+                foreach (WordScoreItem wsi in os.BestWordScores)
+                {
+                    bestWordScoresSimple.Add(wsi.word + " " + wsi.simplescore);
+                }
+                return bestWordScoresSimple;
+            }
         }
+
+        #endregion Properties
+
 
         static public Board boardScript;
 

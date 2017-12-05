@@ -42,6 +42,20 @@ namespace WordSpell
             t.text = s;
         }
 
+        public void CreateList(List<string> l)
+        {
+            Clear();
+
+            foreach(string s in l)
+            {
+                Transform item = Add();
+
+                UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
+
+                t.text = s;
+            }
+        }
+
         public void Clear()
         {
             //UnityEngine.UI.VerticalLayoutGroup l = list.GetComponent(typeof(UnityEngine.UI.VerticalLayoutGroup)) as UnityEngine.UI.VerticalLayoutGroup;
