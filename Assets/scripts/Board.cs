@@ -20,7 +20,7 @@ public class Board : MonoBehaviour
     #endregion Fields
 
     #region Constants
-    const float gridYoff = -1.7f;
+    const float gridYoff = -2.45f;
     const int numgrid = 9;
     const float inc = 1f; // (float)(size * scale_factor);
     const int half_offset = WSGameState.gridsize / 2;
@@ -39,13 +39,15 @@ public class Board : MonoBehaviour
     public Transform TextPrefab;
 
     // Canvas
-    public GameObject GameControlCanvas;
     public GameObject StartCanvas;
     public GameObject MsgCanvas;
     public GameObject SpellCanvas;
     public GameObject InputCanvas;
     public GameObject tgo;
     public Camera BoardCam;
+
+    // Where the letter grid goes
+    public GameObject GameAreaPanel;
 
     public GameObject LevelText;
     public GameObject ScoreText;
@@ -61,15 +63,12 @@ public class Board : MonoBehaviour
     public GameObject HighScoresList;
     public GameObject LongestList;
 
-    public Transform GameArea;
-
     public AudioClip SubmitWordSound;
     public AudioClip NewLevelSound;
     public AudioClip GameOverSound;
     public AudioClip SwapSound;
     public AudioClip SnipeSound;
     #endregion Unity Objects
-
 
     // Use this for initialization
     void Start ()
@@ -111,7 +110,7 @@ public class Board : MonoBehaviour
         }
 
         // Set the camera in the middle of the screen.
-        // R code to calute bess fit line for aspect ratios
+        // R code to calculate best fit line for aspect ratios
         //             s8  480/800  800/1280
         // ratios = c(.486,  .6,    .625)
         // sz     = c(9.5,    8,    7.4)
@@ -127,8 +126,12 @@ public class Board : MonoBehaviour
             CamZ = -13.4f;
         }
 
+        CamZ = -16.5f;
         BoardCam.transform.position = new Vector3(0, gridYoff, CamZ);
-        BoardCam.orthographicSize = (aspect * -11.0f) + 15.23f; 
+        //BoardCam.orthographicSize = (aspect * -11.0f) + 15.23f;
+
+        Debug.Log("pos: " + GameAreaPanel.transform.position);
+        Debug.Log("local: " + GameAreaPanel.transform.localPosition);
     }
 
     void LoadStats()
@@ -187,7 +190,7 @@ public class Board : MonoBehaviour
     public void StartGame()
     {
         StartCanvas.SetActive(false);
-        GameControlCanvas.SetActive(true);
+        GameAreaPanel.SetActive(true);
 
         WSGameState.InitNewGame();
 

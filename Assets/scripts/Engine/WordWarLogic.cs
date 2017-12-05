@@ -10,12 +10,12 @@ namespace WordSpell
 {
     partial class WSGameState
     {
-        #region Members
+        #region Fields
         static GameStats gs = new GameStats();
         static OverallStats os = new OverallStats();
         static List<WordScoreItem> TryWordList = new List<WordScoreItem>();
 
-        #endregion Members
+        #endregion Fields
 
 
         #region Properties
@@ -299,7 +299,6 @@ namespace WordSpell
             {
                 if (SelLetterList.Count >= 0)
                 {
-                    //string curword = GetCurrentWord().ToLower();
                     // Check if button is adject to the last
                     if (!(IsLetterAdjacentToLastButton(lp) && !SelLetterList.Contains(lp)))
                     {
@@ -307,12 +306,10 @@ namespace WordSpell
                         if(!Deselect(lp))
                         {
                             lp.SelectorObject = boardScript.SelectLet(lp.I, lp.J);
-                            //lp.SetSelected(true);
                         }
                     }
                     else
                     {
-                        //lp.SetSelected(true);
                         lp.SelectorObject = boardScript.SelectLet(lp.I, lp.J);
                     }
 
@@ -321,7 +318,6 @@ namespace WordSpell
                     boardScript.SetCurrentWord(GetCurrentWord() + "\n" + GetWordTally());
 
                     // add if for > 3 letters
-                    //CurrentWord.Text = GetWordTally();
 
                     // if it's a word, update color to green
                     if (SelLetterList.Count > 2 && EngLetterScoring.IsWord(GetCurrentWord()))
