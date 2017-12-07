@@ -70,7 +70,7 @@ namespace WordSpell
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
 
-                    using(FileStream fs = new FileStream(filePath, FileMode.Open)                    )
+                    using(FileStream fs = new FileStream(filePath, FileMode.Open))
                     {
                         PartialLookup = (SerializableStringList)xs.Deserialize(fs);
                     }

@@ -33,6 +33,7 @@ public class Board : MonoBehaviour
     // Passed in from Board scene
     #region Unity Objects
     public Transform LetterBoxPrefab;
+    public Transform LetterSpeakerPrefab;
     public GameObject SelectPrefab;
     public Transform LavaLightPrefab;
     public Transform SpellPrefab;
@@ -137,7 +138,11 @@ public class Board : MonoBehaviour
     void LoadStats()
     {
         WSGameState.LoadStats();
+        RefreshStats();
+    }
 
+    void RefreshStats()
+    {
         LongestListBox.CreateList(WSGameState.LongestWords);
         HighScoresListBox.CreateList(WSGameState.BestGameScores);
         BestWordListBox.CreateList(WSGameState.BestWordScores);
@@ -198,9 +203,9 @@ public class Board : MonoBehaviour
         {
             for (int j = 0; j < WSGameState.gridsize; j++)
             {
-                Transform lbi = NewTile(i, j);
-
-                WSGameState.NewLetter(i, j, lbi);
+                LetterProp lp = WSGameState.NewLetter(i, j);
+                Transform lbi = NewTile(i, j, lp.TileType);
+                lp.SetTransform(lbi);
             }
         }
 
@@ -215,6 +220,8 @@ public class Board : MonoBehaviour
         PlayEndGameSound();
         yield return new WaitForSeconds(3);
         MsgCanvas.SetActive(false);
+
+        RefreshStats();
 
         StartCanvas.SetActive(true);
     }
@@ -242,6 +249,31 @@ public class Board : MonoBehaviour
         lbi.localScale *= inc;
 
         return lbi;
+    }
+
+    public Transform NewTile(int i, int j, LetterProp.TileTypes tt, float newtilepos = 0)
+    {
+        // If it's a new tile, put it above the screen so animation can set it into place.
+        Transform lbi = null; 
+
+        switch (tt)
+        {
+            case LetterProp.TileTypes.Speaker:
+                lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
+                lbi.localScale *= inc;
+                break;
+            default:
+                lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
+                lbi.localScale *= inc;
+                break;
+        }
+
+        return lbi;
+    }
+
+    public void DestroyLetterObject(Transform tf)
+    {
+        Destroy(tf.gameObject);
     }
 
     public Transform NewLavaLight()

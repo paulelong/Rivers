@@ -66,8 +66,31 @@ namespace WordSpell
             get { return tt;  }
             set
             {
-                tt = value;
-                UpdateMaterial();
+                if(tt != value)
+                {
+                    tt = value;
+
+                    switch (tt)
+                    {
+                        case TileTypes.Speaker:
+                            ClearTransform();
+                            Transform t = boardScript.NewTile(I, J, tt);
+                            SetTransform(t);
+                            break;
+                        default:
+                            UpdateMaterial();
+                            break;
+
+                    }
+                }
+            }
+        }
+
+        private void ClearTransform()
+        {
+            if(Tf != null)
+            {
+                boardScript.DestroyLetterObject(Tf);
             }
         }
 
@@ -75,6 +98,8 @@ namespace WordSpell
         static List<TileProb> TilesForLevel = new List<TileProb>();
 
         static System.Random r = new System.Random();
+
+        #region Properties
 
         public byte letter
         {
@@ -129,7 +154,10 @@ namespace WordSpell
             set
             {
                 i = value;
-                tileScript.SetPos(i, j); 
+                if(tileScript != null)
+                {
+                    tileScript.SetPos(i, j);
+                }
             }
         }
 
@@ -143,11 +171,12 @@ namespace WordSpell
             set
             {
                 j = value;
-                tileScript.SetPos(i, j);
+                if (tileScript != null)
+                {
+                    tileScript.SetPos(i, j);
+                }
             }
         }
-
-        public SpellInfo SpellInfo { get; internal set; }
 
         public float LetterUCount
         {
@@ -356,6 +385,9 @@ namespace WordSpell
                 musicHolder = value;
             }
         }
+#endregion Properties
+
+        public SpellInfo SpellInfo { get; internal set; }
 
         public enum TileTypes
         {
@@ -488,6 +520,30 @@ namespace WordSpell
             UpdateMaterial();
         }
 
+        public LetterProp(int level, bool levelup, int _i, int _j)
+        {
+            tt = CreateNewTile(level, levelup);
+
+            letter = EngLetterScoring.GetRandomLetter(IsBurning(), WSGameState.GetFortune());
+
+            I = _i;
+            J = _j;
+        }
+
+        public void SetTransform(Transform _tf)
+        {
+            Tf = _tf;
+
+            LetterAnimator = Tf.gameObject.GetComponent<Animator>();
+
+            tileScript = (Tile)Tf.gameObject.GetComponent(typeof(Tile));
+
+            tileScript.SetPos(I, J, this);
+
+            UpdateLetterDisplay();
+            UpdateMaterial();
+        }
+
         public void PlayBackgroundMusic()
         {
             TileType = LetterProp.TileTypes.Speaker;
@@ -501,7 +557,7 @@ namespace WordSpell
 
         public void UpdateMaterial()
         {
-            switch(tt)
+            switch (tt)
             {
                 case TileTypes.Burning:
                     AnimationEnabled = true;
@@ -526,7 +582,7 @@ namespace WordSpell
                     Tf.gameObject.GetComponent<MeshRenderer>().material = ManaMat;
                     break;
                 case TileTypes.Speaker:
-                    Tf.gameObject.GetComponent<MeshRenderer>().material = Jeans;
+                    //Tf.gameObject.GetComponent<MeshRenderer>().material = Jeans;
                     break;
                 default:
                     Tf.gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
@@ -548,6 +604,7 @@ namespace WordSpell
             //t.transform.SetParent(Tf);
             //                    Object.Instantiate();
             //Tf.GetChild(0).gameObject.SetActive(true);
+            LetterAnimator.gameObject.SetActive(true);
             LetterAnimator.SetTrigger(Burning);
         }
 
@@ -583,13 +640,17 @@ namespace WordSpell
             }
 
             // Adjustments for letter widths so they are centered
-            if(this.ASCIIChar == 'W')
+            switch(this.ASCIIChar)
             {
-                text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.6f);
-            }
-            else
-            {
-                text.transform.localPosition = new Vector3(-0.15f, 0.3f, -0.6f);
+                case 'W':
+                    text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                    break;
+                case 'I':
+                    text.transform.localPosition = new Vector3(-0.05f, 0.3f, -0.06f);
+                    break;
+                default:
+                    text.transform.localPosition = new Vector3(-0.15f, 0.3f, -0.06f);
+                    break;
             }
         }
 

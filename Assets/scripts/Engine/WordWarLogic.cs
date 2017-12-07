@@ -52,6 +52,23 @@ namespace WordSpell
             }
         }
 
+        static void RecoreGameScore(int totalScore)
+        {
+            int indx = os.BestGameScores.FindIndex(f => (f < totalScore));
+            if (indx >= 0)
+            {
+                os.BestGameScores.Insert(indx, totalScore);
+            }
+            else
+            {
+                os.BestGameScores.Add(totalScore);
+            }
+            if (os.BestGameScores.Count > NumberOfTopScores)
+            {
+                os.BestGameScores.RemoveAt(NumberOfTopScores);
+            }
+        }
+
         static public List<string> BestWordScores
         {
             get
@@ -289,7 +306,20 @@ namespace WordSpell
             {
                 levelup = false;
             }
-        } 
+
+        }
+
+        public static LetterProp NewLetter(int i, int j)
+        {
+            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j);
+
+            if (levelup == true)
+            {
+                levelup = false;
+            }
+
+            return (LetterPropGrid[i, j]);
+        }
 
         public static void LetterClick(int i, int j)
         {
@@ -406,6 +436,8 @@ namespace WordSpell
                         GamePersistence.SaveOverallStats(os);
                         GamePersistence.ResetGameData();
                         RemoveGameBoard();
+
+                        RecoreGameScore(gs.score);
 
                         //SaveStats();
                         Resume = false;
@@ -659,6 +691,12 @@ namespace WordSpell
 
         private static void CheckTopLongestWordScores(WordScoreItem wsi)
         {
+            if (os.LongestWords.FindIndex(f => (f.word == wsi.word)) >= 0)
+            {
+                return;
+            }
+
+
             int indx = os.LongestWords.FindIndex(f => (f.word.Length < wsi.word.Length));
             if (indx >= 0)
             {
@@ -676,6 +714,11 @@ namespace WordSpell
 
         private static void CheckTopBestWordScoresSimple(WordScoreItem wsi)
         {
+            if (os.BestWordScoresSimple.FindIndex(f => (f.word == wsi.word)) >= 0)
+            {
+                return;
+            }
+
             int indx = os.BestWordScoresSimple.FindIndex(f => (f.score < wsi.simplescore));
             if (indx >= 0)
             {
@@ -693,6 +736,15 @@ namespace WordSpell
 
         private static void CheckTopBestWordScores(WordScoreItem wsi)
         {
+            int idx = os.BestWordScores.FindIndex(f => (f.word == wsi.word));
+            if (idx >= 0)
+            {
+                if(os.BestWordScores[idx].score == wsi.score)
+                {
+                    return;
+                }
+            }
+
             int indx = os.BestWordScores.FindIndex(f => (f.score < wsi.score));
             if (indx >= 0)
             {
@@ -832,8 +884,11 @@ namespace WordSpell
             }
 
             float fallCount = LetterPropGrid[i, gridsize - 1].LetterDCount;
-            Transform lbi = boardScript.NewTile(i, gridsize - 1, fallCount);
-            NewLetter(i, gridsize - 1, lbi);
+
+            LetterProp lp = NewLetter(i, gridsize - 1);
+            Transform lbi = boardScript.NewTile(i, gridsize - 1, lp.TileType, fallCount);
+            lp.SetTransform(lbi);
+
             LetterPropGrid[i, gridsize - 1].LetterDCount = fallCount;
 
             RemoveTile(toRemove);
