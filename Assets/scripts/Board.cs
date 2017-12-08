@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using WordSpell;
+using System;
 
 public class Board : MonoBehaviour
 {
@@ -40,10 +41,12 @@ public class Board : MonoBehaviour
     public Transform TextPrefab;
 
     // Canvas
+    public GameObject ControlCanvas;
     public GameObject StartCanvas;
     public GameObject MsgCanvas;
     public GameObject SpellCanvas;
     public GameObject InputCanvas;
+    public GameObject SystemMenu;
     public GameObject tgo;
     public Camera BoardCam;
 
@@ -74,7 +77,17 @@ public class Board : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        //var gol = GameObject.FindGameObjectsWithTag("ScoreText");
+        //foreach(GameObject go in gol)
+        //{
+        //    Debug.Log(go.name);
+        //}
+
+        SetUserInfo(GamePersistence.TestPersistence());
+
         WSGameState.InitGameGlobal();
+
+        SetStoryInfo(EngLetterScoring.Intro1, EngLetterScoring.Intro2);
 
         TryListBox = new ListBox<VerticalLayoutGroup>(TryList, TextPrefab);
         HistoryListBox = new ListBox<VerticalLayoutGroup>(HistoryList, TextPrefab);
@@ -173,16 +186,6 @@ public class Board : MonoBehaviour
                 }
             }
         }
-
-        if(Input.GetKeyDown(KeyCode.S))
-        {
-            WSGameState.Save();
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            WSGameState.Load();
-        }
     }
 
     // Handlers
@@ -195,7 +198,7 @@ public class Board : MonoBehaviour
     public void StartGame()
     {
         StartCanvas.SetActive(false);
-        GameAreaPanel.SetActive(true);
+        ControlCanvas.SetActive(true);
 
         WSGameState.InitNewGame();
 
@@ -325,7 +328,7 @@ public class Board : MonoBehaviour
     }
 
     // Button commands
-    public void QuitGame()
+    public void QuitApp()
     {
         WSGameState.Save();
         Application.Quit();
@@ -340,6 +343,30 @@ public class Board : MonoBehaviour
     {
         SetCurrentWord("Click on letters to spell a word");
         IndicateGoodWord(false);
+    }
+
+    public void HamburgerMenu()
+    {
+        if(SystemMenu.activeSelf)
+        {
+            SystemMenu.SetActive(false);
+        }
+        else
+        {
+            SystemMenu.SetActive(true);
+        }
+    }
+
+    public void SaveGame()
+    {
+        WSGameState.Save();
+        SystemMenu.SetActive(false);
+    }
+
+    public void QuitGame()
+    {
+        SystemMenu.SetActive(false);
+        WSGameState.GameOver();
     }
 
     // ----------------------------------------------------------
@@ -392,6 +419,20 @@ public class Board : MonoBehaviour
     {
         TryListBox.Clear();
     }
+
+    public void SetUserInfo(string s)
+    {
+        SystemMenu.transform.GetChild(0).GetChild(2).GetComponent<Text>().text = s;
+    }
+
+
+    public void SetStoryInfo(string s1, string s2)
+    {
+        StartCanvas.transform.GetChild(2).GetComponent<Text>().text = s1;
+        StartCanvas.transform.GetChild(4).GetComponent<Text>().text = s2;
+    }
+
+    // Spell related stuff
 
     public void AddSpellList(ListBox<GridLayoutGroup> spellbox, SpellInfo si, bool awarded = false)
     {

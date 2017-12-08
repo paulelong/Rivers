@@ -224,6 +224,18 @@ namespace WordSpell
             }
         }
 
+        internal static string TestPersistence()
+        {
+            string filePath = Application.persistentDataPath + "/testme.txt";
+            string worked = "not yet";
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            {
+                worked = "It's opened";
+            }
+
+            return filePath + "\n" + worked;
+        }
+
         //internal async static Task SaveGame()
         //{
         //    if(LetterPropGrid != null)

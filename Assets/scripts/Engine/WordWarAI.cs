@@ -373,7 +373,7 @@ namespace WordSpell
             {
                 if (curword.Length >= 3)
                 {
-                    if (EngLetterScoring.IsWord(curword))
+                    if (EngLetterScoring.IsWord(curword.ToString()))
                     {
                         Word w = new Word(CurWordList);
                         if (!WordsFromLetter.Contains(w))

@@ -29,6 +29,9 @@ namespace WordSpell
     {
         const string PartialLookupCache = "LookupCache.xml";
         const string DictionaryCache = "DictionaryCache.lst";
+        const string intro1 = "Pangram the letter volcano is about to blow!  Legend tells of a magical prodigy who’s knowledge of words can will save the day.  Select adjacent tiles in any direction to spell words.  Longer words improve your fortune, which means better replacement letters.";
+        const string intro2 = "Advance levels to gain spells which let you rearrange the letters.\n\nBeware of lava tiles(like the E), because if they reach the bottom, the game is over.";
+
 #if UNITY_EDITOR
         static System.Random r = new System.Random(21);
 #else
@@ -115,10 +118,10 @@ namespace WordSpell
             return (DictionaryLookup.BinarySearch(word.ToLower()) >= 0);
         }
 
-        internal static bool IsWord(StringBuilder curword)
-        {
-            return IsWord(curword.ToString());
-        }
+        //internal static bool IsWord(StringBuilder curword)
+        //{
+        //    return IsWord(curword.ToString());
+        //}
 
         private static Dictionary<char, int> values = new Dictionary<char, int>()
         {
@@ -175,6 +178,22 @@ namespace WordSpell
             {'Y', 4 },
             {'Z', 10 },
         };
+
+        public static string Intro1
+        {
+            get
+            {
+                return intro1;
+            }
+        }
+
+        public static string Intro2
+        {
+            get
+            {
+                return intro2;
+            }
+        }
 
         internal static bool PartialExists(string curword)
         {
@@ -337,25 +356,6 @@ namespace WordSpell
             return _score * wordMult + LengthBonus(word);
         }
 
-        //internal static int ScoreWord(List<Button> buttonList)
-        //{
-        //    int _score = 0;
-        //    int wordMult = 1;
-        //    string word = "";
-
-        //    foreach (Button b in buttonList)
-        //    {
-        //        string s = (b.Content as string).ToLower();
-        //        word += s;
-
-        //        LetterProp lp = b.DataContext as LetterProp;
-
-        //        _score += lp.GetLetterMult() * values[s[0]];
-        //        wordMult += lp.GetWordMult();
-        //    }
-        //    return _score * wordMult + LengthBonus(word);
-        //}
-
         internal static int ScoreWordSimple(List<LetterProp> buttonList)
         {
             int _score = 0;
@@ -426,17 +426,6 @@ namespace WordSpell
             string curword = GetCurrentWord(lp_list);
             return ScoreWord(lp_list) + "=>" + EngLetterScoring.ScoreWordString(lp_list);
         }
-
-        //public static string GetCurrentWord(List<Button> buttonList)
-        //{
-        //    string s = "";
-
-        //    foreach (Button b in buttonList)
-        //    {
-        //        s += b.Content;
-        //    }
-        //    return s;
-        //}
 
         public static string GetCurrentWord(List<LetterProp> lplist)
         {

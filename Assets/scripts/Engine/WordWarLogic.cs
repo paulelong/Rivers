@@ -433,17 +433,7 @@ namespace WordSpell
                     bool gameOver = ProcessLetters();
                     if (gameOver)
                     {
-                        GamePersistence.SaveOverallStats(os);
-                        GamePersistence.ResetGameData();
-                        RemoveGameBoard();
-
-                        RecoreGameScore(gs.score);
-
-                        //SaveStats();
-                        Resume = false;
-                        boardScript.EndGanme();
-
-                        //ResetSavedGame();
+                        GameOver();
                     }
                     else
                     {
@@ -488,10 +478,20 @@ namespace WordSpell
             else
             {
                 Deselect(null);
-
-                //CurrentWord.Text = "Not a known word.  Try again";
             }
 
+        }
+
+        public static void GameOver()
+        {
+            GamePersistence.SaveOverallStats(os);
+            GamePersistence.ResetGameData();
+            RemoveGameBoard();
+
+            RecoreGameScore(gs.score);
+
+            Resume = false;
+            boardScript.EndGanme();
         }
 
         internal static bool EnoughMana(int mannaPoints)
@@ -505,6 +505,7 @@ namespace WordSpell
             {
                 for(int j = 0; j < gridsize; j++)
                 {
+                    //LetterPropGrid[i, j].AnimationEnabled = false;
                     RemoveTile(LetterPropGrid[i, j]);
                 }
             }
@@ -917,7 +918,7 @@ namespace WordSpell
             float zr = r.Next(100) / 1f;
             rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
 
-            if(toRemove.MusicHolderRole)
+            if(toRemove.MusicHolderRole && GamePersistence.SavedGameExists())
             {
                 LetterPropGrid[4, 8].PlayBackgroundMusic();
             }
