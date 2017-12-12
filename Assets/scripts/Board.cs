@@ -53,6 +53,8 @@ public class Board : MonoBehaviour
     // Where the letter grid goes
     public GameObject GameAreaPanel;
 
+    public GameObject FortuneBar;
+
     public GameObject LevelText;
     public GameObject ScoreText;
     public GameObject ManaText;
@@ -74,6 +76,7 @@ public class Board : MonoBehaviour
     public AudioClip SnipeSound;
     #endregion Unity Objects
 
+    #region Init
     // Use this for initialization
     void Start ()
     {
@@ -83,6 +86,7 @@ public class Board : MonoBehaviour
         //    Debug.Log(go.name);
         //}
 
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         SetUserInfo(GamePersistence.TestPersistence());
 
         WSGameState.InitGameGlobal();
@@ -148,6 +152,8 @@ public class Board : MonoBehaviour
         Debug.Log("local: " + GameAreaPanel.transform.localPosition);
     }
 
+    #endregion Init
+
     void LoadStats()
     {
         WSGameState.LoadStats();
@@ -189,11 +195,66 @@ public class Board : MonoBehaviour
     }
 
     // Handlers
+    #region Handlers
 
     public void OnMouseClick()
     {
         MsgCanvas.SetActive(false);
     }
+
+    public void OnApplicationQuit()
+    {
+        if (!StartCanvas.activeSelf)
+        {
+            WSGameState.Save();
+        }
+
+        WSGameState.SaveStats();
+    }
+
+    // Button commands
+    public void QuitApp()
+    {
+        WSGameState.Save();
+        Application.Quit();
+    }
+
+    public void SubmitWord()
+    {
+        WSGameState.SubmitWord();
+    }
+
+    public void ResetSubmitButton()
+    {
+        SetCurrentWord("Click on letters to spell a word");
+        IndicateGoodWord(false);
+    }
+
+    public void HamburgerMenu()
+    {
+        if (SystemMenu.activeSelf)
+        {
+            SystemMenu.SetActive(false);
+        }
+        else
+        {
+            SystemMenu.SetActive(true);
+        }
+    }
+
+    public void SaveGame()
+    {
+        WSGameState.Save();
+        SystemMenu.SetActive(false);
+    }
+
+    public void QuitGame()
+    {
+        SystemMenu.SetActive(false);
+        WSGameState.GameOver();
+    }
+
+    #endregion Handlers
 
     public void StartGame()
     {
@@ -234,16 +295,6 @@ public class Board : MonoBehaviour
         StartCoroutine(EndGameDelay());
     }
 
-    public void OnApplicationQuit()
-    {
-        if(!StartCanvas.activeSelf)
-        {
-            WSGameState.Save();
-        }
-
-        WSGameState.SaveStats();
-    }
-
     public Transform NewTile(int i, int j, float newtilepos = 0)
     {
         // If it's a new tile, put it above the screen so animation can set it into place.
@@ -274,9 +325,9 @@ public class Board : MonoBehaviour
         return lbi;
     }
 
-    public void DestroyLetterObject(Transform tf)
+    public void DestroyLetterObject(Transform _tf)
     {
-        Destroy(tf.gameObject);
+        Destroy(_tf.gameObject);
     }
 
     public Transform NewLavaLight()
@@ -286,13 +337,17 @@ public class Board : MonoBehaviour
         return lavalight;
     }
 
+    #region Controls
+
+    // ----------------------------------------------------------
+    // Status settings for Control UI element values
+
     public void ShowMsg(string text)
     {
         MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = text;
         MsgCanvas.SetActive(true);
     }
-
-
+    
     public GameObject SelectLet(int i, int j)
     {
         GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - half_offset) * inc, (j - half_offset) * inc, 0.6f), Quaternion.identity);
@@ -308,10 +363,10 @@ public class Board : MonoBehaviour
         hr.GetComponent<MeshRenderer>().material = m;
         vb.GetComponent<MeshRenderer>().material = m;
 
-        Animator anim_hr = hl.GetComponent<Animator>();
-        Animator anim_vt = vt.GetComponent<Animator>();
-        Animator anim_hl = hr.GetComponent<Animator>();
-        Animator anim_vb= vb.GetComponent<Animator>();
+        //Animator anim_hr = hl.GetComponent<Animator>();
+        //Animator anim_vt = vt.GetComponent<Animator>();
+        //Animator anim_hl = hr.GetComponent<Animator>();
+        //Animator anim_vb= vb.GetComponent<Animator>();
 
         return t;
     }
@@ -322,55 +377,11 @@ public class Board : MonoBehaviour
         Destroy(t);
     }
 
-    public float TranslatToGrid(int i)
+    public void SetFortune(float scale, Material m)
     {
-        return ((i - half_offset) * inc);
+        FortuneBar.transform.localScale = new Vector3(scale, 1, 1);
+        FortuneBar.GetComponent<MeshRenderer>().material = m;
     }
-
-    // Button commands
-    public void QuitApp()
-    {
-        WSGameState.Save();
-        Application.Quit();
-    }
-
-    public void SubmitWord()
-    {
-        WSGameState.SubmitWord();
-    }
-
-    public void ResetSubmitButton()
-    {
-        SetCurrentWord("Click on letters to spell a word");
-        IndicateGoodWord(false);
-    }
-
-    public void HamburgerMenu()
-    {
-        if(SystemMenu.activeSelf)
-        {
-            SystemMenu.SetActive(false);
-        }
-        else
-        {
-            SystemMenu.SetActive(true);
-        }
-    }
-
-    public void SaveGame()
-    {
-        WSGameState.Save();
-        SystemMenu.SetActive(false);
-    }
-
-    public void QuitGame()
-    {
-        SystemMenu.SetActive(false);
-        WSGameState.GameOver();
-    }
-
-    // ----------------------------------------------------------
-    // Status settings to control UI element values
 
     /// <summary>
     /// 
@@ -431,6 +442,14 @@ public class Board : MonoBehaviour
         StartCanvas.transform.GetChild(2).GetComponent<Text>().text = s1;
         StartCanvas.transform.GetChild(4).GetComponent<Text>().text = s2;
     }
+
+    #endregion Controls
+
+    public float TranslatToGrid(int i)
+    {
+        return ((i - half_offset) * inc);
+    }
+
 
     // Spell related stuff
 

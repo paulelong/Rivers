@@ -136,6 +136,8 @@ namespace WordSpell
         private static int FortuneLevelCount;
 
         private static bool resume = false;
+        private static bool gameOver = false;
+
         public static bool Resume { get { return resume; } set { resume = value; } }
 
         internal static void DebugMode()
@@ -144,6 +146,11 @@ namespace WordSpell
             gs.level = 20;
         }
 
+        #region Constants
+
+        const int EffHigh = 13;
+        const int EffMed = 10;        
+
         public enum FortuneLevel
         {
             Bad,
@@ -151,27 +158,15 @@ namespace WordSpell
             Great,
         }
 
+        #endregion Constants
+
         public static FortuneLevel GetFortune()
         {
-            if (Efficiency > 12)
+            if (Efficiency >= EffHigh)
             {
                 return FortuneLevel.Great;
             }
-            else if (Efficiency >= 10)
-            {
-                return FortuneLevel.Good;
-            }
-
-            return FortuneLevel.Bad;
-        }
-
-        public static FortuneLevel GetFortune(int score)
-        {
-            if (score > 12)
-            {
-                return FortuneLevel.Great;
-            }
-            else if (score >= 10)
+            else if (Efficiency >= EffMed)
             {
                 return FortuneLevel.Good;
             }
@@ -219,7 +214,6 @@ namespace WordSpell
                             LetterPropGrid[i, j].PlayBackgroundMusic();
                         }
                     }
-
                 }
             }
             else
@@ -275,57 +269,19 @@ namespace WordSpell
 
             Spells.UpdateSpellsForLevel(gs.level);
 
+            gameOver = false;
+
             //NewMusicTile();
         }
 
         #endregion init
 
-        private static void UpdateManaScore()
-        {
-            boardScript.SetMana(gs.mana.ToString());
-        }
-
-        internal static void UpdateFortune()
-        {
-            //Sel
-            //SolidColorBrush scb = GetFortuneColor();
-            //SetGridColor(scb);
-            //EffText.Foreground = scb;
-        }
-
-        internal static string GetWordTally()
-        {
-            return EngLetterScoring.GetWordTally(SelLetterList);
-        }
-
-        public static void NewLetter(int i, int j, Transform tf)
-        {
-            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j, tf);
-
-            if (levelup == true)
-            {
-                levelup = false;
-            }
-
-        }
-
-        public static LetterProp NewLetter(int i, int j)
-        {
-            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j);
-
-            if (levelup == true)
-            {
-                levelup = false;
-            }
-
-            return (LetterPropGrid[i, j]);
-        }
-
+        #region Main
         public static void LetterClick(int i, int j)
         {
             LetterProp lp = LetterPropGrid[i, j];
 
-            if(!Spells.EvalSpell(lp))
+            if (!Spells.EvalSpell(lp))
             {
                 if (SelLetterList.Count >= 0)
                 {
@@ -333,7 +289,7 @@ namespace WordSpell
                     if (!(IsLetterAdjacentToLastButton(lp) && !SelLetterList.Contains(lp)))
                     {
                         // Deselect except for the one you just clicked.
-                        if(!Deselect(lp))
+                        if (!Deselect(lp))
                         {
                             lp.SelectorObject = boardScript.SelectLet(lp.I, lp.J);
                         }
@@ -365,60 +321,13 @@ namespace WordSpell
             }
         }
 
-        private static void AddToTryList()
-        {
-            WordScoreItem wsi = new WordScoreItem() { word = GetCurrentWord(), score = ScoreWord(), wordscorestring = EngLetterScoring.GetWordTally(SelLetterList), simplescore = ScoreWordSimple() };
-
-            if(TryWordList.FindIndex(f => (f.word == wsi.word)) >= 0)
-            {
-                return;
-            }
-
-            int indx = TryWordList.FindIndex(f => (f.score < wsi.score));
-            if (indx >= 0)
-            {
-                TryWordList.Insert(indx, wsi);
-            }
-            else
-            {
-                TryWordList.Add(wsi);
-            }
-
-            boardScript.ClearTryList();
-            foreach (WordScoreItem wsi_I in TryWordList)
-            {
-                boardScript.AddTryList(wsi_I.word + " " + wsi_I.score.ToString());
-            }
-        }
-
-
-        internal static void TurnOver()
-        {
-            boardScript.ClearTryList();
-            TryWordList.Clear();
-        }
-
-        internal static void Replay()
-        {
-            gs.score = 0;
-            gs.level = 1;
-            TotalEfficiency = 0;
-            Efficiency = 0;
-            HighScoreWordValue = 0;
-            HighScoreWord = "";
-            totalwords = 0;
-            gs.mana = 0;
-
-            UpdateStats();
-        }
-
         internal static void SubmitWord()
         {
             string s = GetCurrentWord().ToLower();
 
             if (EngLetterScoring.IsWord(s))
             {
-                if(gs.history.FindIndex(f => (f.word == GetCurrentWord())) >= 0)
+                if (gs.history.FindIndex(f => (f.word == GetCurrentWord())) >= 0)
                 {
                     boardScript.ShowMsg("You've used that word already.");
                 }
@@ -430,7 +339,7 @@ namespace WordSpell
                     Deselect(null);
                     boardScript.ResetSubmitButton();
 
-                    bool gameOver = ProcessLetters();
+                    gameOver = ProcessLetters();
                     if (gameOver)
                     {
                         GameOver();
@@ -480,6 +389,187 @@ namespace WordSpell
                 Deselect(null);
             }
 
+        }
+
+        public static void RemoveAndReplaceTile(int i, int j)
+        {
+            LetterProp toRemove = LetterPropGrid[i, j];
+
+            Vector3 oldpos = LetterPropGrid[i, j].Tf.position;
+
+            for (int jp = j; jp < gridsize - 1; jp++)
+            {
+                LetterProp LetterOntop = LetterPropGrid[i, jp + 1];
+                //Tile t = (Tile)LetterOntop.Tf.GetChild(0).gameObject.GetComponent(typeof(Tile));
+                //Tile t = (Tile)LetterOntop.LetterBlockObj.GetComponent(typeof(Tile));
+                //t.SetPos(i, jp);
+
+                LetterOntop.J = jp;
+
+                LetterPropGrid[i, jp] = LetterPropGrid[i, jp + 1];
+
+                LetterOntop.LetterDCount++;
+            }
+
+            float fallCount = LetterPropGrid[i, gridsize - 1].LetterDCount;
+
+            LetterProp lp = NewLetter(i, gridsize - 1);
+            Transform lbi = boardScript.NewTile(i, gridsize - 1, lp.TileType, fallCount);
+            lp.SetTransform(lbi);
+
+            LetterPropGrid[i, gridsize - 1].LetterDCount = fallCount;
+
+            RemoveTile(toRemove);
+        }
+
+
+        public static void RemoveTile(LetterProp toRemove)
+        {
+            toRemove.Tf.Translate(0.0f, 0.0f, -1f);
+
+            //Animator a = toRemove.Tf.GetComponent<Animator>();
+            //a.enabled = false;
+            toRemove.AnimationEnabled = false;
+
+            Rigidbody rb = toRemove.LetterBlockObj.GetComponent(typeof(Rigidbody)) as Rigidbody;
+            rb.useGravity = true;
+            rb.isKinematic = false;
+
+            float xf = (r.Next(100) - 50f) / 150f;
+            float yf = (r.Next(10) - 5f) / 1f;
+            float zf = (r.Next(100) / 30f);
+            rb.AddForce(new Vector3(xf, yf, -zf), ForceMode.VelocityChange);
+
+            float xr = (r.Next(200) - 100f); // / 10f;
+            float yr = r.Next(100) / 10f;
+            float zr = r.Next(100) / 1f;
+            rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
+
+            if (toRemove.MusicHolderRole && !gameOver)
+            {
+                NewMusicTile();
+            }
+        }
+
+        #endregion Main
+
+        #region StatUpdate
+
+        private static void UpdateManaScore()
+        {
+            boardScript.SetMana(gs.mana.ToString());
+        }
+
+        internal static void UpdateFortune()
+        {
+            float eff = (float)GetLatestEff();
+            float scale = eff / EffHigh;
+            if(scale > 1.0f)
+            {
+                scale = 1.0f;
+            }
+
+            boardScript.SetFortune(eff, GetFortuneColor());
+        }
+
+        private static void AddToTryList()
+        {
+            WordScoreItem wsi = new WordScoreItem() { word = GetCurrentWord(), score = ScoreWord(), wordscorestring = EngLetterScoring.GetWordTally(SelLetterList), simplescore = ScoreWordSimple() };
+
+            if (TryWordList.FindIndex(f => (f.word == wsi.word)) >= 0)
+            {
+                return;
+            }
+
+            int indx = TryWordList.FindIndex(f => (f.score < wsi.score));
+            if (indx >= 0)
+            {
+                TryWordList.Insert(indx, wsi);
+            }
+            else
+            {
+                TryWordList.Add(wsi);
+            }
+
+            boardScript.ClearTryList();
+            foreach (WordScoreItem wsi_I in TryWordList)
+            {
+                boardScript.AddTryList(wsi_I.word + " " + wsi_I.score.ToString());
+            }
+        }
+
+        private static void UpdateStats()
+        {
+            boardScript.SetScore(gs.score.ToString());
+
+            if (totalwords > 0)
+            {
+                TotalEfficiency = gs.score / totalwords;
+            }
+
+            boardScript.SetLevel(gs.level.ToString());
+
+            UpdateManaScore();
+            UpdateFortune();
+        }
+
+        public static void ChangeManna(int manna)
+        {
+            gs.mana += manna;
+            UpdateManaScore();
+        }
+
+        #endregion StatUpdate
+
+        internal static string GetWordTally()
+        {
+            return EngLetterScoring.GetWordTally(SelLetterList);
+        }
+
+        public static void NewLetter(int i, int j, Transform tf)
+        {
+            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j, tf);
+
+            if (levelup == true)
+            {
+                levelup = false;
+            }
+
+        }
+
+        public static LetterProp NewLetter(int i, int j)
+        {
+            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j);
+
+            if (levelup == true)
+            {
+                levelup = false;
+            }
+
+            return (LetterPropGrid[i, j]);
+        }
+
+        internal static void TurnOver()
+        {
+            boardScript.ClearTryList();
+            TryWordList.Clear();
+        }
+
+        internal static void Replay()
+        {
+            gs.score = 0;
+            gs.level = 1;
+            gs.mana = 0;
+            gs.awarded.Clear();
+            gs.history.Clear();
+
+            TotalEfficiency = 0;
+            Efficiency = 0;
+            HighScoreWordValue = 0;
+            HighScoreWord = "";
+            totalwords = 0;
+
+            UpdateStats();
         }
 
         public static void GameOver()
@@ -670,26 +760,6 @@ namespace WordSpell
             }
         }
 
-        private static void UpdateStats()
-        {
-            boardScript.SetScore(gs.score.ToString());
-
-            if (totalwords > 0)
-            {
-                TotalEfficiency = gs.score / totalwords;
-            }
-
-            boardScript.SetLevel(gs.level.ToString());
-
-            UpdateManaScore();
-        }
-
-        public static void ChangeManna(int manna)
-        {
-            gs.mana += manna;
-            UpdateManaScore();
-        }
-
         private static void CheckTopLongestWordScores(WordScoreItem wsi)
         {
             if (os.LongestWords.FindIndex(f => (f.word == wsi.word)) >= 0)
@@ -862,66 +932,6 @@ namespace WordSpell
 
             WordWarAI wwai = new WordWarAI(LetterPropGrid);
             return (!wwai.AnyWords());
-        }
-
-        public static void RemoveAndReplaceTile(int i, int j)
-        {
-            LetterProp toRemove = LetterPropGrid[i, j];
-
-            Vector3 oldpos = LetterPropGrid[i, j].Tf.position;
-
-            for (int jp = j; jp < gridsize - 1; jp++)
-            {
-                LetterProp LetterOntop = LetterPropGrid[i, jp + 1];
-                //Tile t = (Tile)LetterOntop.Tf.GetChild(0).gameObject.GetComponent(typeof(Tile));
-                Tile t = (Tile)LetterOntop.Tf.gameObject.GetComponent(typeof(Tile));
-                t.SetPos(i, jp);
-
-                LetterOntop.J = jp;
-
-                LetterPropGrid[i, jp] = LetterPropGrid[i, jp + 1];
-
-                LetterOntop.LetterDCount++;
-            }
-
-            float fallCount = LetterPropGrid[i, gridsize - 1].LetterDCount;
-
-            LetterProp lp = NewLetter(i, gridsize - 1);
-            Transform lbi = boardScript.NewTile(i, gridsize - 1, lp.TileType, fallCount);
-            lp.SetTransform(lbi);
-
-            LetterPropGrid[i, gridsize - 1].LetterDCount = fallCount;
-
-            RemoveTile(toRemove);
-        }
-
-
-        public static void RemoveTile(LetterProp toRemove)
-        {
-            toRemove.Tf.Translate(0.0f, 0.0f, -1f);
-
-            //Animator a = toRemove.Tf.GetComponent<Animator>();
-            //a.enabled = false;
-            toRemove.AnimationEnabled = false;
-
-            Rigidbody rb = toRemove.Tf.GetComponent(typeof(Rigidbody)) as Rigidbody;
-            rb.useGravity = true;
-            rb.isKinematic = false;
-
-            float xf = (r.Next(100) - 50f) / 150f;
-            float yf = (r.Next(10) - 5f) / 1f;
-            float zf = (r.Next(100) / 30f);
-            rb.AddForce(new Vector3(xf, yf, -zf), ForceMode.VelocityChange);
-
-            float xr = r.Next(100) / 10f;
-            float yr =  r.Next(100) / 10f;
-            float zr = r.Next(100) / 1f;
-            rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
-
-            if(toRemove.MusicHolderRole && GamePersistence.SavedGameExists())
-            {
-                LetterPropGrid[4, 8].PlayBackgroundMusic();
-            }
         }
 
         public static void RemoveWordAndReplaceTiles()
