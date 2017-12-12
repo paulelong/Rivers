@@ -8,17 +8,46 @@ using UnityEngine;
 
 namespace WordSpell
 {
-    partial class WSGameState
+    public class WSGameState
     {
-        #region Fields
+        public struct ScoreStats
+        {
+            public int MannaScore;
+            public SpellInfo si;
+            public int bonus;
+        }
+
+        #region Privates
         static GameStats gs = new GameStats();
         static OverallStats os = new OverallStats();
         static List<WordScoreItem> TryWordList = new List<WordScoreItem>();
+        static List<LetterProp> SelLetterList = new List<LetterProp>();
+        static System.Random r;
 
-        #endregion Fields
+#if UNITY_EDITOR
+        private static int[] Levels = { 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 1300, 1600, 2000, 5000, 10000 };
+#else
+        private static int[] Levels = { 0, 25, 60, 100, 160, 230, 310, 400, 500, 650, 850, 1000, 1300, 1600, 2000, 2500, 3000, 4600, 5200, 10000, 20000, 30000  };
+#endif
 
+        private static bool levelup = false;
+        private static int totalwords = 0;
+
+        static Material BadFortuneMaterial;
+        static Material GoodFortuneMaterial;
+        static Material GreatFortuneMaterial;
+
+        private static int FortuneLevelCount;
+
+        private static bool resume = false;
+        private static bool gameOver = false;
+        #endregion Privates
 
         #region Properties
+
+        public static int CurrentLevel { get { return gs.level; } private set { } }
+
+        public static double TotalEfficiency { get; internal set; }
 
         static public List<SpellInfo> AwardedSpells
         {
@@ -98,45 +127,12 @@ namespace WordSpell
         #endregion Properties
 
 
+        #region Fields
         static public Board boardScript;
 
         static public LetterProp[,] LetterPropGrid = null;
+        #endregion Fields
 
-        static List<LetterProp> SelLetterList = new List<LetterProp>();
-
-        public const int gridsize = 9;
-
-        static System.Random r;
-
-        public static int CurrentLevel { get { return gs.level; } private set { } }
-
-        public static double TotalEfficiency { get; internal set; }
-
-#if UNITY_EDITOR
-        private static int[] Levels = { 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 1300, 1600, 2000, 5000, 10000 };
-#else
-        private static int[] Levels = { 0, 25, 60, 100, 160, 230, 310, 400, 500, 650, 850, 1000, 1300, 1600, 2000, 2500, 3000, 4600, 5200, 10000, 20000, 30000  };
-#endif
-
-        private static bool levelup = false;
-
-        //public static int totalScore;
-        public static int HighScoreWordValue = 0;
-        public static string HighScoreWord;
-        public static string HighScoreWordTally;
-        public static int totalwords = 0;
-        public static double Efficiency;
-        private const int EffWordCount = 3;
-        private const int NumberOfTopScores = 20;
-
-        static Material BadFortuneMaterial;
-        static Material GoodFortuneMaterial;
-        static Material GreatFortuneMaterial;
-
-        private static int FortuneLevelCount;
-
-        private static bool resume = false;
-        private static bool gameOver = false;
 
         public static bool Resume { get { return resume; } set { resume = value; } }
 
@@ -147,6 +143,10 @@ namespace WordSpell
         }
 
         #region Constants
+        public const int gridsize = 9;
+
+        private const int EffWordCount = 3;
+        private const int NumberOfTopScores = 20;
 
         const int EffHigh = 13;
         const int EffMed = 10;        
@@ -158,27 +158,14 @@ namespace WordSpell
             Great,
         }
 
+        public enum WordValidity
+        {
+            Garbage,
+            Word,
+            UsedWord,
+        }
+
         #endregion Constants
-
-        public static FortuneLevel GetFortune()
-        {
-            if (Efficiency >= EffHigh)
-            {
-                return FortuneLevel.Great;
-            }
-            else if (Efficiency >= EffMed)
-            {
-                return FortuneLevel.Good;
-            }
-
-            return FortuneLevel.Bad;
-        }
-
-        internal static void NewMusicTile()
-        {
-            int ti = r.Next(gridsize);
-            LetterPropGrid[ti, gridsize - 1].PlayBackgroundMusic();
-        }
 
         #region Init
 
@@ -197,7 +184,6 @@ namespace WordSpell
                 Deselect(null);
                 gs = _gs;
                 UpdateStats();
-                UpdateFortune();
 
                 foreach(WordScoreItem wsi in gs.history)
                 {
@@ -274,6 +260,51 @@ namespace WordSpell
             //NewMusicTile();
         }
 
+        public static void NewLetter(int i, int j, Transform tf)
+        {
+            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j, tf);
+
+            if (levelup == true)
+            {
+                levelup = false;
+            }
+
+        }
+
+        public static LetterProp NewLetter(int i, int j)
+        {
+            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j);
+
+            if (levelup == true)
+            {
+                levelup = false;
+            }
+
+            return (LetterPropGrid[i, j]);
+        }
+
+        internal static void NewMusicTile()
+        {
+            int ti = r.Next(gridsize);
+            LetterPropGrid[ti, gridsize - 1].PlayBackgroundMusic();
+        }
+
+        internal static void Replay()
+        {
+            gs.score = 0;
+            gs.level = 1;
+            gs.mana = 0;
+            gs.awarded.Clear();
+            gs.history.Clear();
+
+            TotalEfficiency = 0;
+            //HighScoreWordValue = 0;
+            //HighScoreWord = "";
+            totalwords = 0;
+
+            UpdateStats();
+        }
+
         #endregion init
 
         #region Main
@@ -305,17 +336,24 @@ namespace WordSpell
 
                     // add if for > 3 letters
 
-                    // if it's a word, update color to green
+                    // if it's a word, update color to green, unless we used it before
                     if (SelLetterList.Count > 2 && EngLetterScoring.IsWord(GetCurrentWord()))
                     {
-                        boardScript.IndicateGoodWord(true);
+                        if (gs.history.FindIndex(f => (f.word == GetCurrentWord())) >= 0)
+                        {
+                            boardScript.IndicateGoodWord(WSGameState.WordValidity.UsedWord);
+                        }
+                        else
+                        {
+                            boardScript.IndicateGoodWord(WSGameState.WordValidity.Word);
+                        }
 
                         // if it's a word, remember it.
                         AddToTryList();
                     }
                     else
                     {
-                        boardScript.IndicateGoodWord(false);
+                        boardScript.IndicateGoodWord(WSGameState.WordValidity.Garbage);
                     }
                 }
             }
@@ -379,16 +417,24 @@ namespace WordSpell
                             boardScript.ShowMsg(levelmsg);
                         }
 
-                        UpdateStats();
+                        //UpdateStats();
                         boardScript.ScoreWordSound();
                     }
                 }
             }
             else
             {
+                if(s.Length <= 3)
+                {
+                    boardScript.ShowMsg("Words must be 3 or more letters long.");
+                }
+                else
+                {
+                    boardScript.ShowMsg("Nice word, if you are a Martin :)  Please try again.");
+                }
+
                 Deselect(null);
             }
-
         }
 
         public static void RemoveAndReplaceTile(int i, int j)
@@ -455,21 +501,43 @@ namespace WordSpell
 
         #region StatUpdate
 
+        public static FortuneLevel GetFortune()
+        {
+            if (GetLatestEff() >= EffHigh)
+            {
+                return FortuneLevel.Great;
+            }
+            else if (GetLatestEff() >= EffMed)
+            {
+                return FortuneLevel.Good;
+            }
+
+            return FortuneLevel.Bad;
+        }
+
         private static void UpdateManaScore()
         {
             boardScript.SetMana(gs.mana.ToString());
         }
 
         internal static void UpdateFortune()
-        {
+        {           
             float eff = (float)GetLatestEff();
-            float scale = eff / EffHigh;
+
+            // Scale goes from 3, the smallest score to EffHigh which is the max efficiency.
+            float scale = (eff - 3f) / EffHigh;
+
+            // No bigger than 1, but zero makes it invisible, so start at .5
             if(scale > 1.0f)
             {
                 scale = 1.0f;
             }
+            if(scale <= 0.1f)
+            {
+                scale = .5f;
+            }
 
-            boardScript.SetFortune(eff, GetFortuneColor());
+            boardScript.SetFortune(scale, GetFortuneColor());
         }
 
         private static void AddToTryList()
@@ -526,50 +594,10 @@ namespace WordSpell
             return EngLetterScoring.GetWordTally(SelLetterList);
         }
 
-        public static void NewLetter(int i, int j, Transform tf)
-        {
-            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j, tf);
-
-            if (levelup == true)
-            {
-                levelup = false;
-            }
-
-        }
-
-        public static LetterProp NewLetter(int i, int j)
-        {
-            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j);
-
-            if (levelup == true)
-            {
-                levelup = false;
-            }
-
-            return (LetterPropGrid[i, j]);
-        }
-
         internal static void TurnOver()
         {
             boardScript.ClearTryList();
             TryWordList.Clear();
-        }
-
-        internal static void Replay()
-        {
-            gs.score = 0;
-            gs.level = 1;
-            gs.mana = 0;
-            gs.awarded.Clear();
-            gs.history.Clear();
-
-            TotalEfficiency = 0;
-            Efficiency = 0;
-            HighScoreWordValue = 0;
-            HighScoreWord = "";
-            totalwords = 0;
-
-            UpdateStats();
         }
 
         public static void GameOver()
@@ -635,13 +663,6 @@ namespace WordSpell
             return EngLetterScoring.ScoreWordString(SelLetterList);
         }
 
-        public struct ScoreStats
-        {
-            public int MannaScore;
-            public SpellInfo si;
-            public int bonus;
-        }
-
         internal static ScoreStats RecordWordScore()
         {
             ScoreStats ss = new ScoreStats();
@@ -651,12 +672,6 @@ namespace WordSpell
             boardScript.AddHistory(GetCurrentWord() + " " + GetWordTally());
 
             gs.score += wordTotal;
-            if (wordTotal > HighScoreWordValue)
-            {
-                HighScoreWordValue = wordTotal;
-                HighScoreWord = GetCurrentWord();
-                HighScoreWordTally = EngLetterScoring.GetWordTally(SelLetterList);
-            }
 
             WordScoreItem wsi = new WordScoreItem() { word = GetCurrentWord(), score = wordTotal, wordscorestring = EngLetterScoring.GetWordTally(SelLetterList), simplescore = ScoreWordSimple() };
 
@@ -677,7 +692,6 @@ namespace WordSpell
             totalwords++;
 
             TotalEfficiency = gs.score / totalwords;
-            Efficiency = GetLatestEff();
 
             if (GetFortune() == FortuneLevel.Great)
             {
@@ -732,8 +746,6 @@ namespace WordSpell
                 AwardedSpells.Add(si);
                 ss.si = si;
             }
-
-            UpdateFortune();
 
             UpdateStats();
 
@@ -838,6 +850,11 @@ namespace WordSpell
 
         private static double GetLatestEff()
         {
+            if(gs.fortune.Count <= 0)
+            {
+                return 0;
+            }
+
             int wordtotal = 0;
             foreach (WordScoreItem wsi in gs.fortune)
             {
@@ -946,6 +963,5 @@ namespace WordSpell
         {
             return EngLetterScoring.GetCurrentWord(SelLetterList);
         }
-
     }
 }

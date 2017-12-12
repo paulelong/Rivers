@@ -18,6 +18,10 @@ public class Board : MonoBehaviour
     ListBox<UnityEngine.UI.VerticalLayoutGroup> BestWordSimpleListBox;
     ListBox<UnityEngine.UI.VerticalLayoutGroup> HighScoresListBox;
     ListBox<UnityEngine.UI.VerticalLayoutGroup> LongestListBox;
+
+    private float newFortuneScale;
+    private float fortuneScale = 0f;
+
     #endregion Fields
 
     #region Constants
@@ -29,6 +33,8 @@ public class Board : MonoBehaviour
     const string SpellNamePath = "TextPanel/Name";
     const string SpellCostPath = "TextPanel/Cost";
     const string SpellImagePath = "ButtonPanel/Image";
+
+    const float fortuneChangeSpeed = .05f;
     #endregion Constants
 
     // Passed in from Board scene
@@ -47,7 +53,7 @@ public class Board : MonoBehaviour
     public GameObject SpellCanvas;
     public GameObject InputCanvas;
     public GameObject SystemMenu;
-    public GameObject tgo;
+    public GameObject SubmitButtonGO;
     public Camera BoardCam;
 
     // Where the letter grid goes
@@ -152,6 +158,53 @@ public class Board : MonoBehaviour
         Debug.Log("local: " + GameAreaPanel.transform.localPosition);
     }
 
+    public void EndGanme()
+    {
+        StartCoroutine(EndGameDelay());
+    }
+
+    public Transform NewTile(int i, int j, float newtilepos = 0)
+    {
+        // If it's a new tile, put it above the screen so animation can set it into place.
+
+        Transform lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
+        lbi.localScale *= inc;
+
+        return lbi;
+    }
+
+    public Transform NewTile(int i, int j, LetterProp.TileTypes tt, float newtilepos = 0)
+    {
+        // If it's a new tile, put it above the screen so animation can set it into place.
+        Transform lbi = null;
+
+        switch (tt)
+        {
+            case LetterProp.TileTypes.Speaker:
+                lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
+                lbi.localScale *= inc;
+                break;
+            default:
+                lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
+                lbi.localScale *= inc;
+                break;
+        }
+
+        return lbi;
+    }
+
+    public void DestroyLetterObject(Transform _tf)
+    {
+        Destroy(_tf.gameObject);
+    }
+
+    public Transform NewLavaLight()
+    {
+        Transform lavalight = Instantiate(LavaLightPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+
+        return lavalight;
+    }
+
     #endregion Init
 
     void LoadStats()
@@ -192,6 +245,18 @@ public class Board : MonoBehaviour
                 }
             }
         }
+
+        if(newFortuneScale - fortuneScale > 0.01f)
+        {
+            fortuneScale += fortuneChangeSpeed;
+            FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
+        }
+
+        if (newFortuneScale - fortuneScale < -0.01f)
+        {
+            fortuneScale -= fortuneChangeSpeed;
+            FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
+        }
     }
 
     // Handlers
@@ -227,7 +292,7 @@ public class Board : MonoBehaviour
     public void ResetSubmitButton()
     {
         SetCurrentWord("Click on letters to spell a word");
-        IndicateGoodWord(false);
+        IndicateGoodWord(WSGameState.WordValidity.Garbage);
     }
 
     public void HamburgerMenu()
@@ -290,53 +355,6 @@ public class Board : MonoBehaviour
         StartCanvas.SetActive(true);
     }
 
-    public void EndGanme()
-    {
-        StartCoroutine(EndGameDelay());
-    }
-
-    public Transform NewTile(int i, int j, float newtilepos = 0)
-    {
-        // If it's a new tile, put it above the screen so animation can set it into place.
-
-        Transform lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-        lbi.localScale *= inc;
-
-        return lbi;
-    }
-
-    public Transform NewTile(int i, int j, LetterProp.TileTypes tt, float newtilepos = 0)
-    {
-        // If it's a new tile, put it above the screen so animation can set it into place.
-        Transform lbi = null; 
-
-        switch (tt)
-        {
-            case LetterProp.TileTypes.Speaker:
-                lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-                lbi.localScale *= inc;
-                break;
-            default:
-                lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-                lbi.localScale *= inc;
-                break;
-        }
-
-        return lbi;
-    }
-
-    public void DestroyLetterObject(Transform _tf)
-    {
-        Destroy(_tf.gameObject);
-    }
-
-    public Transform NewLavaLight()
-    {
-        Transform lavalight = Instantiate(LavaLightPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-
-        return lavalight;
-    }
-
     #region Controls
 
     // ----------------------------------------------------------
@@ -379,7 +397,8 @@ public class Board : MonoBehaviour
 
     public void SetFortune(float scale, Material m)
     {
-        FortuneBar.transform.localScale = new Vector3(scale, 1, 1);
+        newFortuneScale = scale;
+
         FortuneBar.GetComponent<MeshRenderer>().material = m;
     }
 
@@ -389,7 +408,7 @@ public class Board : MonoBehaviour
     /// <param name="s"></param>
     public void SetCurrentWord(string s)
     {
-        UnityEngine.UI.Text t = tgo.GetComponentInChildren(typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text;
+        UnityEngine.UI.Text t = SubmitButtonGO.GetComponentInChildren(typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text;
         t.text = s;
     }
 
@@ -450,9 +469,7 @@ public class Board : MonoBehaviour
         return ((i - half_offset) * inc);
     }
 
-
     // Spell related stuff
-
     public void AddSpellList(ListBox<GridLayoutGroup> spellbox, SpellInfo si, bool awarded = false)
     {
         Transform item = spellbox.Add();
@@ -547,21 +564,28 @@ public class Board : MonoBehaviour
         WSGameState.AwardedSpells.Remove(si);
     }
     
-    public void IndicateGoodWord(bool good)
+    public void IndicateGoodWord(WSGameState.WordValidity wordStatus)
     {
-        if (good)
+        var theColor = SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors;
+
+        switch (wordStatus)
         {
-            var theColor = tgo.GetComponent<UnityEngine.UI.Button>().colors;
-            theColor.normalColor = new Color32(72, 234, 94, 255);
-            theColor.highlightedColor = new Color32(72, 234, 94, 255);
-            tgo.GetComponent<UnityEngine.UI.Button>().colors = theColor;
-        }
-        else
-        {
-            var theColor = tgo.GetComponent<UnityEngine.UI.Button>().colors;
-            theColor.normalColor = Color.white;
-            theColor.highlightedColor = Color.white;
-            tgo.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+            case WSGameState.WordValidity.Garbage:
+                theColor.normalColor = Color.gray;
+                theColor.highlightedColor = Color.gray;
+                SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+                break;
+            case WSGameState.WordValidity.Word:
+                theColor.normalColor = new Color32(72, 234, 94, 255);
+                theColor.highlightedColor = new Color32(72, 234, 94, 255);
+                SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+                break;
+            case WSGameState.WordValidity.UsedWord:
+                theColor.normalColor = Color.yellow;
+                theColor.highlightedColor = Color.yellow;
+                SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+                break;
+
         }
     }
 

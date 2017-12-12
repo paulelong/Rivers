@@ -9,7 +9,6 @@ namespace WordSpell
     {
         int i, j;
 
-        Tile tileScript;
         private TileTypes tt;
 
         public Transform Tf { get; private set; }
@@ -20,8 +19,8 @@ namespace WordSpell
         bool IsSelected = false;
         int Burning = Animator.StringToHash("Burning");
         int Selected = Animator.StringToHash("StartSel");
-        int LetterFall = Animator.StringToHash("LetterFall");
-        int LetterFallObj = Animator.StringToHash("LetterFallObj");
+        //int LetterFall = Animator.StringToHash("LetterFall");
+        //int LetterFallObj = Animator.StringToHash("LetterFallObj");
         int Idle = Animator.StringToHash("Idle");
         int FlipBack = Animator.StringToHash("FlipBack");
         int FlipForward = Animator.StringToHash("FlipForward");
@@ -47,45 +46,6 @@ namespace WordSpell
         Vector3 letterRotVUCAxis;
         Vector3 letterRotVDCAxis;
 
-        public bool AnimationEnabled
-        {
-            set
-            {
-                Animator a = Tf.GetComponent<Animator>();
-                a.enabled = value;
-            }
-            get
-            {
-                Animator a = Tf.GetComponent<Animator>();
-                return(a.enabled);
-            }
-        }
-
-        public TileTypes TileType
-        {
-            get { return tt;  }
-            set
-            {
-                if(tt != value)
-                {
-                    tt = value;
-
-                    switch (tt)
-                    {
-                        case TileTypes.Speaker:
-                            ClearTransform();
-                            Transform t = boardScript.NewTile(I, J, tt);
-                            SetTransform(t);
-                            break;
-                        default:
-                            UpdateMaterial();
-                            break;
-
-                    }
-                }
-            }
-        }
-
         private void ClearTransform()
         {
             if(Tf != null)
@@ -100,6 +60,37 @@ namespace WordSpell
         static System.Random r = new System.Random();
 
         #region Properties
+
+        public bool AnimationEnabled
+        {
+            set
+            {
+                Animator a = LetterBlockObj.GetComponent<Animator>();
+                a.Rebind();
+                a.enabled = value;
+            }
+            get
+            {
+                Animator a = LetterBlockObj.GetComponent<Animator>();
+                return (a.enabled);
+            }
+        }
+
+        public TileTypes TileType
+        {
+            get { return tt; }
+            set
+            {
+                if (tt != value)
+                {
+                    tt = value;
+
+                    ClearTransform();
+                    Transform t = boardScript.NewTile(I, J, tt);
+                    SetTransform(t);
+                }
+            }
+        }
 
         public byte letter
         {
@@ -154,10 +145,10 @@ namespace WordSpell
             set
             {
                 i = value;
-                if(tileScript != null)
-                {
-                    tileScript.SetPos(i, j);
-                }
+                //if(TileScript != null)
+                //{
+                //    TileScript.SetPos(i, j);
+                //}
             }
         }
 
@@ -171,10 +162,10 @@ namespace WordSpell
             set
             {
                 j = value;
-                if (tileScript != null)
-                {
-                    tileScript.SetPos(i, j);
-                }
+                //if (TileScript != null)
+                //{
+                //    TileScript.SetPos(i, j);
+                //}
             }
         }
 
@@ -385,9 +376,27 @@ namespace WordSpell
                 musicHolder = value;
             }
         }
-#endregion Properties
 
         public SpellInfo SpellInfo { get; internal set; }
+
+        public GameObject LetterBlockObj
+        {
+            get
+            {
+                return Tf.GetChild(0).gameObject;
+            }
+        }
+
+        public Tile TileScript
+        {
+            get
+            {
+                return (Tile)Tf.GetComponent(typeof(Tile));
+            }
+        }
+
+        #endregion Properties
+
 
         public enum TileTypes
         {
@@ -437,13 +446,15 @@ namespace WordSpell
         static Material WordTripleMat;
         static Material ManaMat;
         static Material BurningMat;
-        static Material Jeans;
+        //static Material Jeans;
 
         internal GameObject SelectorObject;
         static GameObject LavaLight;
 
         static private Board boardScript;
         private bool musicHolder;
+
+        #region Init
 
         public static void LoadMaterials()
         {
@@ -454,7 +465,7 @@ namespace WordSpell
             WordTripleMat = (Material)Resources.Load("PurpleGem");
             ManaMat = (Material)Resources.Load("TurquoiseGem");
             BurningMat = (Material)Resources.Load("Burnt");
-            Jeans = (Material)Resources.Load("Jeans");
+            //Jeans = (Material)Resources.Load("Jeans");
 
             LavaLight = (GameObject)Resources.Load("LavalLight");
         }
@@ -505,11 +516,11 @@ namespace WordSpell
             Tf = _tf;
             tt = CreateNewTile(level, levelup);
 
-            LetterAnimator = Tf.gameObject.GetComponent<Animator>();
+            LetterAnimator = LetterBlockObj.GetComponent<Animator>();
 
-            tileScript = (Tile)Tf.gameObject.GetComponent(typeof(Tile));
+            //TileScript = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
 
-            tileScript.SetPos(I, J, this);
+            //TileScript.SetPos(I, J, this);
 
             letter = EngLetterScoring.GetRandomLetter(IsBurning(), WSGameState.GetFortune());
 
@@ -534,25 +545,38 @@ namespace WordSpell
         {
             Tf = _tf;
 
-            LetterAnimator = Tf.gameObject.GetComponent<Animator>();
+            LetterAnimator = LetterBlockObj.GetComponent<Animator>();
 
-            tileScript = (Tile)Tf.gameObject.GetComponent(typeof(Tile));
+            //TileScript = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
 
-            tileScript.SetPos(I, J, this);
+            TileScript.AttachLetterProp(this);
 
             UpdateLetterDisplay();
             UpdateMaterial();
         }
+
+        #endregion Init
 
         public void PlayBackgroundMusic()
         {
             TileType = LetterProp.TileTypes.Speaker;
 
             MusicHolderRole = true;
-            
-            Tile t = (Tile)Tf.gameObject.GetComponent(typeof(Tile));
-            t.NewSong();
 
+            //Tile t = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
+            TileScript.NewSong();
+            //t.NewSong();
+
+        }
+
+        public void StopBackgroundMusic()
+        {
+            TileType = LetterProp.TileTypes.Speaker;
+
+            MusicHolderRole = false;
+
+            //Tile t = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
+            TileScript.StopSong();
         }
 
         public void UpdateMaterial()
@@ -564,28 +588,28 @@ namespace WordSpell
                     BurnTile();
                     break;
                 case TileTypes.Normal:
-                    Tf.gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
+                    LetterBlockObj.GetComponent<MeshRenderer>().material = NoramlMat;
                     break;
                 case TileTypes.WordDouble:
-                    Tf.gameObject.GetComponent<MeshRenderer>().material = WordDoubleMat;
+                    LetterBlockObj.GetComponent<MeshRenderer>().material = WordDoubleMat;
                     break;
                 case TileTypes.WordTriple:
-                    Tf.gameObject.GetComponent<MeshRenderer>().material = WordTripleMat;
+                    LetterBlockObj.GetComponent<MeshRenderer>().material = WordTripleMat;
                     break;
                 case TileTypes.LetterDouble:
-                    Tf.gameObject.GetComponent<MeshRenderer>().material = LetterDoubleMat;
+                    LetterBlockObj.GetComponent<MeshRenderer>().material = LetterDoubleMat;
                     break;
                 case TileTypes.LetterTriple:
-                    Tf.gameObject.GetComponent<MeshRenderer>().material = LetterTripleMat;
+                    LetterBlockObj.GetComponent<MeshRenderer>().material = LetterTripleMat;
                     break;
                 case TileTypes.Manna:
-                    Tf.gameObject.GetComponent<MeshRenderer>().material = ManaMat;
+                    LetterBlockObj.GetComponent<MeshRenderer>().material = ManaMat;
                     break;
                 case TileTypes.Speaker:
-                    //Tf.gameObject.GetComponent<MeshRenderer>().material = Jeans;
+                    //LetterBlockObj.GetComponent<MeshRenderer>().material = Jeans;
                     break;
                 default:
-                    Tf.gameObject.GetComponent<MeshRenderer>().material = NoramlMat;
+                    LetterBlockObj.GetComponent<MeshRenderer>().material = NoramlMat;
                     break;
             }
         }
@@ -593,7 +617,7 @@ namespace WordSpell
         private void BurnTile()
         {
             //Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = BurningMat;
-            Tf.gameObject.GetComponent<MeshRenderer>().material = BurningMat;
+            LetterBlockObj.GetComponent<MeshRenderer>().material = BurningMat;
             Transform ll = boardScript.NewLavaLight();
             ll.gameObject.SetActive(true);
             ll.SetParent(Tf, false);
@@ -631,7 +655,7 @@ namespace WordSpell
         public void UpdateLetterDisplay()
         {
             //GameObject text = Tf.GetChild(0).GetChild(0).gameObject;
-            GameObject text = Tf.GetChild(0).gameObject;
+            GameObject text = LetterBlockObj.transform.GetChild(0).gameObject;
 
             TextMesh tm = text.GetComponent(typeof(TextMesh)) as TextMesh;
             if (tm != null)
@@ -658,7 +682,7 @@ namespace WordSpell
         {
             if(IsSelected != _selected)
             {
-                //Animator anim = Tf.gameObject.GetComponent<Animator>();
+                //Animator anim = LetterBlockObj.GetComponent<Animator>();
                 
                 LetterAnimator.SetTrigger(Selected);
 

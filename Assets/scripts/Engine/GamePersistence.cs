@@ -156,8 +156,9 @@ namespace WordSpell
                     }
                     return true;
                 }
-                catch (Exception e)
+                catch
                 {
+                    // We'll assume that the game save file is not there.
                     return false;
                 }
             }

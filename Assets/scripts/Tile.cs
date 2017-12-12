@@ -14,36 +14,36 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 
     System.Random r = new System.Random();
 
-    int i, j;
-    LetterProp lp;
+    //int i, j;
+    public LetterProp lp;
     float fallrate = 0.1f;
     float spinrate = 5f;
 
-    public int I
-    {
-        get
-        {
-            return i;
-        }
+    //public int I
+    //{
+    //    get
+    //    {
+    //        return i;
+    //    }
 
-        set
-        {
-            i = value;
-        }
-    }
+    //    set
+    //    {
+    //        i = value;
+    //    }
+    //}
 
-    public int J
-    {
-        get
-        {
-            return j;
-        }
+    //public int J
+    //{
+    //    get
+    //    {
+    //        return j;
+    //    }
 
-        set
-        {
-            j = value;
-        }
-    }
+    //    set
+    //    {
+    //        j = value;
+    //    }
+    //}
 
     public static void LoadMusic()
     {
@@ -58,7 +58,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 
     // Update is called once per frame
     void Update () {
-        if(gameObject.transform.position.y < -150)
+        if(gameObject.transform.GetChild(0).transform.position.y < -150)
         {
             Destroy(gameObject);
         }
@@ -116,25 +116,30 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void SetPos(int _i, int _j, LetterProp  _lp)
+    public void AttachLetterProp(LetterProp _lp)
     {
-        I = _i;
-        J = _j;
         lp = _lp;
     }
 
-    public void SetPos(int _i, int _j)
-    {
-        I = _i;
-        J = _j;
-    }
+    //public void SetPos(int _i, int _j, LetterProp  _lp)
+    //{
+    //    I = _i;
+    //    J = _j;
+    //    lp = _lp;
+    //}
+
+    //public void SetPos(int _i, int _j)
+    //{
+    //    I = _i;
+    //    J = _j;
+    //}
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        WSGameState.LetterClick(I, J);
+        WSGameState.LetterClick(lp.I, lp.J);
         AudioSource audio = GetComponent<AudioSource>();
         PlaySelect();
-        Debug.Log(lp.ASCIIString + " " + I.ToString() + "-" + J.ToString() + " " + lp.I + "-" + lp.J+  " " + lp.Tf.position);
+        //Debug.Log(lp.ASCIIString + " " + I.ToString() + "-" + J.ToString() + " " + lp.I + "-" + lp.J+  " " + lp.Tf.position);
     }
 
     public void FinishSpell()
@@ -151,6 +156,12 @@ public class Tile : MonoBehaviour, IPointerClickHandler
             asrc.clip = AmbientSongs[rs];
             asrc.PlayDelayed(4);
         }
+    }
+
+    public void StopSong()
+    {
+        AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
+        asrc.Stop();
     }
 
     public void PlayMusic()
