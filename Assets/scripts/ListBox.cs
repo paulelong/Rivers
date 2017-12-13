@@ -42,7 +42,7 @@ namespace WordSpell
             t.text = s;
         }
 
-        public void CreateList(List<string> l)
+        public void CreateList(List<string> l, bool addSpace = false)
         {
             Clear();
 
@@ -52,7 +52,14 @@ namespace WordSpell
 
                 UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
 
-                t.text = s;
+                if (addSpace)
+                {
+                    t.text = " " + s;
+                }
+                else
+                {
+                    t.text = s;
+                }
             }
         }
 

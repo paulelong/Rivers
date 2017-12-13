@@ -75,7 +75,7 @@ namespace WordSpell
 
                 foreach (int i in os.BestGameScores)
                 {
-                    bestGameScores.Add(i.ToString());
+                    bestGameScores.Add(i.ToString() + " ");
                 }
                 return bestGameScores; 
             }
@@ -83,18 +83,22 @@ namespace WordSpell
 
         static void RecoreGameScore(int totalScore)
         {
-            int indx = os.BestGameScores.FindIndex(f => (f < totalScore));
-            if (indx >= 0)
+            if(totalScore >= 0)
             {
-                os.BestGameScores.Insert(indx, totalScore);
-            }
-            else
-            {
-                os.BestGameScores.Add(totalScore);
-            }
-            if (os.BestGameScores.Count > NumberOfTopScores)
-            {
-                os.BestGameScores.RemoveAt(NumberOfTopScores);
+                int indx = os.BestGameScores.FindIndex(f => (f < totalScore));
+                if (indx >= 0)
+                {
+                    os.BestGameScores.Insert(indx, totalScore);
+                }
+                else
+                {
+                    os.BestGameScores.Add(totalScore);
+                }
+
+                if (os.BestGameScores.Count > NumberOfTopScores)
+                {
+                    os.BestGameScores.RemoveAt(NumberOfTopScores);
+                }
             }
         }
 
@@ -480,7 +484,7 @@ namespace WordSpell
 
             //Animator a = toRemove.Tf.GetComponent<Animator>();
             //a.enabled = false;
-            toRemove.AnimationEnabled = false;
+            //toRemove.AnimationEnabled = false;
 
             Rigidbody rb = toRemove.LetterBlockObj.GetComponent(typeof(Rigidbody)) as Rigidbody;
             rb.useGravity = true;

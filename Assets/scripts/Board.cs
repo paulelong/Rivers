@@ -215,10 +215,10 @@ public class Board : MonoBehaviour
 
     void RefreshStats()
     {
-        LongestListBox.CreateList(WSGameState.LongestWords);
+        LongestListBox.CreateList(WSGameState.LongestWords, true);
         HighScoresListBox.CreateList(WSGameState.BestGameScores);
-        BestWordListBox.CreateList(WSGameState.BestWordScores);
-        BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple);
+        BestWordListBox.CreateList(WSGameState.BestWordScores, true);
+        BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
     }
 
     // Update is called once per frame
@@ -436,7 +436,8 @@ public class Board : MonoBehaviour
 
     public void AddHistory(string s)
     {
-        HistoryListBox.AddText(s);
+        // bugbug: why does the left side get cut off?  I'll add a space as a workaround.
+        HistoryListBox.AddText(" " + s);
     }
 
     public void ClearHistory()
@@ -446,7 +447,7 @@ public class Board : MonoBehaviour
 
     public void AddTryList(string s)
     {
-        TryListBox.AddText(s);
+        TryListBox.AddText(" " + s);
     }
 
     public void ClearTryList()
