@@ -108,6 +108,7 @@ public class Board : MonoBehaviour
         WSGameState.InitGameGlobal();
 
         SetStoryInfo(EngLetterScoring.Intro1, EngLetterScoring.Intro2);
+        SetVersion(Application.version);
 
         TryListBox = new ListBox<VerticalLayoutGroup>(TryList, TextPrefab);
         HistoryListBox = new ListBox<VerticalLayoutGroup>(HistoryList, TextPrefab);
