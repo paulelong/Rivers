@@ -91,9 +91,19 @@ public class Board : MonoBehaviour
         //{
         //    Debug.Log(go.name);
         //}
+        AudioClip[] AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
+        if (AmbientSongs != null)
+        {
+            SetUserInfo("Loaded songs " + AmbientSongs.Length);
+
+        }
+        else
+        {
+            SetUserInfo("Didn't load songs");
+        }
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        SetUserInfo(GamePersistence.TestPersistence());
+//        SetUserInfo(GamePersistence.TestPersistence());
 
         WSGameState.InitGameGlobal();
 
@@ -460,6 +470,10 @@ public class Board : MonoBehaviour
         SystemMenu.transform.GetChild(0).GetChild(2).GetComponent<Text>().text = s;
     }
 
+    public void SetVersion(string s)
+    {
+        SystemMenu.transform.GetChild(0).GetChild(3).GetComponent<Text>().text = s;
+    }
 
     public void SetStoryInfo(string s1, string s2)
     {
@@ -595,6 +609,7 @@ public class Board : MonoBehaviour
     }
 
     // Sounds to play
+    #region SoundFX
     public void ScoreWordSound()
     {
         AudioSource audio = GetComponent<AudioSource>();
@@ -623,5 +638,6 @@ public class Board : MonoBehaviour
         AudioSource audio = GetComponent<AudioSource>();
         audio.PlayOneShot(SnipeSound);
     }
+    #endregion SoundFX
 
 }
