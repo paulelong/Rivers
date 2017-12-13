@@ -199,7 +199,6 @@ namespace WordSpell
 
         public static void CastSpell(string s = null)
         {
-
             if(NextSpell == null)
             {
                 return;
@@ -224,16 +223,33 @@ namespace WordSpell
                             state++;
                             break;
                         case 1:
-                            foreach (LetterProp lp in RandomLetterList)
+                            if (RandomLetterList.Count > 0)
                             {
-                                lp.AnimationEnabled = true;
-                                lp.UpdateLetterDisplay();
-                                lp.FlipTileForward();
-                                lp.TileIdle();
+                                LetterProp _lp = RandomLetterList[0];
+
+                                _lp.UpdateLetterDisplay();
+                                _lp.FlipTileForward();
+                                _lp.TileIdle();
+
+                                RandomLetterList.RemoveAt(0);
                             }
-                            CompleteSpell();
-                            RandomLetterList.Clear();
-                            state = 0;
+
+                            if (RandomLetterList.Count <= 0)
+                            {
+                                CompleteSpell();
+                                RandomLetterList.Clear();
+                                state = 0;
+                            }
+                            //foreach (LetterProp lp in RandomLetterList)
+                            //{
+                            //    lp.AnimationEnabled = true;
+                            //    lp.UpdateLetterDisplay();
+                            //    lp.FlipTileForward();
+                            //    lp.TileIdle();
+                            //}
+                            //CompleteSpell();
+                            //RandomLetterList.Clear();
+                            //state = 0;
                             break;
                     }
                     break;
@@ -278,24 +294,35 @@ namespace WordSpell
                     }
                     break;
                 case SpellInfo.SpellType.ConvertLetter:
-                    lp.AnimationEnabled = true;
 
                     switch (state)
                     {
                         case 0:
+                            //lp.AnimationEnabled = true;
+                            //lp.FlipTileBack();
+
                             ConvertLetterTile(lp);
+                            Debug.Log("Found Converts: " + RandomLetterList.Count);
                             state++;
                             break;
                         case 1:
-                            foreach (LetterProp lp in RandomLetterList)
+                            if(RandomLetterList.Count > 0)
                             {
-                                lp.UpdateLetterDisplay();
-                                lp.FlipTileForward();
-                                lp.TileIdle();
+                                LetterProp _lp = RandomLetterList[0];
+
+                                _lp.UpdateLetterDisplay();
+                                _lp.FlipTileForward();
+                                _lp.TileIdle();
+
+                                RandomLetterList.RemoveAt(0);
                             }
-                            CompleteSpell();
-                            RandomLetterList.Clear();
-                            state = 0;
+
+                            if(RandomLetterList.Count <= 0)
+                            {
+                                CompleteSpell();
+                                RandomLetterList.Clear();
+                                state = 0;
+                            }
                             break;
                     }
                     break;
@@ -539,7 +566,8 @@ namespace WordSpell
 
         private static void ConvertLetterTile(LetterProp lp)
         {
-            byte changeletter = lp.letter;
+            // Since we change lp during the loop, we want to remember the original letter to change.
+            char changeletter = lp.ASCIIChar;
 
             RandomLetterList.Clear();
 
@@ -548,8 +576,10 @@ namespace WordSpell
                 for (int j = WSGameState.gridsize - 1; j >= 0; j--)
                 {
 
-                    if (WSGameState.LetterPropGrid[i, j].letter == changeletter)
+                    if (WSGameState.LetterPropGrid[i, j].ASCIIChar == changeletter)
                     {
+                        WSGameState.LetterPropGrid[i, j].AnimationEnabled = true;
+
                         WSGameState.LetterPropGrid[i, j].FlipTileBack();
                         WSGameState.LetterPropGrid[i, j].letter = EngLetterScoring.GetRandomLetter(false, WSGameState.GetFortune());
                         RandomLetterList.Add(WSGameState.LetterPropGrid[i, j]);
@@ -616,6 +646,7 @@ namespace WordSpell
 
                 if (EngLetterScoring.IsConsonant((string)WSGameState.LetterPropGrid[i, j].ASCIIString))
                 {
+                    WSGameState.LetterPropGrid[i, j].AnimationEnabled = true;
                     WSGameState.LetterPropGrid[i, j].FlipTileBack();
                     WSGameState.LetterPropGrid[i, j].letter = EngLetterScoring.RandomVowel();
                     RandomLetterList.Add(WSGameState.LetterPropGrid[i, j]);
