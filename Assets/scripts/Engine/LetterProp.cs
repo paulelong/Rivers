@@ -65,14 +65,15 @@ namespace WordSpell
         {
             set
             {
-                Animator a = LetterBlockObj.GetComponent<Animator>();
-                a.Rebind();
-                a.enabled = value;
+                //Animator a = LetterBlockObj.GetComponent<Animator>();
+                //a.Rebind();
+                //a.enabled = value;
             }
             get
             {
-                Animator a = LetterBlockObj.GetComponent<Animator>();
-                return (a.enabled);
+                //Animator a = LetterBlockObj.GetComponent<Animator>();
+                //return (a.enabled);
+                return true;
             }
         }
 
@@ -167,6 +168,11 @@ namespace WordSpell
                 //    TileScript.SetPos(i, j);
                 //}
             }
+        }
+
+        internal void PlaySelect()
+        {
+            TileBlockScript.PlaySelect();
         }
 
         public float LetterUCount
@@ -395,6 +401,14 @@ namespace WordSpell
             }
         }
 
+        public TileAnim TileBlockScript
+        {
+            get
+            {
+                return (TileAnim)Tf.GetChild(0).transform.GetComponent(typeof(TileAnim));
+            }
+        }
+
         #endregion Properties
 
 
@@ -563,10 +577,7 @@ namespace WordSpell
 
             MusicHolderRole = true;
 
-            //Tile t = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
-            TileScript.NewSong();
-            //t.NewSong();
-
+            TileBlockScript.NewSong();
         }
 
         public void StopBackgroundMusic()
@@ -576,7 +587,7 @@ namespace WordSpell
             MusicHolderRole = false;
 
             //Tile t = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
-            TileScript.StopSong();
+            TileBlockScript.StopSong();
         }
 
         public void UpdateMaterial()

@@ -6,11 +6,8 @@ using WordSpell;
 
 public class Tile : MonoBehaviour, IPointerClickHandler
 {
-    public AudioClip music;
-    public AudioClip music2;
-    public AudioClip SelectSound;
 
-    static AudioClip[] AmbientSongs;
+    //static AudioClip[] AmbientSongs;
 
     System.Random r = new System.Random();
 
@@ -45,15 +42,18 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     //    }
     //}
 
-    public static void LoadMusic()
-    {
-        AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
-    }
+    //public static void LoadMusic()
+    //{
+    //    AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
+    //}
 
     // Use this for initialization
     void Start ()
     {
-        LoadMusic();
+        //if(lp.TileType == LetterProp.TileTypes.Speaker)
+        //{
+        //    LoadMusic();
+        //}
     }
 
     // Update is called once per frame
@@ -138,7 +138,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     {
         WSGameState.LetterClick(lp.I, lp.J);
         AudioSource audio = GetComponent<AudioSource>();
-        PlaySelect();
+        lp.PlaySelect();
         //Debug.Log(lp.ASCIIString + " " + I.ToString() + "-" + J.ToString() + " " + lp.I + "-" + lp.J+  " " + lp.Tf.position);
     }
 
@@ -147,32 +147,21 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         Spells.CastSpell();
     }
 
-    public void NewSong()
-    {
-        if(AmbientSongs != null)
-        {
-            int rs = r.Next(AmbientSongs.Length);
-            AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
-            asrc.clip = AmbientSongs[rs];
-            asrc.PlayDelayed(4);
-        }
-    }
+    //public void NewSong()
+    //{
+    //    if(AmbientSongs != null)
+    //    {
+    //        int rs = r.Next(AmbientSongs.Length);
+    //        AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
+    //        asrc.clip = AmbientSongs[rs];
+    //        asrc.PlayDelayed(4);
+    //    }
+    //}
 
-    public void StopSong()
-    {
-        AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
-        asrc.Stop();
-    }
+    //public void StopSong()
+    //{
+    //    AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
+    //    asrc.Stop();
+    //}
 
-    public void PlayMusic()
-    {
-        AudioSource audio = GetComponent<AudioSource>();
-        audio.PlayOneShot(music);
-    }
-
-    public void PlaySelect()
-    {
-        AudioSource audio = GetComponent<AudioSource>();
-        audio.PlayOneShot(SelectSound);
-    }
 }

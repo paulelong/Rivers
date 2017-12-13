@@ -126,7 +126,6 @@ namespace WordSpell
 
         #endregion Properties
 
-
         #region Fields
         static public Board boardScript;
 
@@ -202,10 +201,12 @@ namespace WordSpell
                     }
                 }
             }
-            else
-            {
-                NewMusicTile();
-            }
+            //else
+            //{
+            //    NewMusicTile();
+            //}
+
+            Spells.UpdateSpellsForLevel(gs.level);
         }
 
         internal static void LoadStats()
@@ -235,6 +236,9 @@ namespace WordSpell
             BadFortuneMaterial = (Material)Resources.Load("Copper");
             GoodFortuneMaterial = (Material)Resources.Load("Silver");
             GreatFortuneMaterial = (Material)Resources.Load("Gold");
+
+            // Load the music for the speaker tiles just once.
+            TileAnim.LoadMusic();
         }
 
         public static void InitNewGame()
@@ -252,8 +256,6 @@ namespace WordSpell
             LetterProp.InitProbability(gs.level);
 
             LetterPropGrid = new LetterProp[gridsize, gridsize];
-
-            Spells.UpdateSpellsForLevel(gs.level);
 
             gameOver = false;
 
@@ -368,13 +370,16 @@ namespace WordSpell
                 if (gs.history.FindIndex(f => (f.word == GetCurrentWord())) >= 0)
                 {
                     boardScript.ShowMsg("You've used that word already.");
+                    Deselect(null);
                 }
                 else
                 {
                     ScoreStats ss = RecordWordScore();
+
                     RemoveWordAndReplaceTiles();
 
                     Deselect(null);
+
                     boardScript.ResetSubmitButton();
 
                     gameOver = ProcessLetters();
@@ -602,6 +607,9 @@ namespace WordSpell
 
         public static void GameOver()
         {
+            gameOver = true;
+            Deselect(null);
+
             GamePersistence.SaveOverallStats(os);
             GamePersistence.ResetGameData();
             RemoveGameBoard();

@@ -316,6 +316,7 @@ public class Board : MonoBehaviour
     public void QuitGame()
     {
         SystemMenu.SetActive(false);
+        
         WSGameState.GameOver();
     }
 
@@ -338,6 +339,9 @@ public class Board : MonoBehaviour
             }
         }
 
+        WSGameState.NewMusicTile();
+
+        // Check if there is a saved game.
         WSGameState.Load();
     }
 
