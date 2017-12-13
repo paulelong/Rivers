@@ -212,7 +212,7 @@ namespace WordSpell
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.DestroyGroup:
-                    lp.AnimationEnabled = true;
+                    //lp.AnimationEnabled = true;
                     SpellDestroyLetterGroupSmall(lp);
                     break;
                 case SpellInfo.SpellType.RandomVowels:
@@ -244,7 +244,7 @@ namespace WordSpell
                     }
                     break;
                 case SpellInfo.SpellType.ChangeToVowel:
-                    lp.AnimationEnabled = true;
+                    //lp.AnimationEnabled = true;
 
                     switch (state)
                     {
@@ -335,7 +335,7 @@ namespace WordSpell
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.AnyLetter:
-                    lp.AnimationEnabled = true;
+                    //lp.AnimationEnabled = true;
                     switch (state)
                     {
                         case 0:
@@ -393,12 +393,12 @@ namespace WordSpell
                 _lp1.LetterRotVU = 180f;
                 _lp1.LetterRotVUAxis = _lp1.Tf.position + new Vector3(0, 0.5f, 0);
                 _lp1.LetterRotVUCAxis = _lp1.Tf.position;
-                _lp1.AnimationEnabled = false;
+                //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotVD = 180f;
                 _lp2.LetterRotVDAxis = _lp2.Tf.position - new Vector3(0, 0.5f, 0);
                 _lp2.LetterRotVDCAxis = _lp2.Tf.position;
-                _lp2.AnimationEnabled = false;
+                //_lp2.AnimationEnabled = false;
             } // Side by side
             else
             {
@@ -416,12 +416,12 @@ namespace WordSpell
                 _lp1.LetterRotHL = 180f;
                 _lp1.LetterRotHLAxis = _lp1.Tf.position - new Vector3(0.5f, 0, 0);
                 _lp1.LetterRotHLCAxis = _lp1.Tf.position;
-                _lp1.AnimationEnabled = false;
+                //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotHR = 180f;
                 _lp2.LetterRotHRAxis = _lp2.Tf.position + new Vector3(0.5f, 0, 0);
                 _lp2.LetterRotHLCAxis = _lp2.Tf.position;
-                _lp2.AnimationEnabled = false;
+                //_lp2.AnimationEnabled = false;
             }
         }
 
@@ -565,7 +565,7 @@ namespace WordSpell
 
                     if (WSGameState.LetterPropGrid[i, j].ASCIIChar == changeletter)
                     {
-                        WSGameState.LetterPropGrid[i, j].AnimationEnabled = true;
+                        //WSGameState.LetterPropGrid[i, j].AnimationEnabled = true;
 
                         WSGameState.LetterPropGrid[i, j].FlipTileBack();
                         WSGameState.LetterPropGrid[i, j].letter = EngLetterScoring.GetRandomLetter(false, WSGameState.GetFortune());
@@ -615,7 +615,7 @@ namespace WordSpell
                 WSGameState.NewMusicTile();
             }
 
-            lp.AnimationEnabled = true;
+            //lp.AnimationEnabled = true;
             lp.ChangeTileTo(LetterProp.TileTypes.Burning);
         }
 
@@ -633,7 +633,7 @@ namespace WordSpell
 
                 if (EngLetterScoring.IsConsonant((string)WSGameState.LetterPropGrid[i, j].ASCIIString))
                 {
-                    WSGameState.LetterPropGrid[i, j].AnimationEnabled = true;
+                    //WSGameState.LetterPropGrid[i, j].AnimationEnabled = true;
                     WSGameState.LetterPropGrid[i, j].FlipTileBack();
                     WSGameState.LetterPropGrid[i, j].letter = EngLetterScoring.RandomVowel();
                     RandomLetterList.Add(WSGameState.LetterPropGrid[i, j]);
