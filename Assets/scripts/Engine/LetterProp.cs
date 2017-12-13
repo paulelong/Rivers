@@ -61,21 +61,21 @@ namespace WordSpell
 
         #region Properties
 
-        public bool AnimationEnabled
-        {
-            set
-            {
-                //Animator a = LetterBlockObj.GetComponent<Animator>();
-                //a.Rebind();
-                //a.enabled = value;
-            }
-            get
-            {
-                //Animator a = LetterBlockObj.GetComponent<Animator>();
-                //return (a.enabled);
-                return true;
-            }
-        }
+        //public bool AnimationEnabled
+        //{
+        //    set
+        //    {
+        //        //Animator a = LetterBlockObj.GetComponent<Animator>();
+        //        //a.Rebind();
+        //        //a.enabled = value;
+        //    }
+        //    get
+        //    {
+        //        //Animator a = LetterBlockObj.GetComponent<Animator>();
+        //        //return (a.enabled);
+        //        return true;
+        //    }
+        //}
 
         public TileTypes TileType
         {
@@ -595,7 +595,7 @@ namespace WordSpell
             switch (tt)
             {
                 case TileTypes.Burning:
-                    AnimationEnabled = true;
+                    //AnimationEnabled = true;
                     BurnTile();
                     break;
                 case TileTypes.Normal:
