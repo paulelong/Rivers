@@ -118,11 +118,6 @@ namespace WordSpell
             return (DictionaryLookup.BinarySearch(word.ToLower()) >= 0);
         }
 
-        //internal static bool IsWord(StringBuilder curword)
-        //{
-        //    return IsWord(curword.ToString());
-        //}
-
         private static Dictionary<char, int> values = new Dictionary<char, int>()
         {
             {'a', 1 },
