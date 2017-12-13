@@ -586,7 +586,6 @@ namespace WordSpell
 
             MusicHolderRole = false;
 
-            //Tile t = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
             TileBlockScript.StopSong();
         }
 
@@ -595,7 +594,6 @@ namespace WordSpell
             switch (tt)
             {
                 case TileTypes.Burning:
-                    //AnimationEnabled = true;
                     BurnTile();
                     break;
                 case TileTypes.Normal:
@@ -617,7 +615,6 @@ namespace WordSpell
                     LetterBlockObj.GetComponent<MeshRenderer>().material = ManaMat;
                     break;
                 case TileTypes.Speaker:
-                    //LetterBlockObj.GetComponent<MeshRenderer>().material = Jeans;
                     break;
                 default:
                     LetterBlockObj.GetComponent<MeshRenderer>().material = NoramlMat;
@@ -627,18 +624,12 @@ namespace WordSpell
 
         private void BurnTile()
         {
-            //Tf.GetChild(0).gameObject.GetComponent<MeshRenderer>().material = BurningMat;
             LetterBlockObj.GetComponent<MeshRenderer>().material = BurningMat;
             Transform ll = boardScript.NewLavaLight();
             ll.gameObject.SetActive(true);
-            ll.SetParent(Tf, false);
+            ll.SetParent(LetterBlockObj.transform, false);
             ll.name = "Point light";
-            // Need a point light
-            //Tf.GetChild(0).gameObject.SetActive(true);
-            //GameObject t = (GameObject)Instantiate(LavaLight, new Vector3(0, 0, 0), Quaternion.identity);
-            //t.transform.SetParent(Tf);
-            //                    Object.Instantiate();
-            //Tf.GetChild(0).gameObject.SetActive(true);
+
             LetterAnimator.gameObject.SetActive(true);
             LetterAnimator.SetTrigger(Burning);
         }
