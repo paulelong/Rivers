@@ -137,14 +137,6 @@ namespace WordSpell
         #endregion Fields
 
 
-        public static bool Resume { get { return resume; } set { resume = value; } }
-
-        internal static void DebugMode()
-        {
-            gs.mana = 100;
-            gs.level = 20;
-        }
-
         #region Constants
         public const int gridsize = 9;
 
@@ -152,7 +144,9 @@ namespace WordSpell
         private const int NumberOfTopScores = 20;
 
         const int EffHigh = 13;
-        const int EffMed = 10;        
+        const int EffMed = 10;
+        const int FortuneMaxOver = 10;
+        private const float LowestWordScore = 3f;
 
         public enum FortuneLevel
         {
@@ -169,6 +163,16 @@ namespace WordSpell
         }
 
         #endregion Constants
+
+        public static bool Resume { get { return resume; } set { resume = value; } }
+
+        internal static void DebugMode()
+        {
+            gs.mana = 100;
+            gs.level = 20;
+        }
+
+
 
         #region Init
 
@@ -205,10 +209,6 @@ namespace WordSpell
                     }
                 }
             }
-            //else
-            //{
-            //    NewMusicTile();
-            //}
 
             Spells.UpdateSpellsForLevel(gs.level);
         }
@@ -263,6 +263,7 @@ namespace WordSpell
 
             gameOver = false;
 
+            UpdateStats();
             //NewMusicTile();
         }
 
@@ -533,8 +534,8 @@ namespace WordSpell
         {           
             float eff = (float)GetLatestEff();
 
-            // Scale goes from 3, the smallest score to EffHigh which is the max efficiency.
-            float scale = (eff - 3f) / EffHigh;
+            // Scale goes from 3, the smallest score to EffHigh (which is the max efficiency) +20.
+            float scale = (eff - LowestWordScore) / (EffHigh + FortuneMaxOver);
 
             // No bigger than 1, but zero makes it invisible, so start at .5
             if(scale > 1.0f)
@@ -543,7 +544,7 @@ namespace WordSpell
             }
             if(scale <= 0.1f)
             {
-                scale = .5f;
+                scale = 1f / (EffHigh + FortuneMaxOver - LowestWordScore);
             }
 
             boardScript.SetFortune(scale, GetFortuneColor());
