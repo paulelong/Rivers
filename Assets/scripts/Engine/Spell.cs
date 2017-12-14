@@ -58,8 +58,17 @@ namespace WordSpell
 
     class Spells
     {
+        #region Privates
         private const int SpellPerRow = 3;
         static System.Random r = new System.Random();
+        private static SpellInfo NextSpell;
+        private static LetterProp LetterSwapFirst;
+        private static bool awarded = false;
+        private static SpellCompletedSuccessfullyDelegate spellCompelteDelegate;
+        private static int state = 0;
+        private static LetterProp lp = null;
+        private static List<LetterProp> RandomLetterList = new List<LetterProp>();
+        #endregion Privates
 
         static List<SpellInfo> allSpells = new List<SpellInfo>
         {
@@ -87,14 +96,6 @@ namespace WordSpell
         }
 
         public static List<SpellInfo> AvailableSpells = new List<SpellInfo>();
-        //public static List<SpellInfo> AwardedSpells = new List<SpellInfo>();
-        private static SpellInfo NextSpell;
-        private static LetterProp LetterSwapFirst;
-        private static bool awarded = false;
-        private static SpellCompletedSuccessfullyDelegate spellCompelteDelegate;
-        private static int state = 0;
-        private static LetterProp lp = null;
-        private static List<LetterProp> RandomLetterList = new List<LetterProp>();
 
         public static SpellInfo LastSuccessfulSpell;
 
@@ -181,9 +182,9 @@ namespace WordSpell
         {
             if(worked)
             {
+                LastSuccessfulSpell = NextSpell;
                 if (awarded)
                 {
-                    LastSuccessfulSpell = NextSpell;
                     LastManaCost = 0;
                 }
                 else
@@ -191,6 +192,7 @@ namespace WordSpell
                     LastManaCost = -NextSpell.MannaPoints;
                 }
 
+                // Why do I need a delegate here?
                 spellCompelteDelegate();
             }
             NextSpell = null;
