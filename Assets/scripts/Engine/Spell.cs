@@ -282,6 +282,10 @@ namespace WordSpell
 
                                 CompleteSpell();
                             }
+                            else
+                            {    
+                                CompleteSpell(false);
+                            }
                             break;
                     }
                     break;
@@ -579,7 +583,7 @@ namespace WordSpell
 
         private static bool SwapLetters(LetterProp lpa, LetterProp lpb, bool move = true)
         {
-            if (Math.Abs(lpa.I - lpb.I) - Math.Abs(lpa.J - lpb.J) > 1)
+            if (Math.Abs(lpa.I - lpb.I) - Math.Abs(lpa.J - lpb.J) != 1)
             {
                 WSGameState.boardScript.ShowMsg("Swapping only works with adjcent letters, up/down/left/right.");
                 return false;
