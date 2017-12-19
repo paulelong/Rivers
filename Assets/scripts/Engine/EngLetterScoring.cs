@@ -30,7 +30,7 @@ namespace WordSpell
         const string PartialLookupCache = "LookupCache.xml";
         const string DictionaryCache = "DictionaryCache.lst";
         const string intro1 = "Pangram the letter volcano is about to erupt!  Legend tells of a magical prodigy who’s mastery of words will save the day.  Select adjacent tiles in any direction to spell words.  Longer words improve your fortune, which means better replacement letters.";
-        const string intro2 = "Advance levels to gain spells which let you rearrange letters.\n\nBeware of lava tiles, e.g. E, because if they reach the bottom, the game is over.";
+        const string intro2 = "Advance levels to gain spells which let you rearrange letters.\n\nBeware of lava tiles, e.g. this one, because if they reach the bottom, the game is over.";
 
 #if UNITY_EDITOR
         static System.Random r = new System.Random(21);
