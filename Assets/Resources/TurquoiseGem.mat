@@ -37,7 +37,7 @@ Material:
     m_Floats:
     - _Emission: 1.17
     - _Emissive: 0
-    - _EnvironmentLight: 1.5
+    - _EnvironmentLight: 1.55
     - _IndexOfRefraction: 2.14
     - _ReflectionStrength: 1
     m_Colors:
