@@ -234,7 +234,10 @@ namespace WordSpell
             GameObject go = GameObject.Find("BoardBackground");
             boardScript = (Board)go.GetComponent(typeof(Board));
 
+            boardScript.ShowMsg("Loading dictionary...");
             EngLetterScoring.LoadDictionary();
+            boardScript.HideMsg();
+
             LetterProp.InitLetterPropertyList(boardScript);
 
             BadFortuneMaterial = (Material)Resources.Load("Copper");
@@ -483,11 +486,8 @@ namespace WordSpell
         {
             toRemove.Tf.Translate(0.0f, 0.0f, -1f);
 
-            //Animator a = toRemove.Tf.GetComponent<Animator>();
-            //a.enabled = false;
-            //toRemove.AnimationEnabled = false;
 
-            Rigidbody rb = toRemove.LetterBlockObj.GetComponent(typeof(Rigidbody)) as Rigidbody;
+            Rigidbody rb = toRemove.rigidbody; // toRemove.LetterBlockObj.GetComponent(typeof(Rigidbody)) as Rigidbody;
             rb.useGravity = true;
             rb.isKinematic = false;
 

@@ -239,7 +239,7 @@ public class Board : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                MsgCanvas.SetActive(false);
+                HideMsg();
             }
         }
         else
@@ -275,10 +275,25 @@ public class Board : MonoBehaviour
 
     public void OnMouseClick()
     {
-        MsgCanvas.SetActive(false);
+        HideMsg();
     }
 
     public void OnApplicationQuit()
+    {
+        SaveGameState();
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        SaveGameState();
+    }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        SaveGameState();
+    }
+
+    void SaveGameState()
     {
         if (!StartCanvas.activeSelf)
         {
@@ -363,7 +378,7 @@ public class Board : MonoBehaviour
         ShowMsg("Game Over");
         PlayEndGameSound();
         yield return new WaitForSeconds(3);
-        MsgCanvas.SetActive(false);
+        HideMsg();
 
         RefreshStats();
 
@@ -378,9 +393,14 @@ public class Board : MonoBehaviour
     public void ShowMsg(string text)
     {
         MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = text;
-        MsgCanvas.SetActive(true);
+        HideMsg();
     }
-    
+
+    public void HideMsg()
+    {
+        MsgCanvas.SetActive(false);
+    }
+
     public GameObject SelectLet(int i, int j)
     {
         GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - half_offset) * inc, (j - half_offset) * inc, 0.6f), Quaternion.identity);

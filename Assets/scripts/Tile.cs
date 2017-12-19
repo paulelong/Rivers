@@ -18,10 +18,12 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     }
 
     // Update is called once per frame
-    void Update () {
-        if(gameObject.transform.GetChild(0).transform.position.y < -150)
-        {
-            Destroy(gameObject);
+    void Update ()
+    {
+        if(gameObject.transform.position.y < -150)
+            //if (gameObject.transform.GetChild(0).transform.position.y < -150)
+            {
+                Destroy(gameObject);
         }
 
         if(lp != null)
@@ -80,9 +82,9 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        WSGameState.LetterClick(lp.I, lp.J);
-        AudioSource audio = GetComponent<AudioSource>();
+        //AudioSource audio = GetComponent<AudioSource>();
         lp.PlaySelect();
+        WSGameState.LetterClick(lp.I, lp.J);
     }
 
     // Called by animatitions so that spells can be completed, like turning around tiles.

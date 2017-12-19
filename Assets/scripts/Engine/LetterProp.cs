@@ -393,6 +393,15 @@ namespace WordSpell
             }
         }
 
+        public Rigidbody rigidbody
+        {
+            get
+            {
+                return (Tf.GetComponent(typeof(Rigidbody)) as Rigidbody);
+                //return (Tf.GetChild(0).GetComponent(typeof(Rigidbody)) as Rigidbody);
+            }
+        }
+
         public Tile TileScript
         {
             get
