@@ -459,9 +459,6 @@ namespace WordSpell
             for (int jp = j; jp < gridsize - 1; jp++)
             {
                 LetterProp LetterOntop = LetterPropGrid[i, jp + 1];
-                //Tile t = (Tile)LetterOntop.Tf.GetChild(0).gameObject.GetComponent(typeof(Tile));
-                //Tile t = (Tile)LetterOntop.LetterBlockObj.GetComponent(typeof(Tile));
-                //t.SetPos(i, jp);
 
                 LetterOntop.J = jp;
 

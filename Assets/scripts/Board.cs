@@ -34,7 +34,7 @@ public class Board : MonoBehaviour
     const string SpellCostPath = "TextPanel/Cost";
     const string SpellImagePath = "ButtonPanel/Image";
 
-    const float fortuneChangeSpeed = .05f;
+    const float fortuneChangeSpeed = .02f;
     #endregion Constants
 
     // Passed in from Board scene

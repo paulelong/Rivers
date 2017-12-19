@@ -6,9 +6,8 @@ using WordSpell;
 
 public class Tile : MonoBehaviour, IPointerClickHandler
 {
-    System.Random r = new System.Random();
-
     public LetterProp lp;
+
     float fallrate = 0.1f;
     float spinrate = 5f;
 
@@ -20,6 +19,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     // Update is called once per frame
     void Update ()
     {
+        // Tiles that fall off the screen are destroyed.
         if(gameObject.transform.position.y < -150)
             //if (gameObject.transform.GetChild(0).transform.position.y < -150)
             {
@@ -82,12 +82,11 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        //AudioSource audio = GetComponent<AudioSource>();
         lp.PlaySelect();
         WSGameState.LetterClick(lp.I, lp.J);
     }
 
-    // Called by animatitions so that spells can be completed, like turning around tiles.
+    // Called by animatitions so that spells can be completed, like turning tiles that have been flipped.
     public void FinishSpell()
     {
         Spells.CastSpell();
