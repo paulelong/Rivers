@@ -540,7 +540,6 @@ namespace WordSpell
             tt = CreateNewTile(level, levelup);
 
             LetterAnimator = LetterBlockObj.GetComponent<Animator>();
-
             //TileScript = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
 
             //TileScript.SetPos(I, J, this);

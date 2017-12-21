@@ -77,7 +77,7 @@ namespace WordSpell
             { new SpellInfo { spellType = SpellInfo.SpellType.ChangeToVowel, FriendlyName = "Vowelize", MannaPoints = 7, SpellLevel = 10, Immediate = false, ImageName = "Vowelize" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.WordHint,     FriendlyName = "Hint",      MannaPoints = 10, SpellLevel = 11, Immediate = true,ImageName = "Hint" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2,    FriendlyName = "Hint++",    MannaPoints = 14, SpellLevel = 14, Immediate = true,ImageName = "HintPlus" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.Burn,         FriendlyName = "Burn" ,     MannaPoints = 6, SpellLevel = 6, Immediate = false, ImageName = "Burn"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.Burn,         FriendlyName = "Lava" ,     MannaPoints = 6, SpellLevel = 6, Immediate = false, ImageName = "Burn"  }},
             { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap,   FriendlyName = "Swap",      MannaPoints = 6, SpellLevel = 5, Immediate = false, ImageName = "Swap" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 10, SpellLevel = 15, Immediate = true, ImageName = "VowelDust" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 12, SpellLevel = 7, Immediate = false, ImageName = "ConvertLetter" }},
@@ -583,12 +583,8 @@ namespace WordSpell
 
         private static bool SwapLetters(LetterProp lpa, LetterProp lpb, bool move = true)
         {
-            if (Math.Abs(lpa.I - lpb.I) - Math.Abs(lpa.J - lpb.J) != 1)
-            {
-                WSGameState.boardScript.ShowMsg("Swapping only works with adjcent letters, up/down/left/right.");
-                return false;
-            }
-            else
+            if( ((lpa.I == lpb.I) && Math.Abs(lpa.J - lpb.J) == 1) ||
+                    ((lpa.J == lpb.J) && Math.Abs(lpa.I - lpb.I) == 1) )
             {
                 int ti = lpa.I;
                 lpa.I = lpb.I;
@@ -607,6 +603,11 @@ namespace WordSpell
 
                 WSGameState.LetterPropGrid[lpa.I, lpa.J] = lpa;
                 WSGameState.LetterPropGrid[lpb.I, lpb.J] = lpb;
+            }
+            else
+            {
+                WSGameState.boardScript.ShowMsg("Swapping only works with adjcent letters, up/down/left/right.");
+                return false;
             }
 
             return true;
