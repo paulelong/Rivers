@@ -681,7 +681,7 @@ PlayerSettings:
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
   cloudProjectId: 1cbd48b1-0082-4ef5-9ab2-1acb2a8c7c69
-  projectName: WordSpell (1)
+  projectName: WordSpell TestFlight
   organizationId: paul-long
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
