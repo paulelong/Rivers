@@ -393,7 +393,7 @@ public class Board : MonoBehaviour
     public void ShowMsg(string text)
     {
         MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = text;
-        HideMsg();
+        MsgCanvas.SetActive(true);
     }
 
     public void HideMsg()
@@ -498,8 +498,10 @@ public class Board : MonoBehaviour
 
     public void SetStoryInfo(string s1, string s2)
     {
-        StartCanvas.transform.GetChild(2).GetComponent<Text>().text = s1;
-        StartCanvas.transform.GetChild(4).GetComponent<Text>().text = s2;
+        StartCanvas.transform.Find("Intro1").GetComponent<Text>().text = s1;
+        StartCanvas.transform.Find("Intro2").GetComponent<Text>().text = s2;
+        //StartCanvas.transform.GetChild(2).GetComponent<Text>().text = s1;
+        //StartCanvas.transform.GetChild(4).GetComponent<Text>().text = s2;
     }
 
     #endregion Controls
