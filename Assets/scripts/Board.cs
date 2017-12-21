@@ -500,8 +500,6 @@ public class Board : MonoBehaviour
     {
         StartCanvas.transform.Find("Intro1").GetComponent<Text>().text = s1;
         StartCanvas.transform.Find("Intro2").GetComponent<Text>().text = s2;
-        //StartCanvas.transform.GetChild(2).GetComponent<Text>().text = s1;
-        //StartCanvas.transform.GetChild(4).GetComponent<Text>().text = s2;
     }
 
     #endregion Controls
