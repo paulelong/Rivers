@@ -470,7 +470,7 @@ public class Board : MonoBehaviour
     public void AddHistory(string s)
     {
         // bugbug: why does the left side get cut off?  I'll add a space as a workaround.
-        HistoryListBox.AddText(" " + s);
+        HistoryListBox.InsertText(" " + s);
     }
 
     public void ClearHistory()

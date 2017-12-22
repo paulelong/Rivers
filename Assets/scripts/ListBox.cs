@@ -20,7 +20,6 @@ namespace WordSpell
 
         public Transform Add()
         {
-            //UnityEngine.UI.VerticalLayoutGroup l = list.GetComponent(typeof(UnityEngine.UI.VerticalLayoutGroup)) as UnityEngine.UI.VerticalLayoutGroup;
             Layout l = list.GetComponent(typeof(Layout)) as Layout;
 
             Transform listItem = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
@@ -36,6 +35,16 @@ namespace WordSpell
         public void AddText(string s)
         {
             Transform item = Add();
+
+            UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
+
+            t.text = s;
+        }
+
+        public void InsertText(string s)
+        {
+            Transform item = Add();
+            item.SetSiblingIndex(0);
 
             UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
 
