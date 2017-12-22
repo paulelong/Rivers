@@ -602,6 +602,7 @@ namespace WordSpell
             switch (tt)
             {
                 case TileTypes.Burning:
+                    boardScript.PlayLavaSound();
                     BurnTile();
                     break;
                 case TileTypes.Normal:

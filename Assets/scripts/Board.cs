@@ -80,6 +80,8 @@ public class Board : MonoBehaviour
     public AudioClip GameOverSound;
     public AudioClip SwapSound;
     public AudioClip SnipeSound;
+    public AudioClip LavaSound;
+
     #endregion Unity Objects
 
     #region Init
@@ -654,11 +656,19 @@ public class Board : MonoBehaviour
         AudioSource audio = GetComponent<AudioSource>();
         audio.PlayOneShot(SwapSound);
     }
+
     public void PlaySnipeSound()
     {
         AudioSource audio = GetComponent<AudioSource>();
         audio.PlayOneShot(SnipeSound);
     }
+
+    public void PlayLavaSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(LavaSound);
+    }
+
     #endregion SoundFX
 
 }
