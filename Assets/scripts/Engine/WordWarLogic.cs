@@ -430,7 +430,7 @@ namespace WordSpell
                             boardScript.ShowMsg(levelmsg);
                         }
 
-                        //UpdateStats();
+                        UpdateStats();
                         boardScript.ScoreWordSound();
                     }
                 }
@@ -649,8 +649,6 @@ namespace WordSpell
                 gs.level++;
                 levelup = true;
 
-                //LevelText.Text = "L: " + CurrentLevel.ToString();
-
                 if (gs.level >= 5)
                 {
                     ChangeManna(6);
@@ -756,8 +754,6 @@ namespace WordSpell
                 AwardedSpells.Add(si);
                 ss.si = si;
             }
-
-            UpdateStats();
 
             return ss;
         }
