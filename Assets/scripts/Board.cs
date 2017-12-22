@@ -582,11 +582,14 @@ public class Board : MonoBehaviour
     {
         Text textField = InputCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
         textField.text = "Input a letter, then OK, to change the tile you selected.";
+        //Text t = InputCanvas.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(2).GetComponent<Text>();
+        //t.text = "";
 
         InputCanvas.SetActive(true);
 
         InputField inf = InputCanvas.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<UnityEngine.UI.InputField>();
         EventSystem.current.SetSelectedGameObject(inf.gameObject);
+        inf.text = "";
     }
 
     public void SelectLetterToChangeDone()

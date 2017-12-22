@@ -349,9 +349,17 @@ namespace WordSpell
                             state++;
                             break;
                         case 1:
-                            lp.FlipTileBack();
-                            lp.letter = (byte)s[0];
-                            state++;
+                            if(s == "" || !char.IsLetter(s[0]) || s.Length > 1)
+                            {
+                                WSGameState.boardScript.ShowMsg("That entry was not valid.  Must enter a single letter.");
+                                CompleteSpell(false);
+                            }
+                            else
+                            {
+                                lp.FlipTileBack();
+                                lp.letter = (byte)s[0];
+                                state++;
+                            }
                             break;
                         case 2:
                             lp.UpdateLetterDisplay();
