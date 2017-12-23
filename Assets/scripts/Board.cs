@@ -403,7 +403,7 @@ public class Board : MonoBehaviour
         MsgCanvas.SetActive(false);
     }
 
-    public GameObject SelectLet(int i, int j)
+    public GameObject SelectLet(int i, int j, bool isMagic = false)
     {
         GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - half_offset) * inc, (j - half_offset) * inc, 0.6f), Quaternion.identity);
 
@@ -412,7 +412,16 @@ public class Board : MonoBehaviour
         GameObject hr = t.transform.GetChild(2).gameObject;
         GameObject vb = t.transform.GetChild(3).gameObject;
 
-        Material m = WSGameState.GetFortuneColor();
+        Material m;
+        if(isMagic)
+        {
+            m = WSGameState.GetMagicMat();
+        }
+        else
+        {
+            m = WSGameState.GetFortuneColor();
+
+        }
         hl.GetComponent<MeshRenderer>().material = m;
         vt.GetComponent<MeshRenderer>().material = m;
         hr.GetComponent<MeshRenderer>().material = m;

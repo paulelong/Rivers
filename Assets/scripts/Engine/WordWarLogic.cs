@@ -36,6 +36,7 @@ namespace WordSpell
         static Material BadFortuneMaterial;
         static Material GoodFortuneMaterial;
         static Material GreatFortuneMaterial;
+        static Material ManaMaterial;
 
         private static int FortuneLevelCount;
 
@@ -147,6 +148,7 @@ namespace WordSpell
         const int EffMed = 10;
         const int FortuneMaxOver = 10;
         private const float LowestWordScore = 3f;
+        private static GameObject selMagicTile;
 
         public enum FortuneLevel
         {
@@ -243,6 +245,7 @@ namespace WordSpell
             BadFortuneMaterial = (Material)Resources.Load("Copper");
             GoodFortuneMaterial = (Material)Resources.Load("Silver");
             GreatFortuneMaterial = (Material)Resources.Load("Gold");
+            ManaMaterial = (Material)Resources.Load("Mana");
 
             // Load the music for the speaker tiles just once.
             TileAnim.LoadMusic();
@@ -439,7 +442,14 @@ namespace WordSpell
             {
                 if(s.Length <= 3)
                 {
-                    boardScript.ShowMsg("Words must be 3 or more letters long.");
+                    if(s.Length == 0)
+                    {
+                        boardScript.ShowMsg("Select adjacent tiles in any direction to spells words.  When the word is valid, submit button will turn green.  Words must be 3 or more letters long.");
+                    }
+                    else
+                    {
+                        boardScript.ShowMsg("Words must be 3 or more letters long.");
+                    }
                 }
                 else
                 {
@@ -448,6 +458,11 @@ namespace WordSpell
 
                 Deselect(null);
             }
+        }
+
+        internal static Material GetMagicMat()
+        {
+            return ManaMaterial;
         }
 
         public static void RemoveAndReplaceTile(int i, int j)
@@ -909,6 +924,20 @@ namespace WordSpell
             }
 
             return false;
+        }
+
+        public static void MagicSelect(LetterProp lp_sel)
+        {
+            selMagicTile = boardScript.SelectLet(lp_sel.I, lp_sel.J, true);
+        }
+
+        public static void MagicDeselect()
+        {
+            if(selMagicTile != null)
+            {
+                boardScript.DeselectLet(selMagicTile);
+            }
+            selMagicTile = null;                
         }
 
         public static bool Deselect(LetterProp lp_sel)

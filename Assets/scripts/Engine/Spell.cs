@@ -172,6 +172,7 @@ namespace WordSpell
             if(NextSpell != null)
             {
                 lp = _lp;
+                WSGameState.MagicSelect(_lp);
                 CastSpell();
                 return true;
             }
@@ -180,6 +181,7 @@ namespace WordSpell
 
         static void CompleteSpell(bool worked = true)
         {
+            WSGameState.MagicDeselect();
             if(worked)
             {
                 LastSuccessfulSpell = NextSpell;
