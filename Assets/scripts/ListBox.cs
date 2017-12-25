@@ -7,24 +7,22 @@ using UnityEngine.UI;
 
 namespace WordSpell 
 {
-    public class ListBox<Layout> : ScriptableObject where Layout : class //: MonoBehaviour
+    public class WSListBox : ScriptableObject 
     {
         GameObject list;
         Transform prefab;
 
-        public ListBox(GameObject _list, Transform _prefab)
+        public WSListBox(GameObject _list, Transform _prefab)
         {
             list = _list;
             prefab = _prefab;
         }
 
-        public Transform Add()
+        public Transform Add<Layout>()
         {
-            Layout l = list.GetComponent(typeof(Layout)) as Layout;
-
             Transform listItem = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
 
-            LayoutGroup lg = l as LayoutGroup;
+            LayoutGroup lg = list.GetComponent(typeof(Layout)) as LayoutGroup;
             listItem.SetParent(lg.transform);
 
             listItem.localScale = new Vector3(1, 1, 1);
@@ -32,18 +30,18 @@ namespace WordSpell
             return (listItem);
         }
 
-        public void AddText(string s)
+        public void AddText<Layout>(string s)
         {
-            Transform item = Add();
+            Transform item = Add<Layout>();
 
             UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
 
             t.text = s;
         }
 
-        public void InsertText(string s)
+        public void InsertText<Layout>(string s)
         {
-            Transform item = Add();
+            Transform item = Add<Layout>();
             item.SetSiblingIndex(0);
 
             UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
@@ -51,13 +49,13 @@ namespace WordSpell
             t.text = s;
         }
 
-        public void CreateList(List<string> l, bool addSpace = false)
+        public void CreateList<Layout>(List<string> l, bool addSpace = false)
         {
-            Clear();
+            Clear<Layout>();
 
             foreach(string s in l)
             {
-                Transform item = Add();
+                Transform item = Add<Layout>();
 
                 UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
 
@@ -72,11 +70,10 @@ namespace WordSpell
             }
         }
 
-        public void Clear()
+        public void Clear<Layout>()
         {
-            //UnityEngine.UI.VerticalLayoutGroup l = list.GetComponent(typeof(UnityEngine.UI.VerticalLayoutGroup)) as UnityEngine.UI.VerticalLayoutGroup;
-            Layout l = list.GetComponent(typeof(Layout)) as Layout;
-            LayoutGroup lg = l as LayoutGroup;
+            LayoutGroup lg = list.transform.GetComponent<LayoutGroup>() as LayoutGroup;
+            //LayoutGroup lg = list.GetComponent(typeof(Layout)) as LayoutGroup;
             foreach (Transform t in lg.transform)
             {
                 Destroy(t.gameObject);

@@ -9,15 +9,15 @@ using System;
 public class Board : MonoBehaviour
 {
     #region Fields
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> TryListBox;
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> HistoryListBox;
-    ListBox<UnityEngine.UI.GridLayoutGroup> SpellListBox;
-    ListBox<UnityEngine.UI.GridLayoutGroup> AwardedSpellListBox;
+    WSListBox TryListBox;
+    WSListBox HistoryListBox;
+    WSListBox SpellListBox;
+    WSListBox AwardedSpellListBox;
 
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> BestWordListBox;
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> BestWordSimpleListBox;
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> HighScoresListBox;
-    ListBox<UnityEngine.UI.VerticalLayoutGroup> LongestListBox;
+    WSListBox BestWordListBox;
+    WSListBox BestWordSimpleListBox;
+    WSListBox HighScoresListBox;
+    WSListBox LongestListBox;
 
     private float newFortuneScale;
     private float fortuneScale = 0f;
@@ -112,15 +112,15 @@ public class Board : MonoBehaviour
         SetStoryInfo(EngLetterScoring.Intro1, EngLetterScoring.Intro2);
         SetVersion(Application.version);
 
-        TryListBox = new ListBox<VerticalLayoutGroup>(TryList, TextPrefab);
-        HistoryListBox = new ListBox<VerticalLayoutGroup>(HistoryList, TextPrefab);
-        SpellListBox = new ListBox<GridLayoutGroup>(SpelllList, SpellPrefab);
-        AwardedSpellListBox = new ListBox<GridLayoutGroup>(AwardedSpellList, SpellPrefab);
+        TryListBox = new WSListBox(TryList, TextPrefab);
+        HistoryListBox = new WSListBox(HistoryList, TextPrefab);
+        SpellListBox = new WSListBox(SpelllList, SpellPrefab);
+        AwardedSpellListBox = new WSListBox(AwardedSpellList, SpellPrefab);
 
-        BestWordListBox = new ListBox<VerticalLayoutGroup>(BestWordList, TextPrefab);
-        BestWordSimpleListBox = new ListBox<VerticalLayoutGroup>(BestWordSimpleList, TextPrefab);
-        HighScoresListBox = new ListBox<VerticalLayoutGroup>(HighScoresList, TextPrefab);
-        LongestListBox = new ListBox<VerticalLayoutGroup>(LongestList, TextPrefab);
+        BestWordListBox = new WSListBox(BestWordList, TextPrefab);
+        BestWordSimpleListBox = new WSListBox(BestWordSimpleList, TextPrefab);
+        HighScoresListBox = new WSListBox(HighScoresList, TextPrefab);
+        LongestListBox = new WSListBox(LongestList, TextPrefab);
 
         LocateCamera();
 
@@ -228,10 +228,10 @@ public class Board : MonoBehaviour
 
     void RefreshStats()
     {
-        LongestListBox.CreateList(WSGameState.LongestWords, true);
-        HighScoresListBox.CreateList(WSGameState.BestGameScores);
-        BestWordListBox.CreateList(WSGameState.BestWordScores, true);
-        BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
+        LongestListBox.CreateList<LayoutGroup>(WSGameState.LongestWords, true);
+        HighScoresListBox.CreateList<LayoutGroup>(WSGameState.BestGameScores);
+        BestWordListBox.CreateList<LayoutGroup>(WSGameState.BestWordScores, true);
+        BestWordSimpleListBox.CreateList<LayoutGroup>(WSGameState.BestWordScoresSimple, true);
     }
 
     // Update is called once per frame
@@ -479,22 +479,22 @@ public class Board : MonoBehaviour
     public void AddHistory(string s)
     {
         // bugbug: why does the left side get cut off?  I'll add a space as a workaround.
-        HistoryListBox.InsertText(" " + s);
+        HistoryListBox.InsertText<LayoutGroup>(" " + s);
     }
 
     public void ClearHistory()
     {
-        HistoryListBox.Clear();
+        HistoryListBox.Clear<LayoutGroup>();
     }
 
     public void AddTryList(string s)
     {
-        TryListBox.AddText(" " + s);
+        TryListBox.AddText<LayoutGroup>(" " + s);
     }
 
     public void ClearTryList()
     {
-        TryListBox.Clear();
+        TryListBox.Clear<LayoutGroup>();
     }
 
     public void SetUserInfo(string s)
@@ -521,9 +521,9 @@ public class Board : MonoBehaviour
     }
 
     // Spell related stuff
-    public void AddSpellList(ListBox<GridLayoutGroup> spellbox, SpellInfo si, bool awarded = false)
+    public void AddSpellList(WSListBox spellbox, SpellInfo si, bool awarded = false)
     {
-        Transform item = spellbox.Add();
+        Transform item = spellbox.Add<LayoutGroup>();
         item.transform.name = si.FriendlyName;
 
         UnityEngine.UI.Text s = item.Find(SpellNamePath).GetComponent<UnityEngine.UI.Text>();
@@ -550,9 +550,9 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void ClearSpellList(ListBox<GridLayoutGroup> spellbox)
+    public void ClearSpellList(WSListBox spellbox)
     {
-        spellbox.Clear();
+        spellbox.Clear<LayoutGroup>();
     }
 
     public void ShowSpells()
