@@ -12,17 +12,17 @@ namespace WordSpell
         GameObject list;
         Transform prefab;
 
-        public WSListBox(GameObject _list, Transform _prefab)
+        public void InitWSListBox(GameObject _list, Transform _prefab)
         {
             list = _list;
             prefab = _prefab;
         }
 
-        public Transform Add<Layout>()
+        public Transform Add()
         {
             Transform listItem = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
 
-            LayoutGroup lg = list.GetComponent(typeof(Layout)) as LayoutGroup;
+            LayoutGroup lg = list.GetComponent(typeof(LayoutGroup)) as LayoutGroup;
             listItem.SetParent(lg.transform);
 
             listItem.localScale = new Vector3(1, 1, 1);
@@ -30,18 +30,18 @@ namespace WordSpell
             return (listItem);
         }
 
-        public void AddText<Layout>(string s)
+        public void AddText(string s)
         {
-            Transform item = Add<Layout>();
+            Transform item = Add();
 
             UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
 
             t.text = s;
         }
 
-        public void InsertText<Layout>(string s)
+        public void InsertText(string s)
         {
-            Transform item = Add<Layout>();
+            Transform item = Add();
             item.SetSiblingIndex(0);
 
             UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
@@ -49,13 +49,13 @@ namespace WordSpell
             t.text = s;
         }
 
-        public void CreateList<Layout>(List<string> l, bool addSpace = false)
+        public void CreateList(List<string> l, bool addSpace = false)
         {
-            Clear<Layout>();
+            Clear();
 
             foreach(string s in l)
             {
-                Transform item = Add<Layout>();
+                Transform item = Add();
 
                 UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
 
@@ -70,7 +70,7 @@ namespace WordSpell
             }
         }
 
-        public void Clear<Layout>()
+        public void Clear()
         {
             LayoutGroup lg = list.transform.GetComponent<LayoutGroup>() as LayoutGroup;
             //LayoutGroup lg = list.GetComponent(typeof(Layout)) as LayoutGroup;

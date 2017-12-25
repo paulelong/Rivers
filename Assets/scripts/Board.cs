@@ -112,15 +112,23 @@ public class Board : MonoBehaviour
         SetStoryInfo(EngLetterScoring.Intro1, EngLetterScoring.Intro2);
         SetVersion(Application.version);
 
-        TryListBox = new WSListBox(TryList, TextPrefab);
-        HistoryListBox = new WSListBox(HistoryList, TextPrefab);
-        SpellListBox = new WSListBox(SpelllList, SpellPrefab);
-        AwardedSpellListBox = new WSListBox(AwardedSpellList, SpellPrefab);
+        TryListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+        TryListBox.InitWSListBox(TryList, TextPrefab);
+        HistoryListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+        HistoryListBox.InitWSListBox(HistoryList, TextPrefab);
+        SpellListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+        SpellListBox.InitWSListBox(SpelllList, SpellPrefab);
+        AwardedSpellListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+        AwardedSpellListBox.InitWSListBox(AwardedSpellList, SpellPrefab);
 
-        BestWordListBox = new WSListBox(BestWordList, TextPrefab);
-        BestWordSimpleListBox = new WSListBox(BestWordSimpleList, TextPrefab);
-        HighScoresListBox = new WSListBox(HighScoresList, TextPrefab);
-        LongestListBox = new WSListBox(LongestList, TextPrefab);
+        BestWordListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+        BestWordListBox.InitWSListBox(BestWordList, TextPrefab);
+        BestWordSimpleListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+        BestWordSimpleListBox.InitWSListBox(BestWordSimpleList, TextPrefab);
+        HighScoresListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+        HighScoresListBox.InitWSListBox(HighScoresList, TextPrefab);
+        LongestListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+        LongestListBox.InitWSListBox(LongestList, TextPrefab);
 
         LocateCamera();
 
@@ -228,10 +236,10 @@ public class Board : MonoBehaviour
 
     void RefreshStats()
     {
-        LongestListBox.CreateList<LayoutGroup>(WSGameState.LongestWords, true);
-        HighScoresListBox.CreateList<LayoutGroup>(WSGameState.BestGameScores);
-        BestWordListBox.CreateList<LayoutGroup>(WSGameState.BestWordScores, true);
-        BestWordSimpleListBox.CreateList<LayoutGroup>(WSGameState.BestWordScoresSimple, true);
+        LongestListBox.CreateList(WSGameState.LongestWords, true);
+        HighScoresListBox.CreateList(WSGameState.BestGameScores);
+        BestWordListBox.CreateList(WSGameState.BestWordScores, true);
+        BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
     }
 
     // Update is called once per frame
@@ -479,22 +487,22 @@ public class Board : MonoBehaviour
     public void AddHistory(string s)
     {
         // bugbug: why does the left side get cut off?  I'll add a space as a workaround.
-        HistoryListBox.InsertText<LayoutGroup>(" " + s);
+        HistoryListBox.InsertText(" " + s);
     }
 
     public void ClearHistory()
     {
-        HistoryListBox.Clear<LayoutGroup>();
+        HistoryListBox.Clear();
     }
 
     public void AddTryList(string s)
     {
-        TryListBox.AddText<LayoutGroup>(" " + s);
+        TryListBox.AddText(" " + s);
     }
 
     public void ClearTryList()
     {
-        TryListBox.Clear<LayoutGroup>();
+        TryListBox.Clear();
     }
 
     public void SetUserInfo(string s)
@@ -523,7 +531,7 @@ public class Board : MonoBehaviour
     // Spell related stuff
     public void AddSpellList(WSListBox spellbox, SpellInfo si, bool awarded = false)
     {
-        Transform item = spellbox.Add<LayoutGroup>();
+        Transform item = spellbox.Add();
         item.transform.name = si.FriendlyName;
 
         UnityEngine.UI.Text s = item.Find(SpellNamePath).GetComponent<UnityEngine.UI.Text>();
@@ -552,7 +560,7 @@ public class Board : MonoBehaviour
 
     public void ClearSpellList(WSListBox spellbox)
     {
-        spellbox.Clear<LayoutGroup>();
+        spellbox.Clear();
     }
 
     public void ShowSpells()
