@@ -516,6 +516,7 @@ namespace WordSpell
             if (toRemove.MusicHolderRole && !gameOver)
             {
                 NewMusicTile();
+                Debug.Log("Old music tile died " + toRemove.ASCIIString + " at " + toRemove.I + " " + toRemove.J);
             }
         }
 

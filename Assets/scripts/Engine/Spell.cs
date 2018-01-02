@@ -625,12 +625,14 @@ namespace WordSpell
 
         private static void BurnTile(LetterProp lp)
         {
-            if(lp.TileType == LetterProp.TileTypes.Speaker)
+
+            if (lp.TileType == LetterProp.TileTypes.Speaker)
             {
                 lp.StopBackgroundMusic();
-                lp.TileType = LetterProp.TileTypes.Normal;
                 WSGameState.NewMusicTile();
             }
+
+            lp.TileType = LetterProp.TileTypes.Burning;
 
             //lp.AnimationEnabled = true;
             lp.ChangeTileTo(LetterProp.TileTypes.Burning);

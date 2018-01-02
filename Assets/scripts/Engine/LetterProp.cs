@@ -457,12 +457,12 @@ namespace WordSpell
             {TileTypes.WordDouble, new TileTypeProperties { prob2 = 8, probability = 0.05, foreground = Color.black, background = Color.cyan, depthmod = 0.01, level = 4, levelmod = 0.2 }},
             {TileTypes.LetterTriple, new TileTypeProperties { prob2 = 5, probability = 0.04, foreground = Color.black, background = Color.magenta, depthmod = 0.01, level = 7, levelmod = 0.2 }},
             {TileTypes.WordTriple, new TileTypeProperties { prob2 = 4, probability = 0.03, foreground = Color.black, background = Color.green, depthmod = 0.01, level = 6, levelmod = 0.2 }},
-            {TileTypes.Burning, new TileTypeProperties{ prob2 = 10, probability = 0.12, background = Color.black, foreground = Color.red, depthmod = 1.0, level = 3, levelmod = 0.5 }},
+            {TileTypes.Burning, new TileTypeProperties{ prob2 = 10, probability = 0.12, background = Color.black, foreground = Color.red, depthmod = 1.0, level = 3, levelmod = 0.9 }},
             {TileTypes.Manna, new TileTypeProperties{ prob2 = 8, probability = 0.15, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 5, levelmod = 0.4 }},
             {TileTypes.Speaker, new TileTypeProperties{ prob2 = 0, probability = 0.0, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 1, levelmod = 0.4 }},
         };
 
-        static Material NoramlMat;
+        static Material NormalMat;
         static Material LetterDoubleMat;
         static Material LetterTripleMat;
         static Material WordDoubleMat;
@@ -481,7 +481,7 @@ namespace WordSpell
 
         public static void LoadMaterials()
         {
-            NoramlMat = (Material)Resources.Load("Normal");
+            NormalMat = (Material)Resources.Load("Normal");
             LetterDoubleMat = (Material)Resources.Load("Double Letter");
             LetterTripleMat = (Material)Resources.Load("LavenderGem");
             WordDoubleMat = (Material)Resources.Load("Double Word");
@@ -606,7 +606,7 @@ namespace WordSpell
                     BurnTile();
                     break;
                 case TileTypes.Normal:
-                    LetterBlockObj.GetComponent<MeshRenderer>().material = NoramlMat;
+                    LetterBlockObj.GetComponent<MeshRenderer>().material = NormalMat;
                     break;
                 case TileTypes.WordDouble:
                     LetterBlockObj.GetComponent<MeshRenderer>().material = WordDoubleMat;
@@ -626,7 +626,7 @@ namespace WordSpell
                 case TileTypes.Speaker:
                     break;
                 default:
-                    LetterBlockObj.GetComponent<MeshRenderer>().material = NoramlMat;
+                    LetterBlockObj.GetComponent<MeshRenderer>().material = NormalMat;
                     break;
             }
         }
