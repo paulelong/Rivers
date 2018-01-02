@@ -22,6 +22,8 @@ public class Board : MonoBehaviour
     private float newFortuneScale;
     private float fortuneScale = 0f;
 
+    string DebugString = "";
+
     #endregion Fields
 
     #region Constants
@@ -206,6 +208,7 @@ public class Board : MonoBehaviour
                 lbi.localScale *= inc;
                 break;
             default:
+                //lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
                 lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
                 lbi.localScale *= inc;
                 break;
@@ -363,7 +366,9 @@ public class Board : MonoBehaviour
         StartCanvas.SetActive(false);
         ControlCanvas.SetActive(true);
 
+        MyDebug("Start Game Enter");
         WSGameState.InitNewGame();
+        MyDebug("InitNewGame Exit");
 
         for (int i = 0; i < WSGameState.gridsize; i++)
         {
@@ -374,11 +379,14 @@ public class Board : MonoBehaviour
                 lp.SetTransform(lbi);
             }
         }
+        MyDebug("Letter Init done");
 
         WSGameState.NewMusicTile();
+        MyDebug("Music Tile");
 
         // Check if there is a saved game.
         WSGameState.Load();
+        MyDebug("Load check");
     }
 
     IEnumerator EndGameDelay()
@@ -393,6 +401,12 @@ public class Board : MonoBehaviour
         RefreshStats();
 
         StartCanvas.SetActive(true);
+    }
+
+    void MyDebug(string s)
+    {
+        DebugString += s + "-";
+        SetUserInfo(DebugString);
     }
 
     #region Controls
@@ -523,10 +537,7 @@ public class Board : MonoBehaviour
 
     #endregion Controls
 
-    public float TranslatToGrid(int i)
-    {
-        return ((i - half_offset) * inc);
-    }
+    #region Spells
 
     // Spell related stuff
     public void AddSpellList(WSListBox spellbox, SpellInfo si, bool awarded = false)
@@ -625,7 +636,8 @@ public class Board : MonoBehaviour
         SpellInfo si = WSGameState.AwardedSpells.Find(x => (x.spellType == Spells.LastSuccessfulSpell.spellType));
         WSGameState.AwardedSpells.Remove(si);
     }
-    
+    #endregion Spells
+
     public void IndicateGoodWord(WSGameState.WordValidity wordStatus)
     {
         var theColor = SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors;
