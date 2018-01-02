@@ -45,6 +45,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: SpeakerMat3
+    second: {fileID: 2100000, guid: 1243a6efa8db7674bba2e3c9439c890d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Tweeter
     second: {fileID: 2100000, guid: 32a0892bd8457ff42aae999ef9f1c519, type: 2}
   - first:
@@ -100,7 +105,26 @@ ModelImporter:
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
+      curves:
+      - name: Curve
+        curve:
+          serializedVersion: 2
+          curve:
+          - serializedVersion: 2
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+          - serializedVersion: 2
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+          preInfinity: 3
+          postInfinity: 3
+          rotationOrder: 0
       events: []
       transformMask: []
       maskType: 3
@@ -122,6 +146,8 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
