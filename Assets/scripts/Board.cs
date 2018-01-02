@@ -403,7 +403,7 @@ public class Board : MonoBehaviour
         StartCanvas.SetActive(true);
     }
 
-    void MyDebug(string s)
+    public void MyDebug(string s)
     {
         DebugString += s + "-";
         SetUserInfo(DebugString);

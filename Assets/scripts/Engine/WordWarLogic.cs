@@ -256,6 +256,7 @@ namespace WordSpell
 
             // Reset all variables
             Replay();
+            boardScript.MyDebug("Replay");
 
             // Stuff useful for development, don't ship
 #if UNITY_EDITOR
@@ -264,12 +265,15 @@ namespace WordSpell
             r = new System.Random();
 
             LetterProp.InitProbability(gs.level);
+            boardScript.MyDebug("InitProp");
 
             LetterPropGrid = new LetterProp[gridsize, gridsize];
+            boardScript.MyDebug("InitGrid");
 
             gameOver = false;
 
             UpdateStats();
+            boardScript.MyDebug("UpdateStats");
             //NewMusicTile();
         }
 
