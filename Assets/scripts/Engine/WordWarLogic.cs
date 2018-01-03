@@ -254,6 +254,7 @@ namespace WordSpell
         public static void InitNewGame()
         {
 
+            boardScript.MyDebug("InitGame Start");
             // Reset all variables
             Replay();
             boardScript.MyDebug("Replay");
@@ -308,10 +309,14 @@ namespace WordSpell
 
         internal static void Replay()
         {
+            boardScript.MyDebug("Replay Start");
             gs.score = 0;
             gs.level = 1;
             gs.mana = 0;
+
+            boardScript.MyDebug("Clear 1");
             gs.awarded.Clear();
+            boardScript.MyDebug("Clear 2");
             gs.history.Clear();
 
             TotalEfficiency = 0;
@@ -319,6 +324,7 @@ namespace WordSpell
             //HighScoreWord = "";
             totalwords = 0;
 
+            boardScript.MyDebug("Update");
             UpdateStats();
         }
 
