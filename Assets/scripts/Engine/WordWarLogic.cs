@@ -254,7 +254,7 @@ namespace WordSpell
         public static void InitNewGame()
         {
 
-            boardScript.MyDebug("InitGame Start");
+            boardScript.MyDebug("InitGame");
             // Reset all variables
             Replay();
             boardScript.MyDebug("Replay");
@@ -601,7 +601,9 @@ namespace WordSpell
 
         private static void UpdateStats()
         {
+            boardScript.MyDebug("US 1");
             boardScript.SetScore(gs.score.ToString());
+            boardScript.MyDebug("US 2");
 
             if (totalwords > 0)
             {
@@ -609,9 +611,12 @@ namespace WordSpell
             }
 
             boardScript.SetLevel(gs.level.ToString());
+            boardScript.MyDebug("US 3");
 
             UpdateManaScore();
+            boardScript.MyDebug("US 4");
             UpdateFortune();
+            boardScript.MyDebug("US 5");
         }
 
         public static void ChangeManna(int manna)
