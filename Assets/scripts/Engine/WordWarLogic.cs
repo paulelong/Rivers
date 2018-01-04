@@ -536,6 +536,7 @@ namespace WordSpell
 
         public static FortuneLevel GetFortune()
         {
+            boardScript.MyDebug("GF0");
             if (GetLatestEff() >= EffHigh)
             {
                 return FortuneLevel.Great;
@@ -545,6 +546,7 @@ namespace WordSpell
                 return FortuneLevel.Good;
             }
 
+            boardScript.MyDebug("GF1");
             return FortuneLevel.Bad;
         }
 

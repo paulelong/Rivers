@@ -366,9 +366,8 @@ public class Board : MonoBehaviour
         StartCanvas.SetActive(false);
         ControlCanvas.SetActive(true);
 
-        MyDebug("Start Game Enter");
+        MyDebug("SG0");
         WSGameState.InitNewGame();
-        MyDebug("InitNewGame Exit");
 
         for (int i = 0; i < WSGameState.gridsize; i++)
         {
@@ -379,10 +378,8 @@ public class Board : MonoBehaviour
                 lp.SetTransform(lbi);
             }
         }
-        MyDebug("Letter Init done");
 
         WSGameState.NewMusicTile();
-        MyDebug("Music Tile");
 
         // Check if there is a saved game.
         WSGameState.Load();
@@ -466,8 +463,9 @@ public class Board : MonoBehaviour
     public void SetFortune(float scale, Material m)
     {
         newFortuneScale = scale;
-
+        MyDebug("SF0");
         FortuneBar.GetComponent<MeshRenderer>().material = m;
+        MyDebug("SF1");
     }
 
     /// <summary>
