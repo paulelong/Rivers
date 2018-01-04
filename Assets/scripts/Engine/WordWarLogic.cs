@@ -554,8 +554,10 @@ namespace WordSpell
         }
 
         internal static void UpdateFortune()
-        {           
+        {
+            boardScript.MyDebug("UF0");
             float eff = (float)GetLatestEff();
+            boardScript.MyDebug("UF");
 
             // Scale goes from 3, the smallest score to EffHigh (which is the max efficiency) +20.
             float scale = (eff - LowestWordScore) / (EffHigh + FortuneMaxOver);
@@ -569,8 +571,9 @@ namespace WordSpell
             {
                 scale = 1f / (EffHigh + FortuneMaxOver - LowestWordScore);
             }
-
+            boardScript.MyDebug("UF2");
             boardScript.SetFortune(scale, GetFortuneColor());
+            boardScript.MyDebug("UF3");
         }
 
         private static void AddToTryList()
@@ -887,16 +890,19 @@ namespace WordSpell
 
         private static double GetLatestEff()
         {
-            if(gs.fortune.Count <= 0)
+            boardScript.MyDebug("GKE0");
+            if (gs.fortune.Count <= 0)
             {
                 return 0;
             }
 
+            boardScript.MyDebug("GKE1");
             int wordtotal = 0;
             foreach (WordScoreItem wsi in gs.fortune)
             {
                 wordtotal += wsi.score;
             }
+            boardScript.MyDebug("GKE2");
 
             return (double)wordtotal / (double)gs.fortune.Count;
         }
