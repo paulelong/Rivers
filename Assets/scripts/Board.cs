@@ -462,9 +462,15 @@ public class Board : MonoBehaviour
     public void SetFortune(float scale, Material m)
     {
         newFortuneScale = scale;
-        MyDebug("SF0[" + m.ToString() + "]");
-        FortuneBar.GetComponent<MeshRenderer>().material = m;
+        MyDebug("SF0");
+        if(FortuneBar != null)
+        {
+            MyDebug("SF0.Yes");
+        }
+        MeshRenderer mr = FortuneBar.GetComponent<MeshRenderer>();
         MyDebug("SF1");
+        FortuneBar.GetComponent<MeshRenderer>().material = m;
+        MyDebug("SF2");
     }
 
     /// <summary>

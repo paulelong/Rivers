@@ -888,19 +888,16 @@ namespace WordSpell
 
         private static double GetLatestEff()
         {
-            boardScript.MyDebug("GKE0");
             if (gs.fortune.Count <= 0)
             {
                 return 0;
             }
 
-            boardScript.MyDebug("GKE1");
             int wordtotal = 0;
             foreach (WordScoreItem wsi in gs.fortune)
             {
                 wordtotal += wsi.score;
             }
-            boardScript.MyDebug("GKE2");
 
             return (double)wordtotal / (double)gs.fortune.Count;
         }
