@@ -242,10 +242,10 @@ namespace WordSpell
 
             LetterProp.InitLetterPropertyList(boardScript);
 
-            BadFortuneMaterial = (Material)Resources.Load("Copper");
-            GoodFortuneMaterial = (Material)Resources.Load("Silver");
-            GreatFortuneMaterial = (Material)Resources.Load("Gold");
-            ManaMaterial = (Material)Resources.Load("Mana");
+            BadFortuneMaterial = Resources.Load("Copper") as Material;
+            GoodFortuneMaterial = Resources.Load("Silver") as Material;
+            GreatFortuneMaterial = Resources.Load("Gold") as Material;
+            ManaMaterial = Resources.Load("Mana") as Material;
 
             // Load the music for the speaker tiles just once.
             TileAnim.LoadMusic();
@@ -257,7 +257,6 @@ namespace WordSpell
             boardScript.MyDebug("InitGame");
             // Reset all variables
             Replay();
-            boardScript.MyDebug("Replay");
 
             // Stuff useful for development, don't ship
 #if UNITY_EDITOR
@@ -266,15 +265,13 @@ namespace WordSpell
             r = new System.Random();
 
             LetterProp.InitProbability(gs.level);
-            boardScript.MyDebug("InitProp");
 
             LetterPropGrid = new LetterProp[gridsize, gridsize];
-            boardScript.MyDebug("InitGrid");
 
             gameOver = false;
 
             UpdateStats();
-            boardScript.MyDebug("UpdateStats");
+            boardScript.MyDebug("US-F");
             //NewMusicTile();
         }
 
@@ -314,9 +311,7 @@ namespace WordSpell
             gs.level = 1;
             gs.mana = 0;
 
-            boardScript.MyDebug("Clear 1");
             gs.awarded.Clear();
-            boardScript.MyDebug("Clear 2");
             gs.history.Clear();
 
             TotalEfficiency = 0;
@@ -574,7 +569,9 @@ namespace WordSpell
                 scale = 1f / (EffHigh + FortuneMaxOver - LowestWordScore);
             }
             boardScript.MyDebug("UF2");
-            boardScript.SetFortune(scale, GetFortuneColor());
+            Material fc = GetFortuneColor();
+            boardScript.MyDebug("UF2.5");
+            boardScript.SetFortune(scale, fc);
             boardScript.MyDebug("UF3");
         }
 
@@ -606,9 +603,8 @@ namespace WordSpell
 
         private static void UpdateStats()
         {
-            boardScript.MyDebug("US 1");
             boardScript.SetScore(gs.score.ToString());
-            boardScript.MyDebug("US 2");
+            boardScript.MyDebug("US2");
 
             if (totalwords > 0)
             {
@@ -616,12 +612,12 @@ namespace WordSpell
             }
 
             boardScript.SetLevel(gs.level.ToString());
-            boardScript.MyDebug("US 3");
+            boardScript.MyDebug("US3");
 
             UpdateManaScore();
-            boardScript.MyDebug("US 4");
+            boardScript.MyDebug("US4");
             UpdateFortune();
-            boardScript.MyDebug("US 5");
+            boardScript.MyDebug("US5");
         }
 
         public static void ChangeManna(int manna)

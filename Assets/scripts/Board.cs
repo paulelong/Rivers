@@ -98,12 +98,12 @@ public class Board : MonoBehaviour
         AudioClip[] AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
         if (AmbientSongs != null)
         {
-            SetUserInfo("Loaded songs " + AmbientSongs.Length);
+            MyDebug("LS=" + AmbientSongs.Length);
 
         }
         else
         {
-            SetUserInfo("Didn't load songs");
+            MyDebug("LS0");
         }
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -383,7 +383,6 @@ public class Board : MonoBehaviour
 
         // Check if there is a saved game.
         WSGameState.Load();
-        MyDebug("Load check");
     }
 
     IEnumerator EndGameDelay()
@@ -463,7 +462,7 @@ public class Board : MonoBehaviour
     public void SetFortune(float scale, Material m)
     {
         newFortuneScale = scale;
-        MyDebug("SF0");
+        MyDebug("SF0[" + m.ToString() + "]");
         FortuneBar.GetComponent<MeshRenderer>().material = m;
         MyDebug("SF1");
     }
