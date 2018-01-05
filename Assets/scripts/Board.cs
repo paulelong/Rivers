@@ -463,11 +463,12 @@ public class Board : MonoBehaviour
     {
         newFortuneScale = scale;
         MyDebug("SF0");
-        if(FortuneBar != null)
+
+        MeshRenderer mr = FortuneBar.GetComponent<MeshRenderer>();
+        if (mr != null)
         {
             MyDebug("SF0.Yes");
         }
-        MeshRenderer mr = FortuneBar.GetComponent<MeshRenderer>();
         MyDebug("SF1");
         //FortuneBar.GetComponent<MeshRenderer>().sharedMaterial = m;
         MyDebug("SF2");
