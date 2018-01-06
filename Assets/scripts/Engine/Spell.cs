@@ -629,6 +629,7 @@ namespace WordSpell
             if (lp.TileType == LetterProp.TileTypes.Speaker)
             {
                 lp.StopBackgroundMusic();
+                Debug.Log("Burned speaker, finding new one");
                 WSGameState.NewMusicTile();
             }
 

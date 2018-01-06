@@ -22,6 +22,7 @@ namespace WordSpell
         static OverallStats os = new OverallStats();
         static List<WordScoreItem> TryWordList = new List<WordScoreItem>();
         static List<LetterProp> SelLetterList = new List<LetterProp>();
+
         static System.Random r;
 
 #if UNITY_EDITOR
@@ -261,8 +262,10 @@ namespace WordSpell
             // Stuff useful for development, don't ship
 #if UNITY_EDITOR
             AwardAllSpells();
-#endif
+            r = new System.Random(12);
+#else
             r = new System.Random();
+#endif
 
             LetterProp.InitProbability(gs.level);
 
@@ -302,6 +305,7 @@ namespace WordSpell
         {
             int ti = r.Next(gridsize);
             LetterPropGrid[ti, gridsize - 1].PlayBackgroundMusic();
+            Debug.Log("New Music Tile is " + LetterPropGrid[ti, gridsize - 1].ASCIIString + " at " + ti.ToString() + " 8" );
         }
 
         internal static void Replay()
@@ -520,8 +524,8 @@ namespace WordSpell
 
             if (toRemove.MusicHolderRole && !gameOver)
             {
-                NewMusicTile();
                 Debug.Log("Old music tile died " + toRemove.ASCIIString + " at " + toRemove.I + " " + toRemove.J);
+                NewMusicTile();
             }
         }
 

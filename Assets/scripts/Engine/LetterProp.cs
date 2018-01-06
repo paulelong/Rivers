@@ -57,7 +57,11 @@ namespace WordSpell
         static Dictionary<TileTypes, TileTypeProperties> SortedTiles = new Dictionary<TileTypes, TileTypeProperties>();
         static List<TileProb> TilesForLevel = new List<TileProb>();
 
+#if UNITY_EDITOR
+        static System.Random r = new System.Random(21);
+#else
         static System.Random r = new System.Random();
+#endif
 
         #region Properties
 
@@ -459,7 +463,7 @@ namespace WordSpell
             {TileTypes.WordTriple, new TileTypeProperties { prob2 = 4, probability = 0.03, foreground = Color.black, background = Color.green, depthmod = 0.01, level = 6, levelmod = 0.2 }},
             {TileTypes.Burning, new TileTypeProperties{ prob2 = 10, probability = 0.12, background = Color.black, foreground = Color.red, depthmod = 1.0, level = 3, levelmod = 0.9 }},
             {TileTypes.Manna, new TileTypeProperties{ prob2 = 8, probability = 0.15, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 5, levelmod = 0.4 }},
-            {TileTypes.Speaker, new TileTypeProperties{ prob2 = 0, probability = 0.0, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 1, levelmod = 0.4 }},
+            {TileTypes.Speaker, new TileTypeProperties{ prob2 = 0, probability = 0.0, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 30000, levelmod = 0.4 }},
         };
 
         static Material NormalMat;
@@ -481,13 +485,13 @@ namespace WordSpell
 
         public static void LoadMaterials()
         {
-            NormalMat = (Material)Resources.Load("Normal");
-            LetterDoubleMat = (Material)Resources.Load("Double Letter");
-            LetterTripleMat = (Material)Resources.Load("LavenderGem");
-            WordDoubleMat = (Material)Resources.Load("Double Word");
-            WordTripleMat = (Material)Resources.Load("PurpleGem");
-            ManaMat = (Material)Resources.Load("TurquoiseGem");
-            BurningMat = (Material)Resources.Load("Burnt");
+            NormalMat = Resources.Load("Normal") as Material;
+            LetterDoubleMat = (Material)Resources.Load("Double Letter") as Material;
+            LetterTripleMat = (Material)Resources.Load("LavenderGem") as Material;
+            WordDoubleMat = (Material)Resources.Load("Double Word") as Material;
+            WordTripleMat = (Material)Resources.Load("PurpleGem") as Material;
+            ManaMat = (Material)Resources.Load("TurquoiseGem") as Material;
+            BurningMat = (Material)Resources.Load("Burnt") as Material;
             //Jeans = (Material)Resources.Load("Jeans");
 
             LavaLight = (GameObject)Resources.Load("LavalLight");
@@ -551,6 +555,10 @@ namespace WordSpell
 
             UpdateLetterDisplay();
             UpdateMaterial();
+            if(tt == TileTypes.Speaker)
+            {
+                Debug.Log("Speaker tile shoudl be zero percent.  What happened?");
+            }
         }
 
         public LetterProp(int level, bool levelup, int _i, int _j)
