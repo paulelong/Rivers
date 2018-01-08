@@ -96,15 +96,6 @@ public class Board : MonoBehaviour
         //    Debug.Log(go.name);
         //}
         AudioClip[] AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
-        if (AmbientSongs != null)
-        {
-            MyDebug("LS=" + AmbientSongs.Length);
-
-        }
-        else
-        {
-            MyDebug("LS0");
-        }
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 //        SetUserInfo(GamePersistence.TestPersistence());
@@ -366,7 +357,6 @@ public class Board : MonoBehaviour
         StartCanvas.SetActive(false);
         ControlCanvas.SetActive(true);
 
-        MyDebug("SG0");
         WSGameState.InitNewGame();
 
         for (int i = 0; i < WSGameState.gridsize; i++)
@@ -462,13 +452,9 @@ public class Board : MonoBehaviour
     public void SetFortune(float scale, Material m)
     {
         newFortuneScale = scale;
-        MyDebug("SF0");
 
         MeshRenderer mr = FortuneBar.GetComponent<MeshRenderer>();
-        if (mr != null)
-        {
-            MyDebug("SF0.Yes");
-        }
+
         MyDebug("SF1");
         FortuneBar.GetComponent<MeshRenderer>().sharedMaterial = m;
         MyDebug("SF2");

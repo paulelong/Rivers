@@ -534,7 +534,6 @@ namespace WordSpell
 
         public static FortuneLevel GetFortune()
         {
-            boardScript.MyDebug("GF0");
             if (GetLatestEff() >= EffHigh)
             {
                 return FortuneLevel.Great;
@@ -569,7 +568,6 @@ namespace WordSpell
             {
                 scale = 1f / (EffHigh + FortuneMaxOver - LowestWordScore);
             }
-            boardScript.MyDebug("UF2");
             Material fc = GetFortuneColor();
             boardScript.MyDebug("UF2.5");
             boardScript.SetFortune(scale, fc);
