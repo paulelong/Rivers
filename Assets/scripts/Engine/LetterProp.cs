@@ -486,12 +486,12 @@ namespace WordSpell
         public static void LoadMaterials()
         {
             NormalMat = Resources.Load("Normal") as Material;
-            LetterDoubleMat = (Material)Resources.Load("Double Letter") as Material;
-            LetterTripleMat = (Material)Resources.Load("LavenderGem") as Material;
-            WordDoubleMat = (Material)Resources.Load("Double Word") as Material;
-            WordTripleMat = (Material)Resources.Load("PurpleGem") as Material;
-            ManaMat = (Material)Resources.Load("TurquoiseGem") as Material;
-            BurningMat = (Material)Resources.Load("Burnt") as Material;
+            LetterDoubleMat = Resources.Load("Double Letter") as Material;
+            LetterTripleMat = Resources.Load("LavenderGem") as Material;
+            WordDoubleMat = Resources.Load("Double Word") as Material;
+            WordTripleMat = Resources.Load("PurpleGem") as Material;
+            ManaMat = Resources.Load("TurquoiseGem") as Material;
+            BurningMat = Resources.Load("Burnt") as Material;
             //Jeans = (Material)Resources.Load("Jeans");
 
             LavaLight = (GameObject)Resources.Load("LavalLight");
@@ -637,6 +637,8 @@ namespace WordSpell
                     LetterBlockObj.GetComponent<MeshRenderer>().material = NormalMat;
                     break;
             }
+
+            boardScript.MyDebug("ME");
         }
 
         private void BurnTile()

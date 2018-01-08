@@ -310,7 +310,6 @@ namespace WordSpell
 
         internal static void Replay()
         {
-            boardScript.MyDebug("Replay Start");
             gs.score = 0;
             gs.level = 1;
             gs.mana = 0;
@@ -556,9 +555,7 @@ namespace WordSpell
 
         internal static void UpdateFortune()
         {
-            boardScript.MyDebug("UF0");
             float eff = (float)GetLatestEff();
-            boardScript.MyDebug("UF");
 
             // Scale goes from 3, the smallest score to EffHigh (which is the max efficiency) +20.
             float scale = (eff - LowestWordScore) / (EffHigh + FortuneMaxOver);
@@ -608,7 +605,6 @@ namespace WordSpell
         private static void UpdateStats()
         {
             boardScript.SetScore(gs.score.ToString());
-            boardScript.MyDebug("US2");
 
             if (totalwords > 0)
             {
@@ -616,12 +612,9 @@ namespace WordSpell
             }
 
             boardScript.SetLevel(gs.level.ToString());
-            boardScript.MyDebug("US3");
 
             UpdateManaScore();
-            boardScript.MyDebug("US4");
             UpdateFortune();
-            boardScript.MyDebug("US5");
         }
 
         public static void ChangeManna(int manna)
