@@ -470,7 +470,7 @@ public class Board : MonoBehaviour
             MyDebug("SF0.Yes");
         }
         MyDebug("SF1");
-        //FortuneBar.GetComponent<MeshRenderer>().sharedMaterial = m;
+        FortuneBar.GetComponent<MeshRenderer>().sharedMaterial = m;
         MyDebug("SF2");
     }
 

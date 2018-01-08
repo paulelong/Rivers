@@ -172,7 +172,6 @@ namespace WordSpell
             if(NextSpell != null)
             {
                 lp = _lp;
-                WSGameState.MagicSelect(_lp);
                 CastSpell();
                 return true;
             }
@@ -254,6 +253,7 @@ namespace WordSpell
                     {
                         case 0:
                             ChangeToVowel(lp);
+                            WSGameState.MagicSelect(lp);
                             state++;
                             break;
                         case 1:
@@ -273,6 +273,7 @@ namespace WordSpell
                     {
                         case 0:
                             LetterSwapFirst = lp;
+                            WSGameState.MagicSelect(lp);
                             state++;
                             break;
                         case 1:
@@ -297,6 +298,7 @@ namespace WordSpell
                     {
                         case 0:
                             ConvertLetterTile(lp);
+                            WSGameState.MagicSelect(lp);
                             Debug.Log("Found Converts: " + RandomLetterList.Count);
                             state++;
                             break;
@@ -348,6 +350,7 @@ namespace WordSpell
                     {
                         case 0:
                             WSGameState.boardScript.SelectLetterToChange();
+                            WSGameState.MagicSelect(lp);
                             state++;
                             break;
                         case 1:
