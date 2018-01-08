@@ -396,13 +396,13 @@ namespace WordSpell
                 {
                     ScoreStats ss = RecordWordScore();
 
+                    gameOver = ProcessLetters();
                     RemoveWordAndReplaceTiles();
 
                     Deselect(null);
 
                     boardScript.ResetSubmitButton();
 
-                    gameOver = ProcessLetters();
                     if (gameOver)
                     {
                         GameOver();
@@ -462,7 +462,7 @@ namespace WordSpell
                 }
                 else
                 {
-                    boardScript.ShowMsg("Nice word, if you are a Martin :)  Please try again.");
+                    boardScript.ShowMsg("Nice word...if you are a Martian :)  Please try again.");
                 }
 
                 Deselect(null);
