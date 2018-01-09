@@ -495,7 +495,6 @@ namespace WordSpell
             //Jeans = (Material)Resources.Load("Jeans");
 
             LavaLight = (GameObject)Resources.Load("LavalLight");
-            boardScript.MyDebug("LMx");
         }
 
         public static void InitLetterPropertyList(Board _boardScript)
