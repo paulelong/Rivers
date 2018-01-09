@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23108454258640378}
   - component: {fileID: 95561865344240966}
   m_Layer: 0
-  m_Name: FortuneBar
+  m_Name: FortuneBarPF
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
