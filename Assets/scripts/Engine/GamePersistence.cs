@@ -63,18 +63,26 @@ namespace WordSpell
             public List<SimpleLetter> grid = new List<SimpleLetter>();
             public GameStats gs = new GameStats();
 
+
             public void FillGameData(LetterProp[,] LetterPropGrid, GameStats _gs)
             {
-                gs = _gs;
-
-                for (int i = 0; i < WSGameState.gridsize; i++)
+                if (LetterPropGrid != null)
                 {
-                    for (int j = 0; j < WSGameState.gridsize; j++)
+                    gs = _gs;
+
+                    for (int i = 0; i < WSGameState.gridsize; i++)
                     {
-                        SimpleLetter sl = new SimpleLetter();
-                        sl.addletter(i, j, LetterPropGrid[i, j].letter, LetterPropGrid[i, j].TileType);
-                        grid.Add(sl);
+                        for (int j = 0; j < WSGameState.gridsize; j++)
+                        {
+                            SimpleLetter sl = new SimpleLetter();
+                            sl.addletter(i, j, LetterPropGrid[i, j].letter, LetterPropGrid[i, j].TileType);
+                            grid.Add(sl);
+                        }
                     }
+                }
+                else
+                {
+                    Debug.Log("Grid not intialized yet");
                 }
             }
 

@@ -130,6 +130,36 @@ namespace WordSpell
             }
         }
 
+        public static bool Resume { get { return resume; } set { resume = value; } }
+
+        public static bool IsGameOver
+        {
+            get
+            {
+                return gameOver;
+            }
+
+            set
+            {
+                gameOver = value;
+            }
+        }
+
+        public static bool GameInProgress
+        {
+            get
+            {
+                if (!IsGameOver && LetterPropGrid != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
         #endregion Properties
 
         #region Fields
@@ -167,15 +197,11 @@ namespace WordSpell
 
         #endregion Constants
 
-        public static bool Resume { get { return resume; } set { resume = value; } }
-
         internal static void DebugMode()
         {
             gs.mana = 100;
             gs.level = 20;
         }
-
-
 
         #region Init
 
@@ -246,10 +272,15 @@ namespace WordSpell
             BadFortuneMaterial = Resources.Load("Copper") as Material;
             GoodFortuneMaterial = Resources.Load("Silver") as Material;
             GreatFortuneMaterial = Resources.Load("Gold") as Material;
-            ManaMaterial = Resources.Load("Mana") as Material;
+            ManaMaterial = Resources.Load("Mana") as Material;        
 
             // Load the music for the speaker tiles just once.
             TileAnim.LoadMusic();
+        }
+
+        static public void DebugSphere(GameObject go)
+        {
+            go.GetComponent<MeshRenderer>().material = GoodFortuneMaterial;
         }
 
         public static void InitNewGame()
@@ -271,7 +302,7 @@ namespace WordSpell
 
             LetterPropGrid = new LetterProp[gridsize, gridsize];
 
-            gameOver = false;
+            IsGameOver = false;
 
             UpdateStats();
             boardScript.MyDebug("US-F");
@@ -395,14 +426,14 @@ namespace WordSpell
                 {
                     ScoreStats ss = RecordWordScore();
 
-                    gameOver = ProcessLetters();
+                    IsGameOver = ProcessLetters();
                     RemoveWordAndReplaceTiles();
 
                     Deselect(null);
 
                     boardScript.ResetSubmitButton();
 
-                    if (gameOver)
+                    if (IsGameOver)
                     {
                         GameOver();
                     }
@@ -521,7 +552,7 @@ namespace WordSpell
             float zr = r.Next(100) / 1f;
             rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
 
-            if (toRemove.MusicHolderRole && !gameOver)
+            if (toRemove.MusicHolderRole && !IsGameOver)
             {
                 Debug.Log("Old music tile died " + toRemove.ASCIIString + " at " + toRemove.I + " " + toRemove.J);
                 NewMusicTile();
@@ -636,7 +667,7 @@ namespace WordSpell
 
         public static void GameOver()
         {
-            gameOver = true;
+            IsGameOver = true;
             Deselect(null);
 
             GamePersistence.SaveOverallStats(os);

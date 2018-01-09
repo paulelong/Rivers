@@ -41,6 +41,7 @@ public class Board : MonoBehaviour
 
     // Passed in from Board scene
     #region Unity Objects
+    public GameObject TestSphere;
     public Transform LetterBoxPrefab;
     public Transform LetterSpeakerPrefab;
     public GameObject SelectPrefab;
@@ -90,6 +91,7 @@ public class Board : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+
         //var gol = GameObject.FindGameObjectsWithTag("ScoreText");
         //foreach(GameObject go in gol)
         //{
@@ -101,6 +103,10 @@ public class Board : MonoBehaviour
 //        SetUserInfo(GamePersistence.TestPersistence());
 
         WSGameState.InitGameGlobal();
+
+        // Test code for materials and iOS
+        WSGameState.DebugSphere(TestSphere);
+        // end test code
 
         SetStoryInfo(EngLetterScoring.Intro1, EngLetterScoring.Intro2);
         SetVersion(Application.version);
@@ -299,7 +305,7 @@ public class Board : MonoBehaviour
 
     void SaveGameState()
     {
-        if (!StartCanvas.activeSelf)
+        if (!StartCanvas.activeSelf && WSGameState.GameInProgress)
         {
             WSGameState.Save();
         }
