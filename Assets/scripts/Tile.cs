@@ -21,8 +21,8 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     {
         // Tiles that fall off the screen are destroyed.
         if(gameObject.transform.position.y < -150)
-            //if (gameObject.transform.GetChild(0).transform.position.y < -150)
-            {
+        //if (gameObject.transform.GetChild(0).transform.position.y < -150)
+        {
                 Destroy(gameObject);
         }
 
