@@ -180,6 +180,7 @@ namespace WordSpell
         const int FortuneMaxOver = 10;
         private const float LowestWordScore = 3f;
         private static GameObject selMagicTile;
+        internal static bool dbg = false;
 
         public enum FortuneLevel
         {
@@ -508,7 +509,7 @@ namespace WordSpell
         {
             LetterProp toRemove = LetterPropGrid[i, j];
 
-            Vector3 oldpos = LetterPropGrid[i, j].Tf.position;
+            Vector3 oldpos = LetterPropGrid[i, j].LetTF.position;
 
             for (int jp = j; jp < gridsize - 1; jp++)
             {
@@ -529,13 +530,18 @@ namespace WordSpell
 
             LetterPropGrid[i, gridsize - 1].LetterDCount = fallCount;
 
+            if (i == 5 && LetterPropGrid[i, gridsize - 1].ASCIIChar == 'G')
+            {
+                dbg = true;
+            }
+
             RemoveTile(toRemove);
         }
 
 
         public static void RemoveTile(LetterProp toRemove)
         {
-            toRemove.Tf.Translate(0.0f, 0.0f, -1f);
+            toRemove.LetTF.Translate(0.0f, 0.0f, -1f);
 
 
             Rigidbody rb = toRemove.rigidbody; // toRemove.LetterBlockObj.GetComponent(typeof(Rigidbody)) as Rigidbody;
@@ -1007,6 +1013,8 @@ namespace WordSpell
 
         internal static bool ProcessLetters()
         {
+            List<LetterProp> removeList = new List<LetterProp>() ;
+
             for (int i = 0; i < gridsize; i++)
             {
                 for (int j = 0; j < gridsize; j++)
@@ -1020,9 +1028,18 @@ namespace WordSpell
                             return true;
                         }
 
-                        RemoveAndReplaceTile(curlp.I, curlp.J - 1);
+                        if(LetterPropGrid[i, j -1].TileType != LetterProp.TileTypes.Burning)
+                        {
+                            removeList.Add(LetterPropGrid[i, j - 1]);
+                        }
+//                        RemoveAndReplaceTile(curlp.I, curlp.J - 1);
                     }
                 }
+            }
+
+            foreach(LetterProp lp in removeList)
+            {
+                RemoveAndReplaceTile(lp.I, lp.J);
             }
 
             WordWarAI wwai = new WordWarAI(LetterPropGrid);

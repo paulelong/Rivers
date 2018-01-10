@@ -48,7 +48,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
                 lp.LetterRCount -= fallrate;
                 gameObject.transform.position += new Vector3(fallrate, 0, 0);
             }
-            if(lp.LetterRotHL > 0.01f)
+            if (lp.LetterRotHL > 0.01f)
             {
                 lp.LetterRotHL -= spinrate;
                 gameObject.transform.RotateAround(lp.LetterRotHLAxis, Vector3.up, spinrate);

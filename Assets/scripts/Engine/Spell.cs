@@ -410,13 +410,13 @@ namespace WordSpell
                 }
 
                 _lp1.LetterRotVU = 180f;
-                _lp1.LetterRotVUAxis = _lp1.Tf.position + new Vector3(0, 0.5f, 0);
-                _lp1.LetterRotVUCAxis = _lp1.Tf.position;
+                _lp1.LetterRotVUAxis = _lp1.LetTF.position + new Vector3(0, 0.5f, 0);
+                _lp1.LetterRotVUCAxis = _lp1.LetTF.position;
                 //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotVD = 180f;
-                _lp2.LetterRotVDAxis = _lp2.Tf.position - new Vector3(0, 0.5f, 0);
-                _lp2.LetterRotVDCAxis = _lp2.Tf.position;
+                _lp2.LetterRotVDAxis = _lp2.LetTF.position - new Vector3(0, 0.5f, 0);
+                _lp2.LetterRotVDCAxis = _lp2.LetTF.position;
                 //_lp2.AnimationEnabled = false;
             } // Side by side
             else
@@ -433,13 +433,13 @@ namespace WordSpell
                 }
 
                 _lp1.LetterRotHL = 180f;
-                _lp1.LetterRotHLAxis = _lp1.Tf.position - new Vector3(0.5f, 0, 0);
-                _lp1.LetterRotHLCAxis = _lp1.Tf.position;
+                _lp1.LetterRotHLAxis = _lp1.LetTF.position - new Vector3(0.5f, 0, 0);
+                _lp1.LetterRotHLCAxis = _lp1.LetTF.position;
                 //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotHR = 180f;
-                _lp2.LetterRotHRAxis = _lp2.Tf.position + new Vector3(0.5f, 0, 0);
-                _lp2.LetterRotHLCAxis = _lp2.Tf.position;
+                _lp2.LetterRotHRAxis = _lp2.LetTF.position + new Vector3(0.5f, 0, 0);
+                _lp2.LetterRotHLCAxis = _lp2.LetTF.position;
                 //_lp2.AnimationEnabled = false;
             }
         }
@@ -609,9 +609,9 @@ namespace WordSpell
 
                 if(move)
                 {
-                    Vector3 tv = lpa.Tf.position;
-                    lpa.Tf.position = lpb.Tf.position;
-                    lpb.Tf.position = tv;
+                    Vector3 tv = lpa.LetTF.position;
+                    lpa.LetTF.position = lpb.LetTF.position;
+                    lpb.LetTF.position = tv;
                 }
 
                 WSGameState.LetterPropGrid[lpa.I, lpa.J] = lpa;

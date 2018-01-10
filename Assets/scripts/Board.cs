@@ -245,6 +245,12 @@ public class Board : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
+        if(WSGameState.dbg && WSGameState.LetterPropGrid[5,8].LetTF.position.y - 5f < .1)
+        {
+            Debug.Log("here");
+            WSGameState.dbg = false;
+        }
+
         if(MsgCanvas.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.Return))

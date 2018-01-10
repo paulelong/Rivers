@@ -11,7 +11,7 @@ namespace WordSpell
 
         private TileTypes tt;
 
-        public Transform Tf { get; private set; }
+        public Transform LetTF { get; private set; }
         private Animator LetterAnimator;
 
         private byte _letter;
@@ -48,9 +48,9 @@ namespace WordSpell
 
         private void ClearTransform()
         {
-            if(Tf != null)
+            if(LetTF != null)
             {
-                boardScript.DestroyLetterObject(Tf);
+                boardScript.DestroyLetterObject(LetTF);
             }
         }
 
@@ -393,7 +393,7 @@ namespace WordSpell
         {
             get
             {
-                return Tf.GetChild(0).gameObject;
+                return LetTF.GetChild(0).gameObject;
             }
         }
 
@@ -401,7 +401,7 @@ namespace WordSpell
         {
             get
             {
-                return (Tf.GetComponent(typeof(Rigidbody)) as Rigidbody);
+                return (LetTF.GetComponent(typeof(Rigidbody)) as Rigidbody);
                 //return (Tf.GetChild(0).GetComponent(typeof(Rigidbody)) as Rigidbody);
             }
         }
@@ -410,7 +410,7 @@ namespace WordSpell
         {
             get
             {
-                return (Tile)Tf.GetComponent(typeof(Tile));
+                return (Tile)LetTF.GetComponent(typeof(Tile));
             }
         }
 
@@ -418,7 +418,7 @@ namespace WordSpell
         {
             get
             {
-                return (TileAnim)Tf.GetChild(0).transform.GetComponent(typeof(TileAnim));
+                return (TileAnim)LetTF.GetChild(0).transform.GetComponent(typeof(TileAnim));
             }
         }
 
@@ -540,7 +540,7 @@ namespace WordSpell
 
         public LetterProp(int level, bool levelup, int _i, int _j, Transform _tf)
         {
-            Tf = _tf;
+            LetTF = _tf;
             tt = CreateNewTile(level, levelup);
 
             LetterAnimator = LetterBlockObj.GetComponent<Animator>();
@@ -573,7 +573,7 @@ namespace WordSpell
 
         public void SetTransform(Transform _tf)
         {
-            Tf = _tf;
+            LetTF = _tf;
 
             LetterAnimator = LetterBlockObj.GetComponent<Animator>();
 
