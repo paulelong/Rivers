@@ -530,7 +530,7 @@ namespace WordSpell
 
             LetterPropGrid[i, gridsize - 1].LetterDCount = fallCount;
 
-            if (i == 5 && LetterPropGrid[i, gridsize - 1].ASCIIChar == 'G')
+            if (i == 5 && LetterPropGrid[i, gridsize - 1].ASCIIChar == 'I')
             {
                 dbg = true;
             }
@@ -543,6 +543,11 @@ namespace WordSpell
         {
             toRemove.LetTF.Translate(0.0f, 0.0f, -1f);
 
+            if (toRemove.MusicHolderRole && !IsGameOver)
+            {
+                Debug.Log("Old music tile died " + toRemove.ASCIIString + " at " + toRemove.I + " " + toRemove.J);
+                NewMusicTile();
+            }
 
             Rigidbody rb = toRemove.rigidbody; // toRemove.LetterBlockObj.GetComponent(typeof(Rigidbody)) as Rigidbody;
             rb.useGravity = true;
@@ -557,12 +562,6 @@ namespace WordSpell
             float yr = r.Next(100) / 10f;
             float zr = r.Next(100) / 1f;
             rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
-
-            if (toRemove.MusicHolderRole && !IsGameOver)
-            {
-                Debug.Log("Old music tile died " + toRemove.ASCIIString + " at " + toRemove.I + " " + toRemove.J);
-                NewMusicTile();
-            }
         }
 
         #endregion Main
