@@ -26,7 +26,7 @@ namespace WordSpell
         static System.Random r;
 
 #if UNITY_EDITOR
-        private static int[] Levels = { 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 1300, 1600, 2000, 5000, 10000 };
+        private static int[] Levels = { 0, 20, 40, 60, 87, 100, 120, 140, 160, 180, 200, 220, 1300, 1600, 2000, 5000, 10000 };
 #else
         private static int[] Levels = { 0, 25, 60, 100, 160, 230, 310, 400, 500, 650, 850, 1000, 1300, 1600, 2000, 2500, 3000, 4600, 5200, 10000, 20000, 30000  };
 #endif
@@ -427,8 +427,8 @@ namespace WordSpell
                 {
                     ScoreStats ss = RecordWordScore();
 
-                    IsGameOver = ProcessLetters();
                     RemoveWordAndReplaceTiles();
+                    IsGameOver = ProcessLetters();
 
                     Deselect(null);
 
@@ -543,7 +543,7 @@ namespace WordSpell
         {
             toRemove.LetTF.Translate(0.0f, 0.0f, -1f);
 
-            if (toRemove.MusicHolderRole && !IsGameOver)
+            if (toRemove.MusicHolderRole)
             {
                 Debug.Log("Old music tile died " + toRemove.ASCIIString + " at " + toRemove.I + " " + toRemove.J);
                 NewMusicTile();

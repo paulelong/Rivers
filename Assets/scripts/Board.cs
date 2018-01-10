@@ -41,7 +41,6 @@ public class Board : MonoBehaviour
 
     // Passed in from Board scene
     #region Unity Objects
-    public GameObject TestSphere;
     public Transform LetterBoxPrefab;
     public Transform LetterSpeakerPrefab;
     public GameObject SelectPrefab;
@@ -97,16 +96,11 @@ public class Board : MonoBehaviour
         //{
         //    Debug.Log(go.name);
         //}
-        AudioClip[] AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 //        SetUserInfo(GamePersistence.TestPersistence());
 
         WSGameState.InitGameGlobal();
-
-        // Test code for materials and iOS
-        WSGameState.DebugSphere(TestSphere);
-        // end test code
 
         SetStoryInfo(EngLetterScoring.Intro1, EngLetterScoring.Intro2);
         SetVersion(Application.version);

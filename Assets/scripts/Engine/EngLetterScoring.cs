@@ -78,7 +78,7 @@ namespace WordSpell
                         PartialLookup = (SerializableStringList)xs.Deserialize(fs);
                     }
                 }
-                catch(System.Xml.XmlException x)
+                catch(System.Xml.XmlException)
                 {
                     // Something went wrong, so let's rebuilld
                     BuildPartialLookup(filePath);
