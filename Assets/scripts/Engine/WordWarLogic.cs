@@ -385,7 +385,7 @@ namespace WordSpell
 
                     SelLetterList.Add(lp);
 
-                    boardScript.SetCurrentWord(GetCurrentWord() + " " + ScoreWord() + "\n" + GetWordTally());
+                    boardScript.SetCurrentWord(GetCurrentWord() + " = " + ScoreWord() + "\n" + GetWordTally());
 
                     // add if for > 3 letters
 
@@ -522,6 +522,11 @@ namespace WordSpell
                 LetterOntop.LetterDCount++;
             }
 
+            if (i == 6 && LetterPropGrid[i, gridsize - 1].ASCIIChar == 'O')
+            {
+                dbg = true;
+            }
+
             float fallCount = LetterPropGrid[i, gridsize - 1].LetterDCount;
 
             LetterProp lp = NewLetter(i, gridsize - 1);
@@ -529,11 +534,6 @@ namespace WordSpell
             lp.SetTransform(lbi);
 
             LetterPropGrid[i, gridsize - 1].LetterDCount = fallCount;
-
-            if (i == 5 && LetterPropGrid[i, gridsize - 1].ASCIIChar == 'I')
-            {
-                dbg = true;
-            }
 
             RemoveTile(toRemove);
         }
@@ -543,7 +543,7 @@ namespace WordSpell
         {
             toRemove.LetTF.Translate(0.0f, 0.0f, -1f);
 
-            if (toRemove.MusicHolderRole)
+            if (toRemove.MusicHolderRole && !IsGameOver)
             {
                 Debug.Log("Old music tile died " + toRemove.ASCIIString + " at " + toRemove.I + " " + toRemove.J);
                 NewMusicTile();
