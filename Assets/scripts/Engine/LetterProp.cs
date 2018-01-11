@@ -90,8 +90,12 @@ namespace WordSpell
                 {
                     tt = value;
 
+                    // The tile might have an alternate position if it's new, remember that for the new tile type.
+                    float altTilePos = J - (WSGameState.gridsize / 2);
+                    altTilePos -= LetTF.position.y;
+
                     ClearTransform();
-                    Transform t = boardScript.NewTile(I, J, tt);
+                    Transform t = boardScript.NewTile(I, J, tt, -altTilePos);
                     SetTransform(t);
                 }
             }
