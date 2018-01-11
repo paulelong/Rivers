@@ -29,8 +29,10 @@ namespace WordSpell
     {
         const string PartialLookupCache = "LookupCache.xml";
         const string DictionaryCache = "DictionaryCache.lst";
-        const string intro1 = "Pangram, the letter volcano, is about to erupt!  Legend tells of a magical prodigy who's mastery of words will save the day.  Select adjacent tiles in any direction to spell words.  Longer words improve your fortune, which means better replacement letters.";
-        const string intro2 = "Advance levels to gain spells which let you rearrange letters.\n\nBeware of lava tiles, e.g. this one, because if they reach the bottom, the game is over.";
+        const string intro0 = "Pangram, the letter volcano, is about to erupt!";
+        const string intro1 = "Legend tells of a magical prodigy who's mastery of words will save the day.  Select adjacent tiles in any direction, for instance following the yellow arrows to spell APPLE.  Longer words improve your fortune, which means better replacement letters.";
+        const string intro2 = "Advance levels to gain spells, requiring mana, which you can cast to rearrange letters.";
+        const string intro3 = "Beware of lava, e.g. the RED letter tile, because if they reach the bottom, the game is over.";
 
 #if UNITY_EDITOR
         static System.Random r = new System.Random(21);
@@ -174,6 +176,14 @@ namespace WordSpell
             {'Z', 10 },
         };
 
+        public static string Intro0
+        {
+            get
+            {
+                return intro0;
+            }
+        }
+
         public static string Intro1
         {
             get
@@ -190,6 +200,13 @@ namespace WordSpell
             }
         }
 
+        public static string Intro3
+        {
+            get
+            {
+                return intro3;
+            }
+        }
         internal static bool PartialExists(string curword)
         {
             string curwordlower = curword.ToLower();

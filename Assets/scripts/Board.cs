@@ -102,7 +102,8 @@ public class Board : MonoBehaviour
 
         WSGameState.InitGameGlobal();
 
-        SetStoryInfo(EngLetterScoring.Intro1, EngLetterScoring.Intro2);
+        SetStoryInfo(EngLetterScoring.Intro0, EngLetterScoring.Intro1, EngLetterScoring.Intro2, EngLetterScoring.Intro3);
+
         SetVersion(Application.version);
 
         TryListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
@@ -525,10 +526,12 @@ public class Board : MonoBehaviour
         SystemMenu.transform.GetChild(0).GetChild(3).GetComponent<Text>().text = s;
     }
 
-    public void SetStoryInfo(string s1, string s2)
+    public void SetStoryInfo(string s0, string s1, string s2, string s3)
     {
+        StartCanvas.transform.Find("Intro0").GetComponent<Text>().text = s0;
         StartCanvas.transform.Find("Intro1").GetComponent<Text>().text = s1;
         StartCanvas.transform.Find("Intro2").GetComponent<Text>().text = s2;
+        StartCanvas.transform.Find("Intro3").GetComponent<Text>().text = s3;
     }
 
     #endregion Controls

@@ -464,10 +464,10 @@ namespace WordSpell
                         if (CheckNextLevel(gs.score))
                         {
                             boardScript.LevelSound();
-                            string levelmsg = "Welcom to Level " + CurrentLevel.ToString() + "\n\n";
+                            string levelmsg = "Welcome to Level " + CurrentLevel.ToString() + "\n\n";
                             if (Spells.HasSpells())
                             {
-                                levelmsg += "You have new spells";
+                                levelmsg += "You have new spells.  Each spell requires Mana, which you can collect be spelling words using the Mana tiles.";
                             }
 
                             boardScript.ShowMsg(levelmsg);
