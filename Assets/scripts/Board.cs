@@ -43,6 +43,7 @@ public class Board : MonoBehaviour
     #region Unity Objects
     public Transform LetterBoxPrefab;
     public Transform LetterSpeakerPrefab;
+    public GameObject NotesPrefab;
     public GameObject SelectPrefab;
     public Transform LavaLightPrefab;
     public Transform SpellPrefab;
@@ -192,12 +193,15 @@ public class Board : MonoBehaviour
     {
         // If it's a new tile, put it above the screen so animation can set it into place.
         Transform lbi = null;
+        GameObject notes = null;
 
         switch (tt)
         {
             case LetterProp.TileTypes.Speaker:
                 lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
                 lbi.localScale *= inc;
+                notes = Instantiate(NotesPrefab, new Vector3(0, 0 , 0), Quaternion.identity);
+                notes.transform.parent = lbi;
                 break;
             default:
                 //lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
