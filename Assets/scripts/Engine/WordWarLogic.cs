@@ -385,7 +385,7 @@ namespace WordSpell
 
                     SelLetterList.Add(lp);
 
-                    boardScript.SetCurrentWord(GetCurrentWord() + "\n" + GetWordTally());
+                    boardScript.SetCurrentWord(GetCurrentWord() + " " + ScoreWord() + "\n" + GetWordTally());
 
                     // add if for > 3 letters
 

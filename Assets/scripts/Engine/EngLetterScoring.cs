@@ -436,7 +436,7 @@ namespace WordSpell
         public static string GetWordTally(List<LetterProp> lp_list)
         {
             string curword = GetCurrentWord(lp_list);
-            return ScoreWord(lp_list) + "=>" + EngLetterScoring.ScoreWordString(lp_list);
+            return EngLetterScoring.ScoreWordString(lp_list);
         }
 
         public static string GetCurrentWord(List<LetterProp> lplist)
