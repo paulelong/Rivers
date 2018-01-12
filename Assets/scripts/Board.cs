@@ -88,7 +88,7 @@ public class Board : MonoBehaviour
 
     #region Init
     // Use this for initialization
-    void Start ()
+    void Start()
     {
 
         //var gol = GameObject.FindGameObjectsWithTag("ScoreText");
@@ -96,43 +96,49 @@ public class Board : MonoBehaviour
         //{
         //    Debug.Log(go.name);
         //}
-
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-//        SetUserInfo(GamePersistence.TestPersistence());
-
-        WSGameState.InitGameGlobal();
-
-        SetStoryInfo(EngLetterScoring.Intro0, EngLetterScoring.Intro1, EngLetterScoring.Intro2, EngLetterScoring.Intro3);
-
-        SetVersion(Application.version);
-
-        TryListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
-        TryListBox.InitWSListBox(TryList, TextPrefab);
-        HistoryListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
-        HistoryListBox.InitWSListBox(HistoryList, TextPrefab);
-        SpellListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
-        SpellListBox.InitWSListBox(SpelllList, SpellPrefab);
-        AwardedSpellListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
-        AwardedSpellListBox.InitWSListBox(AwardedSpellList, SpellPrefab);
-
-        BestWordListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
-        BestWordListBox.InitWSListBox(BestWordList, TextPrefab);
-        BestWordSimpleListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
-        BestWordSimpleListBox.InitWSListBox(BestWordSimpleList, TextPrefab);
-        HighScoresListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
-        HighScoresListBox.InitWSListBox(HighScoresList, TextPrefab);
-        LongestListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
-        LongestListBox.InitWSListBox(LongestList, TextPrefab);
-
-        LocateCamera();
-
-        StartCanvas.SetActive(true);
-
-        LoadStats();
-
-        if (GamePersistence.SavedGameExists())
+        try
         {
-            StartGame();
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+            //        SetUserInfo(GamePersistence.TestPersistence());
+
+            WSGameState.InitGameGlobal();
+
+            SetStoryInfo(EngLetterScoring.Intro0, EngLetterScoring.Intro1, EngLetterScoring.Intro2, EngLetterScoring.Intro3);
+
+            SetVersion(Application.version);
+
+            TryListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+            TryListBox.InitWSListBox(TryList, TextPrefab);
+            HistoryListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+            HistoryListBox.InitWSListBox(HistoryList, TextPrefab);
+            SpellListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+            SpellListBox.InitWSListBox(SpelllList, SpellPrefab);
+            AwardedSpellListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+            AwardedSpellListBox.InitWSListBox(AwardedSpellList, SpellPrefab);
+
+            BestWordListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+            BestWordListBox.InitWSListBox(BestWordList, TextPrefab);
+            BestWordSimpleListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+            BestWordSimpleListBox.InitWSListBox(BestWordSimpleList, TextPrefab);
+            HighScoresListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+            HighScoresListBox.InitWSListBox(HighScoresList, TextPrefab);
+            LongestListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+            LongestListBox.InitWSListBox(LongestList, TextPrefab);
+
+            LocateCamera();
+
+            StartCanvas.SetActive(true);
+
+            LoadStats();
+
+            if (GamePersistence.SavedGameExists())
+            {
+                StartGame();
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.Message);
         }
     }
 
@@ -160,7 +166,7 @@ public class Board : MonoBehaviour
         // sz_fit = lm(sz ~ ratios)
 
         float CamZ = (aspect * 23.54f) - 27.69f;
-        if(CamZ > -13.4f)
+        if (CamZ > -13.4f)
         {
             CamZ = -13.4f;
         }
@@ -238,46 +244,53 @@ public class Board : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
-        if(WSGameState.dbg && WSGameState.LetterPropGrid[5,8].LetTF.position.y - 5f < .1)
+        try
         {
-            Debug.Log("here");
-            WSGameState.dbg = false;
-        }
-
-        if(MsgCanvas.activeSelf)
-        {
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (WSGameState.dbg && WSGameState.LetterPropGrid[5, 8].LetTF.position.y - 5f < .1)
             {
-                HideMsg();
+                Debug.Log("here");
+                WSGameState.dbg = false;
             }
-        }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.Return))
+
+            if (MsgCanvas.activeSelf)
             {
-                if(InputCanvas.activeSelf)
+                if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    SelectLetterToChangeDone();
-                }
-                else
-                {
-                    SubmitWord();
+                    HideMsg();
                 }
             }
-        }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    if (InputCanvas.activeSelf)
+                    {
+                        SelectLetterToChangeDone();
+                    }
+                    else
+                    {
+                        SubmitWord();
+                    }
+                }
+            }
 
-        if(newFortuneScale - fortuneScale > 0.01f)
-        {
-            fortuneScale += fortuneChangeSpeed;
-            FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
-        }
+            if (newFortuneScale - fortuneScale > 0.01f)
+            {
+                fortuneScale += fortuneChangeSpeed;
+                FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
+            }
 
-        if (newFortuneScale - fortuneScale < -0.01f)
+            if (newFortuneScale - fortuneScale < -0.01f)
+            {
+                fortuneScale -= fortuneChangeSpeed;
+                FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
+            }
+        }
+        catch (Exception ex)
         {
-            fortuneScale -= fortuneChangeSpeed;
-            FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
+            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.Message);
         }
     }
 
