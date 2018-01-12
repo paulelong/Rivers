@@ -138,7 +138,7 @@ public class Board : MonoBehaviour
         }
         catch (Exception ex)
         {
-            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.Message);
+            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
         }
     }
 
@@ -290,7 +290,7 @@ public class Board : MonoBehaviour
         }
         catch (Exception ex)
         {
-            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.Message);
+            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
         }
     }
 
@@ -420,9 +420,27 @@ public class Board : MonoBehaviour
     // ----------------------------------------------------------
     // Status settings for Control UI element values
 
-    public void ShowMsg(string text)
+    public void ShowMsg(string text, bool bigmsg = false)
     {
-        MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>().text = text;
+        Text t = MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
+        RectTransform rt = MsgCanvas.transform.GetChild(0).GetComponent<RectTransform>();
+        t.text = text;
+        if(bigmsg)
+        {
+            rt.sizeDelta = new Vector2(850f, 1200f);
+            //rt.position = new Vector3()
+            rt.position = new Vector3(2.5f, 0f, 0);
+            t.alignment = TextAnchor.MiddleLeft;
+            t.fontSize = 38;
+        }
+        else
+        {
+            rt.sizeDelta = new Vector2(777f, 388f);
+
+            rt.position = new Vector3(2.5f, 194f, 0);
+            t.alignment = TextAnchor.MiddleCenter;
+            t.fontSize = 52;
+        }
         MsgCanvas.SetActive(true);
     }
 
