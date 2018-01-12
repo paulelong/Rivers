@@ -407,6 +407,7 @@ namespace WordSpell
                     }
                     else
                     {
+                        boardScript.SetCurrentWord(GetCurrentWord() + " = " + ScoreWord() + "\n" + GetWordTally());
                         boardScript.IndicateGoodWord(WSGameState.WordValidity.Garbage);
                     }
                 }
