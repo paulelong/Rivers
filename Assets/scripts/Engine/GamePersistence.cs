@@ -11,10 +11,10 @@ namespace WordSpell
 {
     public class WordScoreItem
     {
-        public string word { get; set; }
-        public string wordscorestring { get; set; }
-        public int score { get; set; }
-        public int simplescore { get; set; }
+        public string Word { get; set; }
+        public string Wordscorestring { get; set; }
+        public int Score { get; set; }
+        public int Simplescore { get; set; }
     }
 
     public class GameStats
@@ -43,7 +43,7 @@ namespace WordSpell
         // [XmlRootAttribute("Letter")]
         public class SimpleLetter
         {
-            public void addletter(int _i, int _j, byte _letter, LetterProp.TileTypes _tt)
+            public void Addletter(int _i, int _j, byte _letter, LetterProp.TileTypes _tt)
             {
                 i = _i;
                 j = _j;
@@ -75,7 +75,7 @@ namespace WordSpell
                         for (int j = 0; j < WSGameState.gridsize; j++)
                         {
                             SimpleLetter sl = new SimpleLetter();
-                            sl.addletter(i, j, LetterPropGrid[i, j].letter, LetterPropGrid[i, j].TileType);
+                            sl.Addletter(i, j, LetterPropGrid[i, j].letter, LetterPropGrid[i, j].TileType);
                             grid.Add(sl);
                         }
                     }

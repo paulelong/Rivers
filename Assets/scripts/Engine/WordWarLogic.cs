@@ -63,7 +63,7 @@ namespace WordSpell
                 List<string> longestWordStrings = new List<string>();
                 foreach (WordScoreItem wsi in os.LongestWords)
                 {
-                    longestWordStrings.Add(wsi.word + " " + wsi.word.Length.ToString());
+                    longestWordStrings.Add(wsi.Word + " " + wsi.Word.Length.ToString());
                 }
                 return longestWordStrings;
             }
@@ -111,7 +111,7 @@ namespace WordSpell
                 List<string> bestWordStrings = new List<string>();
                 foreach (WordScoreItem wsi in os.BestWordScores)
                 {
-                    bestWordStrings.Add(wsi.word + " " + wsi.wordscorestring);
+                    bestWordStrings.Add(wsi.Word + " " + wsi.Wordscorestring);
                 }
                 return bestWordStrings;
             }
@@ -124,7 +124,7 @@ namespace WordSpell
                 List<string> bestWordScoresSimple = new List<string>();
                 foreach (WordScoreItem wsi in os.BestWordScores)
                 {
-                    bestWordScoresSimple.Add(wsi.word + " " + wsi.simplescore);
+                    bestWordScoresSimple.Add(wsi.Word + " " + wsi.Simplescore);
                 }
                 return bestWordScoresSimple;
             }
@@ -224,7 +224,7 @@ namespace WordSpell
 
                 foreach(WordScoreItem wsi in gs.history)
                 {
-                    boardScript.AddHistory(wsi.word + " " + wsi.wordscorestring);
+                    boardScript.AddHistory(wsi.Word + " " + wsi.Wordscorestring);
                 }
 
                 // Activate any tile specific work, like music.
@@ -385,19 +385,20 @@ namespace WordSpell
 
                     SelLetterList.Add(lp);
 
-                    boardScript.SetCurrentWord(GetCurrentWord() + " = " + ScoreWord() + ". submit?\n" + GetWordTally());
 
                     // add if for > 3 letters
 
                     // if it's a word, update color to green, unless we used it before
                     if (SelLetterList.Count > 2 && EngLetterScoring.IsWord(GetCurrentWord()))
                     {
-                        if (gs.history.FindIndex(f => (f.word == GetCurrentWord())) >= 0)
+                        if (gs.history.FindIndex(f => (f.Word == GetCurrentWord())) >= 0)
                         {
+                            boardScript.SetCurrentWord(GetCurrentWord() + " = " + ScoreWord() + ", already used\n" + GetWordTally());
                             boardScript.IndicateGoodWord(WSGameState.WordValidity.UsedWord);
                         }
                         else
                         {
+                            boardScript.SetCurrentWord(GetCurrentWord() + " = " + ScoreWord() + ". submit?\n" + GetWordTally());
                             boardScript.IndicateGoodWord(WSGameState.WordValidity.Word);
                         }
 
@@ -418,7 +419,7 @@ namespace WordSpell
 
             if (EngLetterScoring.IsWord(s))
             {
-                if (gs.history.FindIndex(f => (f.word == GetCurrentWord())) >= 0)
+                if (gs.history.FindIndex(f => (f.Word == GetCurrentWord())) >= 0)
                 {
                     boardScript.ShowMsg("You've used that word already.");
                     Deselect(null);
@@ -426,6 +427,10 @@ namespace WordSpell
                 else
                 {
                     ScoreStats ss = RecordWordScore();
+
+#if UNITY_EDITOR
+                    Save();
+#endif
 
                     RemoveWordAndReplaceTiles();
                     IsGameOver = ProcessLetters();
@@ -612,14 +617,14 @@ namespace WordSpell
 
         private static void AddToTryList()
         {
-            WordScoreItem wsi = new WordScoreItem() { word = GetCurrentWord(), score = ScoreWord(), wordscorestring = EngLetterScoring.GetWordTally(SelLetterList), simplescore = ScoreWordSimple() };
+            WordScoreItem wsi = new WordScoreItem() { Word = GetCurrentWord(), Score = ScoreWord(), Wordscorestring = EngLetterScoring.GetWordTally(SelLetterList), Simplescore = ScoreWordSimple() };
 
-            if (TryWordList.FindIndex(f => (f.word == wsi.word)) >= 0)
+            if (TryWordList.FindIndex(f => (f.Word == wsi.Word)) >= 0)
             {
                 return;
             }
 
-            int indx = TryWordList.FindIndex(f => (f.score < wsi.score));
+            int indx = TryWordList.FindIndex(f => (f.Score < wsi.Score));
             if (indx >= 0)
             {
                 TryWordList.Insert(indx, wsi);
@@ -632,7 +637,7 @@ namespace WordSpell
             boardScript.ClearTryList();
             foreach (WordScoreItem wsi_I in TryWordList)
             {
-                boardScript.AddTryList(wsi_I.word + " " + wsi_I.score.ToString());
+                boardScript.AddTryList(wsi_I.Word + " " + wsi_I.Score.ToString());
             }
         }
 
@@ -744,9 +749,9 @@ namespace WordSpell
 
             gs.score += wordTotal;
 
-            WordScoreItem wsi = new WordScoreItem() { word = GetCurrentWord(), score = wordTotal, wordscorestring = EngLetterScoring.GetWordTally(SelLetterList), simplescore = ScoreWordSimple() };
+            WordScoreItem wsi = new WordScoreItem() { Word = GetCurrentWord(), Score = wordTotal, Wordscorestring = EngLetterScoring.GetWordTally(SelLetterList), Simplescore = ScoreWordSimple() };
 
-            ss.bonus = EngLetterScoring.LengthBonus(wsi.word);
+            ss.bonus = EngLetterScoring.LengthBonus(wsi.Word);
 
             gs.fortune.Add(wsi);
             if (gs.fortune.Count > EffWordCount)
@@ -843,13 +848,13 @@ namespace WordSpell
 
         private static void CheckTopLongestWordScores(WordScoreItem wsi)
         {
-            if (os.LongestWords.FindIndex(f => (f.word == wsi.word)) >= 0)
+            if (os.LongestWords.FindIndex(f => (f.Word == wsi.Word)) >= 0)
             {
                 return;
             }
 
 
-            int indx = os.LongestWords.FindIndex(f => (f.word.Length < wsi.word.Length));
+            int indx = os.LongestWords.FindIndex(f => (f.Word.Length < wsi.Word.Length));
             if (indx >= 0)
             {
                 os.LongestWords.Insert(indx, wsi);
@@ -866,12 +871,12 @@ namespace WordSpell
 
         private static void CheckTopBestWordScoresSimple(WordScoreItem wsi)
         {
-            if (os.BestWordScoresSimple.FindIndex(f => (f.word == wsi.word)) >= 0)
+            if (os.BestWordScoresSimple.FindIndex(f => (f.Word == wsi.Word)) >= 0)
             {
                 return;
             }
 
-            int indx = os.BestWordScoresSimple.FindIndex(f => (f.score < wsi.simplescore));
+            int indx = os.BestWordScoresSimple.FindIndex(f => (f.Score < wsi.Simplescore));
             if (indx >= 0)
             {
                 os.BestWordScoresSimple.Insert(indx, wsi);
@@ -888,16 +893,16 @@ namespace WordSpell
 
         private static void CheckTopBestWordScores(WordScoreItem wsi)
         {
-            int idx = os.BestWordScores.FindIndex(f => (f.word == wsi.word));
+            int idx = os.BestWordScores.FindIndex(f => (f.Word == wsi.Word));
             if (idx >= 0)
             {
-                if(os.BestWordScores[idx].score == wsi.score)
+                if(os.BestWordScores[idx].Score == wsi.Score)
                 {
                     return;
                 }
             }
 
-            int indx = os.BestWordScores.FindIndex(f => (f.score < wsi.score));
+            int indx = os.BestWordScores.FindIndex(f => (f.Score < wsi.Score));
             if (indx >= 0)
             {
                 os.BestWordScores.Insert(indx, wsi);
@@ -927,7 +932,7 @@ namespace WordSpell
             int wordtotal = 0;
             foreach (WordScoreItem wsi in gs.fortune)
             {
-                wordtotal += wsi.score;
+                wordtotal += wsi.Score;
             }
 
             return (double)wordtotal / (double)gs.fortune.Count;
