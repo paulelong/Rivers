@@ -427,17 +427,15 @@ public class Board : MonoBehaviour
         t.text = text;
         if(bigmsg)
         {
-            rt.sizeDelta = new Vector2(850f, 1200f);
-            //rt.position = new Vector3()
-            rt.position = new Vector3(2.5f, 0f, 0);
+            rt.sizeDelta = new Vector2(850f, 1400f);
+            rt.localPosition = new Vector3(2.5f, 0f, 0);
             t.alignment = TextAnchor.MiddleLeft;
             t.fontSize = 38;
         }
         else
         {
             rt.sizeDelta = new Vector2(777f, 388f);
-
-            rt.position = new Vector3(2.5f, 194f, 0);
+            rt.localPosition = new Vector3(2.5f, 194f, 0);
             t.alignment = TextAnchor.MiddleCenter;
             t.fontSize = 52;
         }
