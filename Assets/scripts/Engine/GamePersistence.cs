@@ -244,5 +244,12 @@ namespace WordSpell
 
             return filePath + "\n" + worked;
         }
+
+        internal static void ResetSavedData()
+        {
+            File.Delete(Application.persistentDataPath + "/" + SaveGamePath);
+
+            File.Delete(Application.persistentDataPath + "/" + OverallStatsPath);
+        }
     }
 }

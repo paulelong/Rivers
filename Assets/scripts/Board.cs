@@ -366,10 +366,15 @@ public class Board : MonoBehaviour
     public void QuitGame()
     {
         SystemMenu.SetActive(false);
-        
         WSGameState.GameOver();
     }
 
+    public void ResetApp()
+    {
+        SystemMenu.SetActive(false);
+        WSGameState.GameOver();
+        GamePersistence.ResetSavedData();
+    }
     #endregion Handlers
 
     public void StartGame()
