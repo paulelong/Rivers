@@ -131,8 +131,10 @@ public class Board : MonoBehaviour
             MyDebug("S3");
 
             LocateCamera();
+            MyDebug("S3.1");
 
             StartCanvas.SetActive(true);
+            MyDebug("S3.2");
 
             LoadStats();
             MyDebug("S4");

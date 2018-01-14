@@ -431,6 +431,7 @@ namespace WordSpell
                     ScoreStats ss = RecordWordScore();
 
 #if UNITY_EDITOR
+                    boardScript.MyDebug("S0.1");
                     Save();
 #endif
 
@@ -744,17 +745,21 @@ namespace WordSpell
 
         internal static ScoreStats RecordWordScore()
         {
+            boardScript.MyDebug("rws0");
             ScoreStats ss = new ScoreStats();
+            boardScript.MyDebug("rws1");
 
             int wordTotal = ScoreWord();
 
             boardScript.AddHistory(GetCurrentWord() + " " + GetWordTally());
+            boardScript.MyDebug("rws2");
 
             gs.score += wordTotal;
 
             WordScoreItem wsi = new WordScoreItem() { Word = GetCurrentWord(), Score = wordTotal, Wordscorestring = EngLetterScoring.GetWordTally(SelLetterList), Simplescore = ScoreWordSimple() };
 
             ss.bonus = EngLetterScoring.LengthBonus(wsi.Word);
+            boardScript.MyDebug("rws3");
 
             gs.fortune.Add(wsi);
             if (gs.fortune.Count > EffWordCount)
@@ -762,11 +767,13 @@ namespace WordSpell
                 gs.fortune.RemoveAt(0);
             }
 
+            boardScript.MyDebug("rws4");
             gs.history.Add(wsi);
 
             CheckTopBestWordScores(wsi);
             CheckTopBestWordScoresSimple(wsi);
             CheckTopLongestWordScores(wsi);
+            boardScript.MyDebug("rws5");
 
             totalwords++;
 
@@ -786,6 +793,7 @@ namespace WordSpell
                 gs.mana += (FortuneLevelCount - 4);
             }
             ss.MannaScore = ScoreManna();
+            boardScript.MyDebug("rws6");
 
             // If it's a big or price word, give them a spell based on the word.
             string curword = GetCurrentWord();
@@ -825,6 +833,7 @@ namespace WordSpell
                 AwardedSpells.Add(si);
                 ss.si = si;
             }
+            boardScript.MyDebug("rwsX");
 
             return ss;
         }
