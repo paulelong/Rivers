@@ -427,14 +427,17 @@ namespace WordSpell
                 }
                 else
                 {
+                    boardScript.MyDebug("Sub0");
                     ScoreStats ss = RecordWordScore();
 
 #if UNITY_EDITOR
                     Save();
 #endif
 
+                    boardScript.MyDebug("Sub1");
                     RemoveWordAndReplaceTiles();
                     IsGameOver = ProcessLetters();
+                    boardScript.MyDebug("Sub2");
 
                     Deselect(null);
 
@@ -504,6 +507,8 @@ namespace WordSpell
 
                 Deselect(null);
             }
+
+            boardScript.MyDebug("SubX");
         }
 
         internal static Material GetMagicMat()
@@ -585,7 +590,6 @@ namespace WordSpell
                 return FortuneLevel.Good;
             }
 
-            boardScript.MyDebug("GF1");
             return FortuneLevel.Bad;
         }
 
@@ -611,9 +615,7 @@ namespace WordSpell
                 scale = 1f / (EffHigh + FortuneMaxOver - LowestWordScore);
             }
             Material fc = GetFortuneColor();
-            boardScript.MyDebug("UF2.5");
             boardScript.SetFortune(scale, fc);
-            boardScript.MyDebug("UF3");
         }
 
         private static void AddToTryList()

@@ -98,12 +98,16 @@ public class Board : MonoBehaviour
         //}
         try
         {
+            MyDebug("S0");
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             //        SetUserInfo(GamePersistence.TestPersistence());
 
             WSGameState.InitGameGlobal();
+            MyDebug("S1");
 
             SetStoryInfo(EngLetterScoring.Intro0, EngLetterScoring.Intro1, EngLetterScoring.Intro2, EngLetterScoring.Intro3);
+
+            MyDebug("S2");
 
             SetVersion(Application.version);
 
@@ -124,17 +128,20 @@ public class Board : MonoBehaviour
             HighScoresListBox.InitWSListBox(HighScoresList, TextPrefab);
             LongestListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
             LongestListBox.InitWSListBox(LongestList, TextPrefab);
+            MyDebug("S3");
 
             LocateCamera();
 
             StartCanvas.SetActive(true);
 
             LoadStats();
+            MyDebug("S4");
 
             if (GamePersistence.SavedGameExists())
             {
                 StartGame();
             }
+            MyDebug("S5");
         }
         catch (Exception ex)
         {
@@ -432,6 +439,8 @@ public class Board : MonoBehaviour
         t.text = text;
         if(bigmsg)
         {
+            MyDebug("E!");
+
             rt.sizeDelta = new Vector2(850f, 1400f);
             rt.localPosition = new Vector3(2.5f, 0f, 0);
             t.alignment = TextAnchor.MiddleLeft;
@@ -496,9 +505,7 @@ public class Board : MonoBehaviour
 
         MeshRenderer mr = FortuneBar.GetComponent<MeshRenderer>();
 
-        MyDebug("SF1");
         FortuneBar.GetComponent<MeshRenderer>().material = m;
-        MyDebug("SF2");
     }
 
     /// <summary>
