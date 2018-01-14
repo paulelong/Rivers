@@ -128,10 +128,8 @@ public class Board : MonoBehaviour
             HighScoresListBox.InitWSListBox(HighScoresList, TextPrefab);
             LongestListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
             LongestListBox.InitWSListBox(LongestList, TextPrefab);
-            MyDebug("S3");
 
             LocateCamera();
-            MyDebug("S3.1");
 
             StartCanvas.SetActive(true);
             MyDebug("S3.2");
@@ -240,16 +238,22 @@ public class Board : MonoBehaviour
 
     void LoadStats()
     {
+        MyDebug("LS0");
         WSGameState.LoadStats();
+        MyDebug("LS1");
         RefreshStats();
+        MyDebug("LSx");
     }
 
     void RefreshStats()
     {
+        MyDebug("RS0");
         LongestListBox.CreateList(WSGameState.LongestWords, true);
+        MyDebug("RS1");
         HighScoresListBox.CreateList(WSGameState.BestGameScores);
         BestWordListBox.CreateList(WSGameState.BestWordScores, true);
         BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
+        MyDebug("RSx");
     }
 
     // Update is called once per frame

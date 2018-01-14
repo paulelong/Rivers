@@ -745,21 +745,17 @@ namespace WordSpell
 
         internal static ScoreStats RecordWordScore()
         {
-            boardScript.MyDebug("rws0");
             ScoreStats ss = new ScoreStats();
-            boardScript.MyDebug("rws1");
 
             int wordTotal = ScoreWord();
 
             boardScript.AddHistory(GetCurrentWord() + " " + GetWordTally());
-            boardScript.MyDebug("rws2");
 
             gs.score += wordTotal;
 
             WordScoreItem wsi = new WordScoreItem() { Word = GetCurrentWord(), Score = wordTotal, Wordscorestring = EngLetterScoring.GetWordTally(SelLetterList), Simplescore = ScoreWordSimple() };
 
             ss.bonus = EngLetterScoring.LengthBonus(wsi.Word);
-            boardScript.MyDebug("rws3");
 
             gs.fortune.Add(wsi);
             if (gs.fortune.Count > EffWordCount)
@@ -769,9 +765,12 @@ namespace WordSpell
 
             boardScript.MyDebug("rws4");
             gs.history.Add(wsi);
+            boardScript.MyDebug("rws4.1");
 
             CheckTopBestWordScores(wsi);
+            boardScript.MyDebug("rws4.2");
             CheckTopBestWordScoresSimple(wsi);
+            boardScript.MyDebug("rws4.3");
             CheckTopLongestWordScores(wsi);
             boardScript.MyDebug("rws5");
 
