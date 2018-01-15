@@ -335,9 +335,8 @@ public class Board : MonoBehaviour
         if (!StartCanvas.activeSelf && WSGameState.GameInProgress)
         {
             WSGameState.Save();
+            WSGameState.SaveStats();
         }
-
-        WSGameState.SaveStats();
     }
 
     // Button commands

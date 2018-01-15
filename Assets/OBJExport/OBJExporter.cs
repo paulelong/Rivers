@@ -332,7 +332,7 @@ public class OBJExporter : ScriptableWizard
             System.IO.File.WriteAllBytes(exportName, exTexture.EncodeToPNG());
             return exportName;
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             Debug.Log("Could not export texture : " + t.name + ". is it readable?");
             return "null";
