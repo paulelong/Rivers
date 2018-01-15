@@ -859,13 +859,16 @@ namespace WordSpell
 
         private static void CheckTopLongestWordScores(WordScoreItem wsi)
         {
+            boardScript.MyDebug("ctl0");
             if (os.LongestWords.FindIndex(f => (f.Word == wsi.Word)) >= 0)
             {
                 return;
             }
+            boardScript.MyDebug("ctl1");
 
 
             int indx = os.LongestWords.FindIndex(f => (f.Word.Length < wsi.Word.Length));
+            boardScript.MyDebug("ctl2");
             if (indx >= 0)
             {
                 os.LongestWords.Insert(indx, wsi);
@@ -874,10 +877,16 @@ namespace WordSpell
             {
                 os.LongestWords.Add(wsi);
             }
+
+            boardScript.MyDebug("ctl3");
+
             if (os.LongestWords.Count > NumberOfTopScores)
             {
                 os.LongestWords.RemoveAt(NumberOfTopScores);
             }
+
+            boardScript.MyDebug("ctl4");
+
         }
 
         private static void CheckTopBestWordScoresSimple(WordScoreItem wsi)

@@ -11,6 +11,7 @@ namespace WordSpell
     {
         GameObject list;
         Transform prefab;
+        public string dbg = "";
 
         public void InitWSListBox(GameObject _list, Transform _prefab)
         {
@@ -51,13 +52,18 @@ namespace WordSpell
 
         public void CreateList(List<string> l, bool addSpace = false)
         {
+            dbg = "cl0-";
+            
             Clear();
+            dbg += "cl1-";
 
             foreach(string s in l)
             {
                 Transform item = Add();
+                dbg += "cl2(" + s + ")-";
 
                 UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
+                dbg += "cl3-";
 
                 if (addSpace)
                 {
@@ -68,6 +74,7 @@ namespace WordSpell
                     t.text = s;
                 }
             }
+            dbg += "clx-";
         }
 
         public void Clear()

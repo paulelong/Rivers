@@ -145,7 +145,7 @@ public class Board : MonoBehaviour
         }
         catch (Exception ex)
         {
-            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            ShowMsg("Exception 1 captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
         }
     }
 
@@ -303,7 +303,7 @@ public class Board : MonoBehaviour
         }
         catch (Exception ex)
         {
-            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            ShowMsg("Exception 2 captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
         }
     }
 
@@ -391,6 +391,8 @@ public class Board : MonoBehaviour
 
     public void StartGame()
     {
+        MyDebug(LongestListBox.dbg);
+
         StartCanvas.SetActive(false);
         ControlCanvas.SetActive(true);
 
