@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace WordSpell
 {
-    public class WSGameState
+    public static class WSGameState
     {
         public struct ScoreStats
         {
@@ -864,7 +864,7 @@ namespace WordSpell
             {
                 return;
             }
-            boardScript.MyDebug("ctl1");
+            boardScript.MyDebug("ctl1("+wsi.Word.Length.ToString()+" "+os.LongestWords.Count.ToString()+")");
 
 
             int indx = os.LongestWords.FindIndex(f => (f.Word.Length < wsi.Word.Length));

@@ -63,7 +63,6 @@ namespace WordSpell
             public List<SimpleLetter> grid = new List<SimpleLetter>();
             public GameStats gs = new GameStats();
 
-
             public void FillGameData(LetterProp[,] LetterPropGrid, GameStats _gs)
             {
                 if (LetterPropGrid != null)
