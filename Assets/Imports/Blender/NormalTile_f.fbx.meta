@@ -1,29 +1,23 @@
 fileFormatVersion: 2
-guid: e522e84b8b6e26b42a425fd19c7deb2c
-timeCreated: 1512587870
+guid: 55e8d4d3184670142b3c08fec8ead5c4
+timeCreated: 1516043931
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
+    2100000: Material
     2300000: //RootNode
     3300000: //RootNode
     4300000: Cube
     6400000: //RootNode
-    7400000: Default Take
-    9500000: //RootNode
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: a27d8de2eac3d3046aa19f09a8b7a6db, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -92,7 +86,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
