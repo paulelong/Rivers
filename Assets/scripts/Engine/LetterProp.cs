@@ -696,7 +696,7 @@ namespace WordSpell
                     text.transform.localPosition = new Vector3(-0.05f, 0.3f, -0.06f);
                     break;
                 default:
-                    text.transform.localPosition = new Vector3(-0.15f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.17f, 0.3f, -0.06f);
                     break;
             }
         }

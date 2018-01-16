@@ -200,6 +200,13 @@ namespace WordSpell
             state = 0;
         }
 
+        public static void AbortSpell()
+        {
+            WSGameState.MagicDeselect();
+            NextSpell = null;
+            state = 0;
+        }
+
         public static void CastSpell(string s = null)
         {
             if(NextSpell == null)

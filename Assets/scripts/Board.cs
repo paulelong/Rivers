@@ -56,6 +56,7 @@ public class Board : MonoBehaviour
     public GameObject InputCanvas;
     public GameObject SystemMenu;
     public GameObject SubmitButtonGO;
+    public GameObject CastButton;
     public Camera BoardCam;
 
     // Where the letter grid goes
@@ -83,6 +84,7 @@ public class Board : MonoBehaviour
     public AudioClip SwapSound;
     public AudioClip SnipeSound;
     public AudioClip LavaSound;
+    private bool SpellCasted = false;
 
     #endregion Unity Objects
 
@@ -391,8 +393,6 @@ public class Board : MonoBehaviour
 
     public void StartGame()
     {
-        MyDebug(LongestListBox.dbg);
-
         StartCanvas.SetActive(false);
         ControlCanvas.SetActive(true);
 
@@ -492,11 +492,6 @@ public class Board : MonoBehaviour
         hr.GetComponent<MeshRenderer>().material = m;
         vb.GetComponent<MeshRenderer>().material = m;
 
-        //Animator anim_hr = hl.GetComponent<Animator>();
-        //Animator anim_vt = vt.GetComponent<Animator>();
-        //Animator anim_hl = hr.GetComponent<Animator>();
-        //Animator anim_vb= vb.GetComponent<Animator>();
-
         return t;
     }
 
@@ -576,10 +571,10 @@ public class Board : MonoBehaviour
 
     public void SetStoryInfo(string s0, string s1, string s2, string s3)
     {
-        StartCanvas.transform.Find("Intro0").GetComponent<Text>().text = s0;
-        StartCanvas.transform.Find("Intro1").GetComponent<Text>().text = s1;
-        StartCanvas.transform.Find("Intro2").GetComponent<Text>().text = s2;
-        StartCanvas.transform.Find("Intro3").GetComponent<Text>().text = s3;
+        StartCanvas.transform.Find("Back0/Intro0").GetComponent<Text>().text = s0;
+        StartCanvas.transform.Find("Back1/Intro1").GetComponent<Text>().text = s1;
+        StartCanvas.transform.Find("Back2/Intro2").GetComponent<Text>().text = s2;
+        StartCanvas.transform.Find("Back3/Intro3").GetComponent<Text>().text = s3;
     }
 
     #endregion Controls
@@ -623,21 +618,33 @@ public class Board : MonoBehaviour
 
     public void ShowSpells()
     {
-        ClearSpellList(SpellListBox);
-
-        foreach (SpellInfo si in Spells.AvailableSpells)
+        if (!SpellCasted)
         {
-            AddSpellList(SpellListBox, si);
+            ClearSpellList(SpellListBox);
+
+            foreach (SpellInfo si in Spells.AvailableSpells)
+            {
+                AddSpellList(SpellListBox, si);
+            }
+
+            ClearSpellList(AwardedSpellListBox);
+
+            foreach (SpellInfo si in WSGameState.AwardedSpells)
+            {
+                AddSpellList(AwardedSpellListBox, si, true);
+            }
+
+            SpellCanvas.SetActive(true);
         }
-
-        ClearSpellList(AwardedSpellListBox);
-
-        foreach (SpellInfo si in WSGameState.AwardedSpells)
+        else
         {
-            AddSpellList(AwardedSpellListBox, si, true);
-        }
+            Spells.AbortSpell();
 
-        SpellCanvas.SetActive(true);
+            Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
+            t.text = "Cast";
+
+            SpellCasted = false;
+        }
     }
 
     public void CancelSpells()
@@ -651,6 +658,12 @@ public class Board : MonoBehaviour
 
         // Awarded spells need to be removed from the list
         Spells.ReadySpell(spellName, awarded, SpellSucceded);
+
+        // So spell can be canceled, change button text
+        Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
+        t.text = "Abort";
+
+        SpellCasted = true;
     }
 
     public void SelectLetterToChange()
@@ -682,6 +695,11 @@ public class Board : MonoBehaviour
 
         SpellInfo si = WSGameState.AwardedSpells.Find(x => (x.spellType == Spells.LastSuccessfulSpell.spellType));
         WSGameState.AwardedSpells.Remove(si);
+
+        Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
+        t.text = "Cast";
+
+        SpellCasted = false;
     }
     #endregion Spells
 
