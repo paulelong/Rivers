@@ -456,7 +456,7 @@ public class Board : MonoBehaviour
         else
         {
             rt.sizeDelta = new Vector2(777f, 388f);
-            rt.localPosition = new Vector3(2.5f, 194f, 0);
+            rt.localPosition = new Vector3(2.5f, -400f, 0);
             t.alignment = TextAnchor.MiddleCenter;
             t.fontSize = 52;
         }
