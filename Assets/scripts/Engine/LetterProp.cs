@@ -690,13 +690,36 @@ namespace WordSpell
             switch(this.ASCIIChar)
             {
                 case 'W':
-                    text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                case 'M':
+                    //text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.35f, 0.49f, -0.06f);
+                    break;
+                case 'G':
+                case 'Q':
+                case 'O':
+                case 'C':
+                    //text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.33f, 0.49f, -0.06f);
+                    break;
+                case 'L':
+                case 'T':
+                    //text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.16f, 0.49f, -0.06f);
+                    break;
+                case 'S':
+                case 'Z':
+                case 'J':
+                    //text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.2f, 0.49f, -0.06f);
                     break;
                 case 'I':
-                    text.transform.localPosition = new Vector3(-0.05f, 0.3f, -0.06f);
+                    //text.transform.localPosition = new Vector3(-0.05f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.1f, 0.49f, -0.06f);
                     break;
                 default:
-                    text.transform.localPosition = new Vector3(-0.17f, 0.3f, -0.06f);
+                    //text.transform.localPosition = new Vector3(-0.17f, 0.3f, -0.06f);
+                    //text.transform.localPosition = new Vector3(-0.22f, 0.6f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.26f, 0.49f, -0.06f);
                     break;
             }
         }

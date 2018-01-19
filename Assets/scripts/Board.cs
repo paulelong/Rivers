@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using WordSpell;
 using System;
+using System.Net.Mail;
+using System.Net;
 
 public class Board : MonoBehaviour
 {
@@ -136,6 +138,8 @@ public class Board : MonoBehaviour
 
             LocateCamera();
 
+            HideSpellStuff();
+
             StartCanvas.SetActive(true);
             MyDebug("S3.2");
 
@@ -239,6 +243,16 @@ public class Board : MonoBehaviour
         Transform lavalight = Instantiate(LavaLightPrefab, new Vector3(0, 0, 0), Quaternion.identity);
 
         return lavalight;
+    }
+
+    public void HideSpellStuff()
+    {
+        CastButton.SetActive(false);
+    }
+
+    public void ShowSpellStuff()
+    {
+        CastButton.SetActive(true);
     }
 
     #endregion Init
@@ -415,6 +429,52 @@ public class Board : MonoBehaviour
         GamePersistence.ResetSavedData();
     }
 
+    public void SendEmail2()
+    {
+        //email Id to send the mail to
+        string email = "paulelong@outlook.com";
+        //subject of the mail
+        string subject = MyEscapeURL("FEEDBACK/SUGGESTION");
+        //body of the mail which consists of Device Model and its Operating System
+        string body = MyEscapeURL("Please Enter your message here\n\n\n\n" +
+         "________" +
+         "\n\nPlease Do Not Modify This\n\n" +
+         "Model: " + SystemInfo.deviceModel + "\n\n" +
+            "OS: " + SystemInfo.operatingSystem + "\n\n" +
+         "________");
+        //Open the Default Mail App
+        Application.OpenURL("mailto:" + email + "?subject=" + subject + "&body=" + body);
+    }
+
+    string MyEscapeURL(string url)
+    {
+        return WWW.EscapeURL(url).Replace("+", "%20");
+    }
+
+    public void SendEmail()
+    {
+        MailMessage mail = new MailMessage();
+        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+        mail.From = new MailAddress("paulelong@outlooik@gmail.com");
+        mail.To.Add("g.amati@ucl.ac.uk");
+        mail.Subject = "Prova";
+
+        SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+        SmtpServer.Port = 587;
+        SmtpServer.Credentials = (ICredentialsByHost)CredentialCache.DefaultNetworkCredentials; //(ICredentialsByHost) new NetworkCredential("GMAILACCOUNT","PASSWORD");
+        SmtpServer.EnableSsl = true;
+        SmtpServer.Timeout = 20000;
+        SmtpServer.UseDefaultCredentials = false;
+        try
+        {
+            SmtpServer.Send(mail);
+        }
+        catch (SmtpException myEx)
+        {
+            Debug.Log("Expection: \n" + myEx.ToString());
+        }
+    }
+
     public void ShowOption(string text)
     {
         Text t = OptionCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
@@ -496,11 +556,11 @@ public class Board : MonoBehaviour
         {
             MyDebug("E!");
 
-            t.fontSize = 38;
+            t.fontSize = 24;
         }
         else
         {
-            t.fontSize = 52;
+            t.fontSize = 40;
         }
         MsgCanvas.SetActive(true);
     }
@@ -603,12 +663,12 @@ public class Board : MonoBehaviour
 
     public void SetUserInfo(string s)
     {
-        SystemMenu.transform.GetChild(0).GetChild(2).GetComponent<Text>().text = s;
+        SystemMenu.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = s;
     }
 
     public void SetVersion(string s)
     {
-        SystemMenu.transform.GetChild(0).GetChild(3).GetComponent<Text>().text = s;
+        SystemMenu.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = s;
     }
 
     public void SetStoryInfo(string s0, string s1, string s2, string s3)

@@ -36,11 +36,11 @@ namespace WordSpell
 
         public static readonly string[] LevelMsgs = 
         {
-            "Now you now see Blue tiles which are worth double points.",
+            "Level 2 brings blue tiles which are worth double the letter value",
             "Beware of lava tiles, if they reach the bottom, the game is over",
-            "New double word tiles are availalbe, words spelled with this tile are worth double.",
-            "New tripple letter tiles are availalbe, The tile is worth triple.",
-            "New triple word tiles are availalbe, words spelled with this tile are worth triple.",
+            "Level 4 brings double word tiles which double the word score",
+            "Level 5 brings tripple letter tiles which triple the leter value.",
+            "Level 6 brings triple word tiles which triple the word score",
         };
 
 #if UNITY_EDITOR

@@ -144,6 +144,11 @@ namespace WordSpell
                     AvailableSpells.Add(si);
                 }
             }
+
+            if (Spells.AvailableSpells.Count > 0)
+            {
+                WSGameState.boardScript.ShowSpellStuff();
+            }
         }
 
         internal static bool HasSpells()

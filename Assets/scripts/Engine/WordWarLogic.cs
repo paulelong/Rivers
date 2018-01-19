@@ -241,6 +241,7 @@ namespace WordSpell
             }
 
             Spells.UpdateSpellsForLevel(gs.level);
+
         }
 
         internal static void LoadStats()
