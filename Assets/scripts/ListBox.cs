@@ -52,8 +52,6 @@ namespace WordSpell
 
         public void CreateList(List<string> l, bool addSpace = false)
         {
-            dbg = "cl0-";
-            
             Clear();
             dbg += "cl1-";
 

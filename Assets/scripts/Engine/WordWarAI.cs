@@ -15,7 +15,6 @@ namespace WordSpell
         private char[] curword = new char[32];
         private int curwordoff = 0;
 
-
         int i_length;
         int j_length;
         

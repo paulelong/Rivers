@@ -25,7 +25,7 @@ namespace WordSpell
         }
     }
 
-    class EngLetterScoring
+    static class EngLetterScoring
     {
         const string PartialLookupCache = "LookupCache.xml";
         const string DictionaryCache = "DictionaryCache.lst";
@@ -33,6 +33,15 @@ namespace WordSpell
         const string intro1 = "Legend tells of a magical prodigy who's mastery of words will save the day.  Select adjacent tiles in any direction, for instance following the yellow arrows to spell APPLE.  Longer words improve your fortune, which means better replacement letters.";
         const string intro2 = "Advance levels to gain spells, requiring mana, which you can cast to rearrange letters.";
         const string intro3 = "Beware of lava, e.g. the RED letter tile, because if they reach the bottom, the game is over.";
+
+        public static readonly string[] LevelMsgs = 
+        {
+            "Now you now see Blue tiles which are worth double points.",
+            "Beware of lava tiles, if they reach the bottom, the game is over",
+            "New double word tiles are availalbe, words spelled with this tile are worth double.",
+            "New tripple letter tiles are availalbe, The tile is worth triple.",
+            "New triple word tiles are availalbe, words spelled with this tile are worth triple.",
+        };
 
 #if UNITY_EDITOR
         static System.Random r = new System.Random(21);
@@ -112,6 +121,18 @@ namespace WordSpell
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 xs.Serialize(fs, PartialLookup);
+            }
+        }
+
+        static public string GetLevelMsg(int n)
+        {
+            if ((n-2) < LevelMsgs.Length)
+            {
+                return LevelMsgs[n-2];
+            }
+            else
+            {
+                return "";
             }
         }
 

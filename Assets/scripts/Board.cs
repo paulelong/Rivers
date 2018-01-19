@@ -37,6 +37,7 @@ public class Board : MonoBehaviour
     const string SpellImagePath = "ButtonPanel/Image";
 
     const float fortuneChangeSpeed = .02f;
+    private const float TimeTillHint = 200f;
     #endregion Constants
 
     // Passed in from Board scene
@@ -52,6 +53,7 @@ public class Board : MonoBehaviour
     public GameObject ControlCanvas;
     public GameObject StartCanvas;
     public GameObject MsgCanvas;
+    public GameObject OptionCanvas;
     public GameObject SpellCanvas;
     public GameObject InputCanvas;
     public GameObject SystemMenu;
@@ -85,6 +87,7 @@ public class Board : MonoBehaviour
     public AudioClip SnipeSound;
     public AudioClip LavaSound;
     private bool SpellCasted = false;
+    private float LastActionTime;
 
     #endregion Unity Objects
 
@@ -149,6 +152,8 @@ public class Board : MonoBehaviour
         {
             ShowMsg("Exception 1 captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
         }
+
+        ResetTimer();
     }
 
     void LocateCamera()
@@ -263,6 +268,12 @@ public class Board : MonoBehaviour
     {
         try
         {
+            if (WSGameState.CurrentLevel < 4 && WSGameState.GameInProgress && Time.realtimeSinceStartup - LastActionTime > TimeTillHint && !OptionCanvas.activeSelf)
+            {
+                ResetTimer();
+                ShowOption("You seem stuck, do you want to me to find you a word?");
+            }
+
             if (WSGameState.dbg && WSGameState.LetterPropGrid[5, 8].LetTF.position.y - 5f < .1)
             {
                 Debug.Log("here");
@@ -309,12 +320,24 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void ResetTimer()
+    {
+        LastActionTime = Time.realtimeSinceStartup;
+    }
+
     // Handlers
     #region Handlers
 
     public void OnMouseClick()
     {
+        ResetTimer();
+
         HideMsg();
+
+        if (SystemMenu.activeSelf)
+        {
+            SystemMenu.SetActive(false);
+        }
     }
 
     public void OnApplicationQuit()
@@ -350,6 +373,7 @@ public class Board : MonoBehaviour
 
     public void SubmitWord()
     {
+        ResetTimer();
         WSGameState.SubmitWord();
     }
 
@@ -361,6 +385,7 @@ public class Board : MonoBehaviour
 
     public void HamburgerMenu()
     {
+        ResetTimer();
         if (SystemMenu.activeSelf)
         {
             SystemMenu.SetActive(false);
@@ -389,6 +414,29 @@ public class Board : MonoBehaviour
         WSGameState.GameOver();
         GamePersistence.ResetSavedData();
     }
+
+    public void ShowOption(string text)
+    {
+        Text t = OptionCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
+        RectTransform rt = MsgCanvas.transform.GetChild(0).GetComponent<RectTransform>();
+        t.text = text;
+
+        OptionCanvas.SetActive(true);
+    }
+
+    public void OptionYes()
+    {
+        Spells.GetBestHint(10);
+        OptionCanvas.SetActive(false);
+        ResetTimer();
+    }
+
+    public void OptionNo()
+    {
+        OptionCanvas.SetActive(false);
+        ResetTimer();
+    }
+
     #endregion Handlers
 
     public void StartGame()
@@ -448,16 +496,10 @@ public class Board : MonoBehaviour
         {
             MyDebug("E!");
 
-            rt.sizeDelta = new Vector2(850f, 1400f);
-            rt.localPosition = new Vector3(2.5f, 0f, 0);
-            t.alignment = TextAnchor.MiddleLeft;
             t.fontSize = 38;
         }
         else
         {
-            rt.sizeDelta = new Vector2(777f, 388f);
-            rt.localPosition = new Vector3(2.5f, -400f, 0);
-            t.alignment = TextAnchor.MiddleCenter;
             t.fontSize = 52;
         }
         MsgCanvas.SetActive(true);

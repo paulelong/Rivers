@@ -111,7 +111,7 @@ namespace WordSpell
                 List<string> bestWordStrings = new List<string>();
                 foreach (WordScoreItem wsi in os.BestWordScores)
                 {
-                    bestWordStrings.Add(wsi.Word + " " + wsi.Wordscorestring);
+                    bestWordStrings.Add(wsi.Score + " " + wsi.Word + " " + wsi.Wordscorestring);
                 }
                 return bestWordStrings;
             }
@@ -124,7 +124,7 @@ namespace WordSpell
                 List<string> bestWordScoresSimple = new List<string>();
                 foreach (WordScoreItem wsi in os.BestWordScores)
                 {
-                    bestWordScoresSimple.Add(wsi.Word + " " + wsi.Simplescore);
+                    bestWordScoresSimple.Add(wsi.Simplescore + " " + wsi.Word);
                 }
                 return bestWordScoresSimple;
             }
@@ -224,7 +224,7 @@ namespace WordSpell
 
                 foreach(WordScoreItem wsi in gs.history)
                 {
-                    boardScript.AddHistory(wsi.Word + " " + wsi.Wordscorestring);
+                    boardScript.AddHistory(wsi.Score + " " + wsi.Word + " " + wsi.Wordscorestring);
                 }
 
                 // Activate any tile specific work, like music.
@@ -365,6 +365,8 @@ namespace WordSpell
         {
             LetterProp lp = LetterPropGrid[i, j];
 
+            boardScript.ResetTimer();
+
             if (!Spells.EvalSpell(lp))
             {
                 if (SelLetterList.Count >= 0)
@@ -434,6 +436,11 @@ namespace WordSpell
                     boardScript.MyDebug("S0.1");
                     Save();
 #endif
+                    bool GainedNextLevel = false;
+                    if (GainedNextLevel = CheckNextLevel(gs.score))
+                    {
+                        levelup = true;
+                    }
 
                     boardScript.MyDebug("Sub1");
                     RemoveWordAndReplaceTiles();
@@ -471,14 +478,15 @@ namespace WordSpell
 
                         TurnOver();
 
-                        if (CheckNextLevel(gs.score))
+                        if (GainedNextLevel)
                         {
                             boardScript.LevelSound();
                             string levelmsg = "Welcome to Level " + CurrentLevel.ToString() + "\n\n";
                             if (Spells.HasSpells())
                             {
-                                levelmsg += "You have new spells.  Spell requires you collect by spelling words using the purple Mana tiles.";
+                                levelmsg += "You have new spells.  Spells require Mana which you collect by spelling words using purple Mana tiles.\n\n";
                             }
+                            levelmsg += EngLetterScoring.GetLevelMsg(CurrentLevel);
 
                             boardScript.ShowMsg(levelmsg);
                         }
@@ -749,7 +757,7 @@ namespace WordSpell
 
             int wordTotal = ScoreWord();
 
-            boardScript.AddHistory(GetCurrentWord() + " " + GetWordTally());
+            boardScript.AddHistory(wordTotal + " " + GetCurrentWord() + " " + GetWordTally());
 
             gs.score += wordTotal;
 

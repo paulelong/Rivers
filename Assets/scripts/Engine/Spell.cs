@@ -559,7 +559,7 @@ namespace WordSpell
             return true;
         }
 
-        private static void GetBestHint(int min)
+        public static void GetBestHint(int min)
         {
             WordWarAI wwai = new WordWarAI(WSGameState.LetterPropGrid);
             List<WordWarAI.Word> wl = wwai.FindAllWords();
@@ -574,7 +574,7 @@ namespace WordSpell
                 }
             }
 
-            WSGameState.boardScript.ShowMsg("Best word is " + bw.GetWord);
+            WSGameState.boardScript.ShowMsg("How about " + bw.GetWord);
         }
 
         private static void ConvertLetterTile(LetterProp lp)
