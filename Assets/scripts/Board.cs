@@ -506,6 +506,7 @@ public class Board : MonoBehaviour
 
         WSGameState.InitNewGame();
 
+        MyDebug("SG1");
         for (int i = 0; i < WSGameState.gridsize; i++)
         {
             for (int j = 0; j < WSGameState.gridsize; j++)
@@ -515,11 +516,13 @@ public class Board : MonoBehaviour
                 lp.SetTransform(lbi);
             }
         }
+        MyDebug("SG2");
 
         WSGameState.NewMusicTile();
 
         // Check if there is a saved game.
         WSGameState.Load();
+        MyDebug("SGx");
     }
 
     IEnumerator EndGameDelay()
