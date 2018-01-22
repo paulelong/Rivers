@@ -439,11 +439,11 @@ namespace WordSpell
                 }
                 else
                 {
-                    boardScript.MyDebug("Sub0");
+                    boardScript.MyDebug2("Sub0");
                     ScoreStats ss = RecordWordScore();
 
 #if UNITY_EDITOR
-                    boardScript.MyDebug("S0.1");
+                    boardScript.MyDebug2("S0.1");
                     Save();
 #endif
                     bool GainedNextLevel = false;
@@ -452,10 +452,10 @@ namespace WordSpell
                         levelup = true;
                     }
 
-                    boardScript.MyDebug("Sub1");
+                    boardScript.MyDebug2("Sub1");
                     RemoveWordAndReplaceTiles();
                     IsGameOver = ProcessLetters();
-                    boardScript.MyDebug("Sub2");
+                    boardScript.MyDebug2("Sub2");
 
                     Deselect(null);
 
@@ -527,7 +527,7 @@ namespace WordSpell
                 Deselect(null);
             }
 
-            boardScript.MyDebug("SubX");
+            boardScript.MyDebug2("SubX", true);
         }
 
         internal static Material GetMagicMat()
@@ -781,16 +781,16 @@ namespace WordSpell
                 gs.fortune.RemoveAt(0);
             }
 
-            boardScript.MyDebug("rws4");
+            boardScript.MyDebug2("rws4");
             gs.history.Add(wsi);
-            boardScript.MyDebug("rws4.1");
+            boardScript.MyDebug2("rws4.1");
 
             CheckTopBestWordScores(wsi);
-            boardScript.MyDebug("rws4.2");
+            boardScript.MyDebug2("rws4.2");
             CheckTopBestWordScoresSimple(wsi);
-            boardScript.MyDebug("rws4.3");
+            boardScript.MyDebug2("rws4.3");
             CheckTopLongestWordScores(wsi);
-            boardScript.MyDebug("rws5");
+            boardScript.MyDebug2("rws5");
 
             totalwords++;
 
@@ -810,7 +810,7 @@ namespace WordSpell
                 gs.mana += (FortuneLevelCount - 4);
             }
             ss.MannaScore = ScoreManna();
-            boardScript.MyDebug("rws6");
+            boardScript.MyDebug2("rws6");
 
             // If it's a big or price word, give them a spell based on the word.
             string curword = GetCurrentWord();
@@ -850,7 +850,7 @@ namespace WordSpell
                 AwardedSpells.Add(si);
                 ss.si = si;
             }
-            boardScript.MyDebug("rwsX");
+            boardScript.MyDebug2("rwsX");
 
             return ss;
         }
@@ -877,16 +877,16 @@ namespace WordSpell
 
         private static void CheckTopLongestWordScores(WordScoreItem wsi)
         {
-            boardScript.MyDebug("ctl0");
+            boardScript.MyDebug2("ctl0");
             if (os.LongestWords.FindIndex(f => (f.Word == wsi.Word)) >= 0)
             {
                 return;
             }
-            boardScript.MyDebug("ctl1("+wsi.Word.Length.ToString()+" "+os.LongestWords.Count.ToString()+")");
+            boardScript.MyDebug2("ctl1("+wsi.Word.Length.ToString()+" "+os.LongestWords.Count.ToString()+")");
 
 
             int indx = os.LongestWords.FindIndex(f => (f.Word.Length < wsi.Word.Length));
-            boardScript.MyDebug("ctl2");
+            boardScript.MyDebug2("ctl2");
             if (indx >= 0)
             {
                 os.LongestWords.Insert(indx, wsi);
@@ -896,14 +896,14 @@ namespace WordSpell
                 os.LongestWords.Add(wsi);
             }
 
-            boardScript.MyDebug("ctl3");
+            boardScript.MyDebug2("ctl3");
 
             if (os.LongestWords.Count > NumberOfTopScores)
             {
                 os.LongestWords.RemoveAt(NumberOfTopScores);
             }
 
-            boardScript.MyDebug("ctl4");
+            boardScript.MyDebug2("ctl4");
 
         }
 

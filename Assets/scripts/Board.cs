@@ -25,6 +25,7 @@ public class Board : MonoBehaviour
     private float fortuneScale = 0f;
 
     string DebugString = "";
+    string DebugString2 = "";
 
     #endregion Fields
 
@@ -154,7 +155,8 @@ public class Board : MonoBehaviour
         }
         catch (Exception ex)
         {
-            ShowMsg("Exception 1 captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            MyDebug("!1");
+            ShowMsg("EXCEPTION 1\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
         }
 
         ResetTimer();
@@ -290,7 +292,6 @@ public class Board : MonoBehaviour
 
             if (WSGameState.dbg && WSGameState.LetterPropGrid[5, 8].LetTF.position.y - 5f < .1)
             {
-                Debug.Log("here");
                 WSGameState.dbg = false;
             }
 
@@ -330,7 +331,8 @@ public class Board : MonoBehaviour
         }
         catch (Exception ex)
         {
-            ShowMsg("Exception 2 captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            MyDebug("!2");
+            ShowMsg("EXCEPTION 2\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
         }
     }
 
@@ -542,7 +544,17 @@ public class Board : MonoBehaviour
     public void MyDebug(string s)
     {
         DebugString += s + "-";
-        SetUserInfo(DebugString);
+        SetUserInfo(DebugString + "\n" + DebugString2);
+    }
+
+    public void MyDebug2(string s, bool last = false)
+    {
+        DebugString2 += s + "-";
+        SetUserInfo(DebugString + "\n" + DebugString2);
+        if(last)
+        {
+            DebugString2 = "";
+        }
     }
 
     #region Controls
@@ -557,8 +569,6 @@ public class Board : MonoBehaviour
         t.text = text;
         if(bigmsg)
         {
-            MyDebug("E!");
-
             t.fontSize = 24;
         }
         else
