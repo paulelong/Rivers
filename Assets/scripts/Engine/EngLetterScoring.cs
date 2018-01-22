@@ -43,12 +43,6 @@ namespace WordSpell
             "Level 6 brings triple word tiles which triple the word score",
         };
 
-//#if UNITY_EDITOR
-//        static System.Random r = new System.Random(21);
-//#else
-//        static System.Random r = new System.Random();
-//#endif
-
         static char[] Vowels = { 'A', 'E', 'I', 'O', 'U' };
         static char[] RequiredLettersForWord = { 'a', 'e', 'i', 'o', 'u', 'y' };
 

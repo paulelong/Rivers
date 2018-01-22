@@ -561,7 +561,7 @@ namespace WordSpell
             UpdateMaterial();
             if(tt == TileTypes.Speaker)
             {
-                Debug.Log("Speaker tile shoudl be zero percent.  What happened?");
+                Debug.Log("Speaker tile should be zero percent.  What happened?");
             }
         }
 
