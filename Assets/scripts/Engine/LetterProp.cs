@@ -58,9 +58,9 @@ namespace WordSpell
         static List<TileProb> TilesForLevel = new List<TileProb>();
 
 #if UNITY_EDITOR
-        static System.Random r = new System.Random(21);
+        //static System.Random r = new System.Random(21);
 #else
-        static System.Random r = new System.Random();
+        //static System.Random r = new System.Random();
 #endif
 
         #region Properties
@@ -750,7 +750,7 @@ namespace WordSpell
                 }
             }
 
-            int index = r.Next(prob_total);
+            int index = WSGameState.Rnd.Next(prob_total);
             int sum = 0;
             int i = 0;
 

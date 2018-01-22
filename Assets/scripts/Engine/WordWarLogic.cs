@@ -25,6 +25,7 @@ namespace WordSpell
 
         static System.Random r;
 
+
 #if UNITY_EDITOR
         private static int[] Levels = { 0, 20, 40, 60, 87, 100, 120, 140, 160, 180, 200, 220, 1300, 1600, 2000, 5000, 10000 };
 #else
@@ -46,6 +47,14 @@ namespace WordSpell
         #endregion Privates
 
         #region Properties
+
+        public static System.Random Rnd
+        { 
+            get
+            {
+                return r;
+            } 
+        } 
 
         public static int CurrentLevel { get { return gs.level; } private set { } }
 
@@ -336,7 +345,7 @@ namespace WordSpell
 
         internal static void NewMusicTile()
         {
-            int ti = r.Next(gridsize);
+            int ti = WSGameState.Rnd.Next(gridsize);
             LetterPropGrid[ti, gridsize - 1].PlayBackgroundMusic();
             Debug.Log("New Music Tile is " + LetterPropGrid[ti, gridsize - 1].ASCIIString + " at " + ti.ToString() + " 8" );
         }
@@ -574,14 +583,14 @@ namespace WordSpell
             rb.useGravity = true;
             rb.isKinematic = false;
 
-            float xf = (r.Next(100) - 50f) / 150f;
-            float yf = (r.Next(10) - 5f) / 1f;
-            float zf = (r.Next(100) / 30f);
+            float xf = (WSGameState.Rnd.Next(100) - 50f) / 150f;
+            float yf = (WSGameState.Rnd.Next(10) - 5f) / 1f;
+            float zf = (WSGameState.Rnd.Next(100) / 30f);
             rb.AddForce(new Vector3(xf, yf, -zf), ForceMode.VelocityChange);
 
-            float xr = (r.Next(200) - 100f); // / 10f;
-            float yr = r.Next(100) / 10f;
-            float zr = r.Next(100) / 1f;
+            float xr = (WSGameState.Rnd.Next(200) - 100f); // / 10f;
+            float yr = WSGameState.Rnd.Next(100) / 10f;
+            float zr = WSGameState.Rnd.Next(100) / 1f;
             rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
         }
 

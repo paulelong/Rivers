@@ -60,7 +60,7 @@ namespace WordSpell
     {
         #region Privates
         private const int SpellPerRow = 3;
-        static System.Random r = new System.Random();
+        //static System.Random r = new System.Random();
         private static SpellInfo NextSpell;
         private static LetterProp LetterSwapFirst;
         private static bool awarded = false;
@@ -122,7 +122,7 @@ namespace WordSpell
                 }
             }
 
-            int itemnumber = r.Next(inplay.Count);
+            int itemnumber = WSGameState.Rnd.Next(inplay.Count);
             SpellInfo rsi = inplay[itemnumber];
 
             return rsi;
@@ -667,8 +667,8 @@ namespace WordSpell
 
             while (n > 0 && x > 0)
             {
-                int i = r.Next(WSGameState.gridsize);
-                int j = r.Next(WSGameState.gridsize);
+                int i = WSGameState.Rnd.Next(WSGameState.gridsize);
+                int j = WSGameState.Rnd.Next(WSGameState.gridsize);
 
                 if (EngLetterScoring.IsConsonant((string)WSGameState.LetterPropGrid[i, j].ASCIIString))
                 {

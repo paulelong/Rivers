@@ -43,11 +43,11 @@ namespace WordSpell
             "Level 6 brings triple word tiles which triple the word score",
         };
 
-#if UNITY_EDITOR
-        static System.Random r = new System.Random(21);
-#else
-        static System.Random r = new System.Random();
-#endif
+//#if UNITY_EDITOR
+//        static System.Random r = new System.Random(21);
+//#else
+//        static System.Random r = new System.Random();
+//#endif
 
         static char[] Vowels = { 'A', 'E', 'I', 'O', 'U' };
         static char[] RequiredLettersForWord = { 'a', 'e', 'i', 'o', 'u', 'y' };
@@ -242,13 +242,13 @@ namespace WordSpell
 
             if (fl == WSGameState.FortuneLevel.Bad)
             {
-                b = (byte)r.Next('A', 'Z'+1);
+                b = (byte)WSGameState.Rnd.Next('A', 'Z'+1);
             }
             else if (fl == WSGameState.FortuneLevel.Good)
             {
                 int maxvalue = 10;
 
-                int p = r.Next(5);
+                int p = WSGameState.Rnd.Next(5);
                 if (p <= 2)
                 {
                     maxvalue = 3;
@@ -264,21 +264,21 @@ namespace WordSpell
 
                 do
                 {
-                    b = (byte)r.Next('A', 'Z'+1);
+                    b = (byte)WSGameState.Rnd.Next('A', 'Z'+1);
                 } while (values[(char)b] >= maxvalue);
             }
             else
             {
                 bool goodletter = false;
 
-                if (r.Next(10) < 8)
+                if (WSGameState.Rnd.Next(10) < 8)
                 {
                     goodletter = true;
                 }
 
                 do
                 {
-                    b = (byte)r.Next('A', 'Z'+1);
+                    b = (byte)WSGameState.Rnd.Next('A', 'Z'+1);
                 } while (values[(char)b] >= 3 && goodletter);
             }
 
@@ -500,7 +500,7 @@ namespace WordSpell
 
         internal static byte RandomVowel()
         {
-            int vowelnum = r.Next(5);
+            int vowelnum = WSGameState.Rnd.Next(5);
             return (byte)Vowels[vowelnum];
         }
     }
