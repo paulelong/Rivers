@@ -133,6 +133,10 @@ namespace WordSpell
             return( allSpells.Find(x => (x.FriendlyName == name)) );
         }
 
+        public static bool SpellReady()
+        {
+            return NextSpell != null;
+        }
 
         internal static void UpdateSpellsForLevel(int level)
         {
@@ -145,7 +149,7 @@ namespace WordSpell
                 }
             }
 
-            if (Spells.AvailableSpells.Count > 0)
+            if (Spells.AvailableSpells.Count > 0 || WSGameState.AwardedSpells.Count > 0)
             {
                 WSGameState.boardScript.ShowSpellStuff();
             }

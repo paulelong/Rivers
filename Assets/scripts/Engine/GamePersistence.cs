@@ -206,9 +206,10 @@ namespace WordSpell
                         return (os);
                     }
                 }
-                catch (Exception e)
+                catch (InvalidOperationException e)
                 {
-                    throw e;
+                    WSGameState.boardScript.MyDebug("los!");
+                    return null;
                 }
             }
 

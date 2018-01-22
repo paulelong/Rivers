@@ -268,10 +268,10 @@ public class Board : MonoBehaviour
 
     void RefreshStats()
     {
-        MyDebug("RS0");
-        LongestListBox.CreateList(WSGameState.LongestWords, true);
         MyDebug("RS1");
         HighScoresListBox.CreateList(WSGameState.BestGameScores);
+        MyDebug("RS0");
+        LongestListBox.CreateList(WSGameState.LongestWords, true);
         BestWordListBox.CreateList(WSGameState.BestWordScores, true);
         BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
         MyDebug("RSx");
@@ -765,10 +765,13 @@ public class Board : MonoBehaviour
         Spells.ReadySpell(spellName, awarded, SpellSucceded);
 
         // So spell can be canceled, change button text
-        Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
-        t.text = "Abort";
+        if(Spells.SpellReady())
+        {
+            Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
+            t.text = "Abort";
 
-        SpellCasted = true;
+            SpellCasted = true;
+        }
     }
 
     public void SelectLetterToChange()
