@@ -236,14 +236,21 @@ namespace WordSpell
                     boardScript.AddHistory(wsi.Score + " " + wsi.Word + " " + wsi.Wordscorestring);
                 }
 
+                bool FoundMusic = false; // Work around bug so multiple speaker tiles don't show after reload
+
                 // Activate any tile specific work, like music.
                 for (int i = 0; i < gridsize; i++)
                 {
                     for(int j = 0; j< gridsize; j++)
                     {
-                        if(LetterPropGrid[i, j].TileType == LetterProp.TileTypes.Speaker)
+                        if(LetterPropGrid[i, j].TileType == LetterProp.TileTypes.Speaker && !FoundMusic)
                         {
                             LetterPropGrid[i, j].PlayBackgroundMusic();
+                            FoundMusic = true;
+                        }
+                        else
+                        {
+                            LetterPropGrid[i, j].TileType = LetterProp.TileTypes.Normal;
                         }
                     }
                 }
@@ -274,16 +281,16 @@ namespace WordSpell
             GameObject go = GameObject.Find("BoardBackground");
             boardScript = (Board)go.GetComponent(typeof(Board));
 
-            boardScript.ShowMsg("Loading dictionary...");
-            EngLetterScoring.LoadDictionary();
-            boardScript.HideMsg();
-
             LetterProp.InitLetterPropertyList(boardScript);
 
             BadFortuneMaterial = Resources.Load("Copper") as Material;
             GoodFortuneMaterial = Resources.Load("Silver") as Material;
             GreatFortuneMaterial = Resources.Load("Gold") as Material;
-            ManaMaterial = Resources.Load("Mana") as Material;        
+            ManaMaterial = Resources.Load("Mana") as Material;
+
+            boardScript.ShowMsg("Loading dictionary...");
+            EngLetterScoring.LoadDictionary();
+            boardScript.HideMsg();
 
             // Load the music for the speaker tiles just once.
             TileAnim.LoadMusic();
@@ -304,7 +311,7 @@ namespace WordSpell
             // Stuff useful for development, don't ship
 #if UNITY_EDITOR
             AwardAllSpells();
-            r = new System.Random(12);
+            r = new System.Random(25);
 #else
             r = new System.Random();
 #endif
