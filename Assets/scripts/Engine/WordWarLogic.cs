@@ -304,14 +304,14 @@ namespace WordSpell
         public static void InitNewGame()
         {
 
-            boardScript.MyDebug("InitGame");
+            boardScript.MyDebug("Ing0");
             // Reset all variables
             Replay();
 
             // Stuff useful for development, don't ship
 #if UNITY_EDITOR
             AwardAllSpells();
-            r = new System.Random(25);
+            r = new System.Random(30);
 #else
             r = new System.Random();
 #endif
@@ -323,7 +323,7 @@ namespace WordSpell
             IsGameOver = false;
 
             UpdateStats();
-            boardScript.MyDebug("US-F");
+            boardScript.MyDebug("Ingx");
             //NewMusicTile();
         }
 
@@ -371,7 +371,7 @@ namespace WordSpell
             //HighScoreWord = "";
             totalwords = 0;
 
-            boardScript.MyDebug("Update");
+            boardScript.MyDebug("r1");
             UpdateStats();
         }
 
@@ -435,7 +435,9 @@ namespace WordSpell
 
         internal static void SubmitWord()
         {
+            boardScript.MyDebug2("Subx");
             string s = GetCurrentWord().ToLower();
+            boardScript.MyDebug2("Sub00");
 
             if (EngLetterScoring.IsWord(s))
             {
@@ -515,7 +517,7 @@ namespace WordSpell
             }
             else
             {
-                if(s.Length <= 3)
+                if(s.Length < 3)
                 {
                     if(s.Length == 0)
                     {
@@ -523,12 +525,12 @@ namespace WordSpell
                     }
                     else
                     {
-                        boardScript.ShowMsg("Words must be 3 or more letters long.");
+                        boardScript.ShowMsg("Only words greater than 3 letters are accepted.");
                     }
                 }
                 else
                 {
-                    boardScript.ShowMsg("Nice word...if you are a Martian :)  Please try again.");
+                    boardScript.ShowMsg(EngLetterScoring.GetIncorrectWordPhrase());
                 }
 
                 Deselect(null);
@@ -574,7 +576,6 @@ namespace WordSpell
 
             RemoveTile(toRemove);
         }
-
 
         public static void RemoveTile(LetterProp toRemove)
         {

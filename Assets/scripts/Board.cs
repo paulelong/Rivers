@@ -156,10 +156,11 @@ public class Board : MonoBehaviour
         catch (Exception ex)
         {
             MyDebug("!1");
-            ShowMsg("EXCEPTION 1\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            ShowMsg(DebugString + "\nEXCEPTION 1\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
         }
 
         ResetTimer();
+        MyDebug("Sx");
     }
 
     void LocateCamera()
@@ -332,7 +333,7 @@ public class Board : MonoBehaviour
         catch (Exception ex)
         {
             MyDebug("!2");
-            ShowMsg("EXCEPTION 2\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            ShowMsg(DebugString2 + "\nEXCEPTION 2\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
         }
     }
 

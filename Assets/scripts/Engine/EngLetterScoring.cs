@@ -43,6 +43,22 @@ namespace WordSpell
             "Level 6 brings triple word tiles which triple the word score",
         };
 
+        public static readonly string[] IncorrectWordPhrases =
+        {
+            "Nice word...if you are a Martian :)  Please try again.",
+            "Good try, but only earthbound languages will work.",
+            "I'm sure you think that's a word, but it's not in my dictionary",
+            "Creative, but that's not a word.",
+            "Not every combination of letters spell a word.",
+        };
+
+
+        static public string GetIncorrectWordPhrase()
+        {
+            int r = WSGameState.Rnd.Next(IncorrectWordPhrases.Length);
+            return IncorrectWordPhrases[r];
+        }
+
         static char[] Vowels = { 'A', 'E', 'I', 'O', 'U' };
         static char[] RequiredLettersForWord = { 'a', 'e', 'i', 'o', 'u', 'y' };
 
@@ -51,29 +67,43 @@ namespace WordSpell
 
         static public void LoadDictionary()
         {
-            TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
-            string[] words = DictFile.text.Split('\n');
-
-            DictionaryLookup = new List<string>();
-            foreach (String rs in words)
+            try
             {
-                string s = rs.TrimEnd();
+                WSGameState.boardScript.MyDebug("ld0");
+                TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
+                string[] words = DictFile.text.Split('\n');
+                WSGameState.boardScript.MyDebug("ld1");
 
-                if (!s.Contains("'") && s.Length > 2 && s.IndexOfAny(RequiredLettersForWord) >= 0)
+                DictionaryLookup = new List<string>();
+                foreach (String rs in words)
                 {
-                    DictionaryLookup.Add(s);
+                    string s = rs.TrimEnd();
+
+                    if (!s.Contains("'") && s.Length > 2 && s.IndexOfAny(RequiredLettersForWord) >= 0)
+                    {
+                        DictionaryLookup.Add(s);
+                    }
                 }
+
+                WSGameState.boardScript.MyDebug("ld2");
+                CreatePartialLookup();
+            }
+            catch
+            {
+                WSGameState.boardScript.MyDebug("ld!");
             }
 
-            CreatePartialLookup();
         }
  
         static public void CreatePartialLookup()
         {
+            WSGameState.boardScript.MyDebug("cpl0");
+
             string filePath = Application.persistentDataPath + "/" + PartialLookupCache;
             // Is it cached already?
             if (File.Exists(filePath))
             {
+                WSGameState.boardScript.MyDebug("cpl1");
                 try
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
@@ -86,17 +116,22 @@ namespace WordSpell
                 catch(System.Xml.XmlException)
                 {
                     // Something went wrong, so let's rebuilld
+                    WSGameState.boardScript.MyDebug("cpl!");
                     BuildPartialLookup(filePath);
+                    WSGameState.boardScript.MyDebug("cpl2");
                 }
             }
             else
             {
+                WSGameState.boardScript.MyDebug("cpl3");
                 BuildPartialLookup(filePath);
+                WSGameState.boardScript.MyDebug("cpl4");
             }
         }
 
         static private void BuildPartialLookup(string filePath)
         {
+            WSGameState.boardScript.MyDebug("bpl0");
             // Build partial list for each unique letter combination.
             foreach (string s in DictionaryLookup)
             {
@@ -109,13 +144,17 @@ namespace WordSpell
                     }
                 }
             }
+            WSGameState.boardScript.MyDebug("bpl1");
 
             XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
+
+            WSGameState.boardScript.MyDebug("bpl2");
 
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 xs.Serialize(fs, PartialLookup);
             }
+            WSGameState.boardScript.MyDebug("bplx");
         }
 
         static public string GetLevelMsg(int n)
