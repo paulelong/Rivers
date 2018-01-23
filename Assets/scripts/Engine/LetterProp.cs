@@ -92,10 +92,10 @@ namespace WordSpell
 
                     // The tile might have an alternate position if it's new, remember that for the new tile type.
                     float altTilePos = J - (WSGameState.gridsize / 2);
-                    altTilePos -= LetTF.position.y;
+                    altTilePos -= (LetTF.position.y / WSGameState.GridScale);
 
                     ClearTransform();
-                    Transform t = boardScript.NewTile(I, J, tt, -altTilePos);
+                    Transform t = boardScript.NewTile(I, J, tt, -altTilePos * WSGameState.GridScale);
                     SetTransform(t);
                 }
             }
@@ -561,7 +561,7 @@ namespace WordSpell
             UpdateMaterial();
             if(tt == TileTypes.Speaker)
             {
-                Debug.Log("Speaker tile should be zero percent.  What happened?");
+                boardScript.PlayDbg("spk!");
             }
         }
 
@@ -614,7 +614,6 @@ namespace WordSpell
             switch (tt)
             {
                 case TileTypes.Burning:
-                    boardScript.PlayLavaSound();
                     BurnTile();
                     break;
                 case TileTypes.Normal:
@@ -645,6 +644,8 @@ namespace WordSpell
 
         private void BurnTile()
         {
+            boardScript.PlayLavaSound();
+
             LetterBlockObj.GetComponent<MeshRenderer>().material = BurningMat;
             Transform ll = boardScript.NewLavaLight();
             ll.gameObject.SetActive(true);

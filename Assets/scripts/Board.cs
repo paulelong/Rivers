@@ -38,8 +38,7 @@ public class Board : MonoBehaviour
 
     #region Constants
     const float gridYoff = -2.45f;
-    const int numgrid = 9;
-    const float inc = 1f; // (float)(size * scale_factor);
+    //const float inc = (float)WSGameState.maxgridsize / (float)WSGameState.gridsize; // (float)(size * scale_factor);
     const int half_offset = WSGameState.gridsize / 2;
 
     const string SpellNamePath = "TextPanel/Name";
@@ -215,8 +214,8 @@ public class Board : MonoBehaviour
     {
         // If it's a new tile, put it above the screen so animation can set it into place.
 
-        Transform lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-        lbi.localScale *= inc;
+        Transform lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * WSGameState.GridScale, (j - half_offset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
+        lbi.localScale *= WSGameState.GridScale;
 
         return lbi;
     }
@@ -229,15 +228,15 @@ public class Board : MonoBehaviour
         switch (tt)
         {
             case LetterProp.TileTypes.Speaker:
-                lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-                lbi.localScale *= inc;
+                lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * WSGameState.GridScale, (j - half_offset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
                 break;
             default:
-                //lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-                lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-                lbi.localScale *= inc;
+                //lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * WSGameState.ScaleSize, (j - half_offset + newtilepos) * WSGameState.ScaleSize, 0), Quaternion.identity);
+                lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * WSGameState.GridScale, (j - half_offset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
                 break;
         }
+
+        lbi.transform.localScale *= WSGameState.GridScale;
 
         return lbi;
     }
@@ -447,7 +446,7 @@ public class Board : MonoBehaviour
         //subject of the mail
         string subject = MyEscapeURL("WordSpell bug report " + Application.version);
         //body of the mail which consists of Device Model and its Operating System
-        string body = MyEscapeURL("Please add an explantion of the move you just attempted.  For instance, I spelled a for letter word to get rid of a lava tile.  Try to add anything relevant, like a spell you just attempted.\n\n\n\n" +
+        string body = MyEscapeURL("Please add an explantion of the move you just attempted.  For instance, \"I spelled a for letter word to get rid of a lava tile.\"  Try to add any relevant details, like what your intent was or a spell you just attempted.\n\n\n\n" +
          "________" +
          "\n\nPlease Do Not Modify This\n\n" +
          "Model: " + SystemInfo.deviceModel + "\n\n" +
@@ -525,9 +524,9 @@ public class Board : MonoBehaviour
         WSGameState.InitNewGame();
 
         StartDbg("SG1");
-        for (int i = 0; i < WSGameState.gridsize; i++)
+        for (int i = 0; i < WSGameState.maxgridsize; i++)
         {
-            for (int j = 0; j < WSGameState.gridsize; j++)
+            for (int j = 0; j < WSGameState.maxgridsize; j++)
             {
                 LetterProp lp = WSGameState.NewLetter(i, j);
                 Transform lbi = NewTile(i, j, lp.TileType);
@@ -602,7 +601,8 @@ public class Board : MonoBehaviour
 
     public GameObject SelectLet(int i, int j, bool isMagic = false)
     {
-        GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - half_offset) * inc, (j - half_offset) * inc, 0.6f), Quaternion.identity);
+        GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - half_offset) * WSGameState.GridScale, (j - half_offset) * WSGameState.GridScale, 0.6f), Quaternion.identity);
+        t.transform.localScale *= WSGameState.GridScale;
 
         GameObject hl = t.transform.GetChild(0).gameObject;
         GameObject vt = t.transform.GetChild(1).gameObject;

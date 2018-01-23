@@ -426,12 +426,12 @@ namespace WordSpell
                 }
 
                 _lp1.LetterRotVU = 180f;
-                _lp1.LetterRotVUAxis = _lp1.LetTF.position + new Vector3(0, 0.5f, 0);
+                _lp1.LetterRotVUAxis = _lp1.LetTF.position + new Vector3(0, 0.5f * WSGameState.GridScale, 0);
                 _lp1.LetterRotVUCAxis = _lp1.LetTF.position;
                 //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotVD = 180f;
-                _lp2.LetterRotVDAxis = _lp2.LetTF.position - new Vector3(0, 0.5f, 0);
+                _lp2.LetterRotVDAxis = _lp2.LetTF.position - new Vector3(0, 0.5f * WSGameState.GridScale, 0);
                 _lp2.LetterRotVDCAxis = _lp2.LetTF.position;
                 //_lp2.AnimationEnabled = false;
             } // Side by side
@@ -449,12 +449,12 @@ namespace WordSpell
                 }
 
                 _lp1.LetterRotHL = 180f;
-                _lp1.LetterRotHLAxis = _lp1.LetTF.position - new Vector3(0.5f, 0, 0);
+                _lp1.LetterRotHLAxis = _lp1.LetTF.position - new Vector3(0.5f * WSGameState.GridScale, 0, 0);
                 _lp1.LetterRotHLCAxis = _lp1.LetTF.position;
                 //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotHR = 180f;
-                _lp2.LetterRotHRAxis = _lp2.LetTF.position + new Vector3(0.5f, 0, 0);
+                _lp2.LetterRotHRAxis = _lp2.LetTF.position + new Vector3(0.5f * WSGameState.GridScale, 0, 0);
                 _lp2.LetterRotHLCAxis = _lp2.LetTF.position;
                 //_lp2.AnimationEnabled = false;
             }

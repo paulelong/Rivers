@@ -169,17 +169,28 @@ namespace WordSpell
             }
         }
 
+        static public float GridScale
+        {
+            get
+            {
+                return scaleSize;
+            }
+        }
+
         #endregion Properties
 
         #region Fields
         static public Board boardScript;
 
         static public LetterProp[,] LetterPropGrid = null;
+
+        static float scaleSize = (float)maxgridsize / (float)gridsize;
         #endregion Fields
 
 
         #region Constants
-        public const int gridsize = 9;
+        public const int maxgridsize = 9;
+        public const int gridsize = 7;
 
         private const int EffWordCount = 3;
         private const int NumberOfTopScores = 20;
@@ -296,11 +307,6 @@ namespace WordSpell
             TileAnim.LoadMusic();
         }
 
-        static public void DebugSphere(GameObject go)
-        {
-            go.GetComponent<MeshRenderer>().material = GoodFortuneMaterial;
-        }
-
         public static void InitNewGame()
         {
 
@@ -354,7 +360,7 @@ namespace WordSpell
         {
             int ti = WSGameState.Rnd.Next(gridsize);
             LetterPropGrid[ti, gridsize - 1].PlayBackgroundMusic();
-            Debug.Log("New Music Tile is " + LetterPropGrid[ti, gridsize - 1].ASCIIString + " at " + ti.ToString() + " 8" );
+            boardScript.PlayDbg("mt(" + LetterPropGrid[ti, gridsize - 1].ASCIIString + "," + ti + ")");
         }
 
         internal static void Replay()
@@ -583,7 +589,6 @@ namespace WordSpell
 
             if (toRemove.MusicHolderRole && !IsGameOver)
             {
-                Debug.Log("Old music tile died " + toRemove.ASCIIString + " at " + toRemove.I + " " + toRemove.J);
                 NewMusicTile();
             }
 
