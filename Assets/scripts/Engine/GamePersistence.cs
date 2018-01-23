@@ -35,10 +35,78 @@ namespace WordSpell
         public List<int> BestGameScores = new List<int>();
     }
 
-    public class GamePersistence
+    static public class GamePersistence
     {
         private const string SaveGamePath = "WordSpellSave.xml";
         private const string OverallStatsPath = "WordSpellStats.xml";
+
+        static public string StatsText
+        {
+            get
+            {
+                string filePath = Application.persistentDataPath + "/" + OverallStatsPath;
+
+                if (File.Exists(filePath))
+                {
+                    try
+                    {
+
+                        XmlSerializer xs = new XmlSerializer(typeof(GameData));
+                        using (FileStream fs = new FileStream(filePath, FileMode.Open))
+                        {
+                            using (StreamReader reader = new StreamReader(fs))
+                            {
+                                return reader.ReadToEnd();
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        WSGameState.boardScript.PlayDbg("gameFile!");
+                        string s = e.Message;
+                        return s;
+                    }
+                }
+                else
+                {
+                    return "Couldn't open " + filePath;
+                }
+            }
+        }
+
+        static public string GameText
+        {
+            get
+            {
+                string filePath = Application.persistentDataPath + "/" + SaveGamePath;
+
+                if(File.Exists(filePath))
+                {
+                    try
+                    {
+
+                        XmlSerializer xs = new XmlSerializer(typeof(GameData));
+                        using (FileStream fs = new FileStream(filePath, FileMode.Open))
+                        {
+                            using (StreamReader reader = new StreamReader(fs))
+                            {
+                                return reader.ReadToEnd();
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        WSGameState.boardScript.PlayDbg("gameFile!");
+                        string s = e.Message;
+                        return s;
+                    }
+                }
+                else
+                {
+                    return "Couldn't open " + filePath;
+                }
+            }
+        }
 
         // [XmlRootAttribute("Letter")]
         public class SimpleLetter
@@ -130,6 +198,7 @@ namespace WordSpell
             {
                 try
                 {
+
                     XmlSerializer xs = new XmlSerializer(typeof(GameData));
                     using (FileStream fs = new FileStream(filePath, FileMode.Open))
                     {
@@ -208,7 +277,7 @@ namespace WordSpell
                 }
                 catch (InvalidOperationException)
                 {
-                    WSGameState.boardScript.MyDebug("los!");
+                    WSGameState.boardScript.StartDbg("los!");
                     return null;
                 }
             }

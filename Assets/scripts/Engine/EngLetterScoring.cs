@@ -69,10 +69,10 @@ namespace WordSpell
         {
             try
             {
-                WSGameState.boardScript.MyDebug("ld0");
+                WSGameState.boardScript.StartDbg("ld0");
                 TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
                 string[] words = DictFile.text.Split('\n');
-                WSGameState.boardScript.MyDebug("ld1");
+                WSGameState.boardScript.StartDbg("ld1");
 
                 DictionaryLookup = new List<string>();
                 foreach (String rs in words)
@@ -85,25 +85,25 @@ namespace WordSpell
                     }
                 }
 
-                WSGameState.boardScript.MyDebug("ld2");
+                WSGameState.boardScript.StartDbg("ld2");
                 CreatePartialLookup();
             }
             catch
             {
-                WSGameState.boardScript.MyDebug("ld!");
+                WSGameState.boardScript.StartDbg("ld!");
             }
 
         }
  
         static public void CreatePartialLookup()
         {
-            WSGameState.boardScript.MyDebug("cpl0");
+            WSGameState.boardScript.StartDbg("cpl0");
 
             string filePath = Application.persistentDataPath + "/" + PartialLookupCache;
             // Is it cached already?
             if (File.Exists(filePath))
             {
-                WSGameState.boardScript.MyDebug("cpl1");
+                WSGameState.boardScript.StartDbg("cpl1");
                 try
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
@@ -116,22 +116,22 @@ namespace WordSpell
                 catch(System.Xml.XmlException)
                 {
                     // Something went wrong, so let's rebuilld
-                    WSGameState.boardScript.MyDebug("cpl!");
+                    WSGameState.boardScript.StartDbg("cpl!");
                     BuildPartialLookup(filePath);
-                    WSGameState.boardScript.MyDebug("cpl2");
+                    WSGameState.boardScript.StartDbg("cpl2");
                 }
             }
             else
             {
-                WSGameState.boardScript.MyDebug("cpl3");
+                WSGameState.boardScript.StartDbg("cpl3");
                 BuildPartialLookup(filePath);
-                WSGameState.boardScript.MyDebug("cpl4");
+                WSGameState.boardScript.StartDbg("cpl4");
             }
         }
 
         static private void BuildPartialLookup(string filePath)
         {
-            WSGameState.boardScript.MyDebug("bpl0");
+            WSGameState.boardScript.StartDbg("bpl0");
             // Build partial list for each unique letter combination.
             foreach (string s in DictionaryLookup)
             {
@@ -144,17 +144,17 @@ namespace WordSpell
                     }
                 }
             }
-            WSGameState.boardScript.MyDebug("bpl1");
+            WSGameState.boardScript.StartDbg("bpl1");
 
             XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
 
-            WSGameState.boardScript.MyDebug("bpl2");
+            WSGameState.boardScript.StartDbg("bpl2");
 
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 xs.Serialize(fs, PartialLookup);
             }
-            WSGameState.boardScript.MyDebug("bplx");
+            WSGameState.boardScript.StartDbg("bplx");
         }
 
         static public string GetLevelMsg(int n)

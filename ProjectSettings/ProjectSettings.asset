@@ -127,7 +127,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 2.3.77
+  bundleVersion: 2.3.80
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -162,8 +162,8 @@ PlayerSettings:
     Android: com.PaulysHotel.WordSpell
     iOS: com.PaulysHotel.WordSpell
   buildNumber:
-    iOS: 77
-  AndroidBundleVersionCode: 77
+    iOS: 80
+  AndroidBundleVersionCode: 80
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

@@ -27,6 +27,13 @@ public class Board : MonoBehaviour
     string DebugString = "";
     string DebugString2 = "";
 
+    string Ex1Str = "";
+    string Ex2Str = "";
+
+    private bool SpellCasted = false;
+    private float LastActionTime;
+    private string lastPlayDbg = "";
+
     #endregion Fields
 
     #region Constants
@@ -89,8 +96,6 @@ public class Board : MonoBehaviour
     public AudioClip SwapSound;
     public AudioClip SnipeSound;
     public AudioClip LavaSound;
-    private bool SpellCasted = false;
-    private float LastActionTime;
 
     #endregion Unity Objects
 
@@ -106,16 +111,16 @@ public class Board : MonoBehaviour
         //}
         try
         {
-            MyDebug("S0");
+            StartDbg("S0");
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             //        SetUserInfo(GamePersistence.TestPersistence());
 
             WSGameState.InitGameGlobal();
-            MyDebug("S1");
+            StartDbg("S1");
 
             SetStoryInfo(EngLetterScoring.Intro0, EngLetterScoring.Intro1, EngLetterScoring.Intro2, EngLetterScoring.Intro3);
 
-            MyDebug("S2");
+            StartDbg("S2");
 
             SetVersion(Application.version);
 
@@ -142,25 +147,26 @@ public class Board : MonoBehaviour
             HideSpellStuff();
 
             StartCanvas.SetActive(true);
-            MyDebug("S3.2");
+            StartDbg("S3.2");
 
             LoadStats();
-            MyDebug("S4");
+            StartDbg("S4");
 
             if (GamePersistence.SavedGameExists())
             {
                 StartGame();
             }
-            MyDebug("S5");
+            StartDbg("S5");
         }
         catch (Exception ex)
         {
-            MyDebug("!1");
+            StartDbg("!1");
             ShowMsg(DebugString + "\nEXCEPTION 1\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            Ex1Str += "EXCEPTION 1:\n" + ex.ToString();
         }
 
         ResetTimer();
-        MyDebug("Sx");
+        StartDbg("Sx");
     }
 
     void LocateCamera()
@@ -262,22 +268,22 @@ public class Board : MonoBehaviour
 
     void LoadStats()
     {
-        MyDebug("LS0");
+        StartDbg("LS0");
         WSGameState.LoadStats();
-        MyDebug("LS1");
+        StartDbg("LS1");
         RefreshStats();
-        MyDebug("LSx");
+        StartDbg("LSx");
     }
 
     void RefreshStats()
     {
-        MyDebug("RS1");
+        StartDbg("RS1");
         HighScoresListBox.CreateList(WSGameState.BestGameScores);
-        MyDebug("RS0");
+        StartDbg("RS0");
         LongestListBox.CreateList(WSGameState.LongestWords, true);
         BestWordListBox.CreateList(WSGameState.BestWordScores, true);
         BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
-        MyDebug("RSx");
+        StartDbg("RSx");
     }
 
     // Update is called once per frame
@@ -332,8 +338,10 @@ public class Board : MonoBehaviour
         }
         catch (Exception ex)
         {
-            MyDebug("!2");
+            StartDbg("!2");
             ShowMsg(DebugString2 + "\nEXCEPTION 2\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            Ex2Str += "EXCEPTION2:\n" + ex.ToString();
+
         }
     }
 
@@ -437,13 +445,20 @@ public class Board : MonoBehaviour
         //email Id to send the mail to
         string email = "paulelong@outlook.com";
         //subject of the mail
-        string subject = MyEscapeURL("FEEDBACK/SUGGESTION");
+        string subject = MyEscapeURL("WordSpell bug report " + Application.version);
         //body of the mail which consists of Device Model and its Operating System
-        string body = MyEscapeURL("Please Enter your message here\n\n\n\n" +
+        string body = MyEscapeURL("Please add an explantion of the move you just attempted.  For instance, I spelled a for letter word to get rid of a lava tile.  Try to add anything relevant, like a spell you just attempted.\n\n\n\n" +
          "________" +
          "\n\nPlease Do Not Modify This\n\n" +
          "Model: " + SystemInfo.deviceModel + "\n\n" +
             "OS: " + SystemInfo.operatingSystem + "\n\n" +
+            "Version: " + Application.version + "\n\n" +
+            "Startup Dbg: " + DebugString + "\n\n" +
+            "Play Dbg: " + lastPlayDbg + "\n\n" +
+            "Ex1: " + Ex1Str + "\n\n" +
+            "Ex2: " + Ex2Str + "\n\n" +
+            "Stats: " + GamePersistence.StatsText + "\n\n" +
+            "Game: " + DebugString2 + "\n\n" +
          "________");
         //Open the Default Mail App
         Application.OpenURL("mailto:" + email + "?subject=" + subject + "&body=" + body);
@@ -509,7 +524,7 @@ public class Board : MonoBehaviour
 
         WSGameState.InitNewGame();
 
-        MyDebug("SG1");
+        StartDbg("SG1");
         for (int i = 0; i < WSGameState.gridsize; i++)
         {
             for (int j = 0; j < WSGameState.gridsize; j++)
@@ -519,13 +534,13 @@ public class Board : MonoBehaviour
                 lp.SetTransform(lbi);
             }
         }
-        MyDebug("SG2");
+        StartDbg("SG2");
 
         WSGameState.NewMusicTile();
 
         // Check if there is a saved game.
         WSGameState.Load();
-        MyDebug("SGx");
+        StartDbg("SGx");
     }
 
     IEnumerator EndGameDelay()
@@ -542,18 +557,19 @@ public class Board : MonoBehaviour
         StartCanvas.SetActive(true);
     }
 
-    public void MyDebug(string s)
+    public void StartDbg(string s)
     {
         DebugString += s + "-";
         SetUserInfo(DebugString + "\n" + DebugString2);
     }
 
-    public void MyDebug2(string s, bool last = false)
+    public void PlayDbg(string s, bool last = false)
     {
         DebugString2 += s + "-";
         SetUserInfo(DebugString + "\n" + DebugString2);
         if(last)
         {
+            lastPlayDbg = DebugString2;
             DebugString2 = "";
         }
     }
