@@ -33,13 +33,14 @@ public class Board : MonoBehaviour
     private bool SpellCasted = false;
     private float LastActionTime;
     private string lastPlayDbg = "";
+    //private int half_offset = WSGameState.Gridsize / 2;
+
 
     #endregion Fields
 
     #region Constants
     const float gridYoff = -2.45f;
     //const float inc = (float)WSGameState.maxgridsize / (float)WSGameState.gridsize; // (float)(size * scale_factor);
-    const int half_offset = WSGameState.gridsize / 2;
 
     const string SpellNamePath = "TextPanel/Name";
     const string SpellCostPath = "TextPanel/Cost";
@@ -148,12 +149,19 @@ public class Board : MonoBehaviour
             StartCanvas.SetActive(true);
             StartDbg("S3.2");
 
+            GamePersistence.LoadSavedGameData();
+
             LoadStats();
             StartDbg("S4");
 
             if (GamePersistence.SavedGameExists())
             {
-                StartGame();
+                StartCanvas.SetActive(false);
+                ControlCanvas.SetActive(true);
+
+                WSGameState.InitNewGame();
+
+                WSGameState.Load();
             }
             StartDbg("S5");
         }
@@ -214,7 +222,7 @@ public class Board : MonoBehaviour
     {
         // If it's a new tile, put it above the screen so animation can set it into place.
 
-        Transform lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * WSGameState.GridScale, (j - half_offset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
+        Transform lbi = Instantiate(LetterBoxPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
         lbi.localScale *= WSGameState.GridScale;
 
         return lbi;
@@ -228,11 +236,11 @@ public class Board : MonoBehaviour
         switch (tt)
         {
             case LetterProp.TileTypes.Speaker:
-                lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * WSGameState.GridScale, (j - half_offset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
+                lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
                 break;
             default:
-                //lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * WSGameState.ScaleSize, (j - half_offset + newtilepos) * WSGameState.ScaleSize, 0), Quaternion.identity);
-                lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * WSGameState.GridScale, (j - half_offset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
+                //lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.ScaleSize, (j - WSGameState.HalfOffset + newtilepos) * WSGameState.ScaleSize, 0), Quaternion.identity);
+                lbi = Instantiate(LetterBoxPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
                 break;
         }
 
@@ -294,11 +302,6 @@ public class Board : MonoBehaviour
             {
                 ResetTimer();
                 ShowOption("You seem stuck, do you want to me to find you a word?");
-            }
-
-            if (WSGameState.dbg && WSGameState.LetterPropGrid[5, 8].LetTF.position.y - 5f < .1)
-            {
-                WSGameState.dbg = false;
             }
 
             if (MsgCanvas.activeSelf)
@@ -439,58 +442,6 @@ public class Board : MonoBehaviour
         GamePersistence.ResetSavedData();
     }
 
-    public void SendEmail2()
-    {
-        //email Id to send the mail to
-        string email = "paulelong@outlook.com";
-        //subject of the mail
-        string subject = MyEscapeURL("WordSpell bug report " + Application.version);
-        //body of the mail which consists of Device Model and its Operating System
-        string body = MyEscapeURL("Please add an explantion of the move you just attempted.  For instance, \"I spelled a for letter word to get rid of a lava tile.\"  Try to add any relevant details, like what your intent was or a spell you just attempted.\n\n\n\n" +
-         "________" +
-         "\n\nPlease Do Not Modify This\n\n" +
-         "Model: " + SystemInfo.deviceModel + "\n\n" +
-            "OS: " + SystemInfo.operatingSystem + "\n\n" +
-            "Version: " + Application.version + "\n\n" +
-            "Startup Dbg: " + DebugString + "\n\n" +
-            "Play Dbg: " + lastPlayDbg + "\n\n" +
-            "Ex1: " + Ex1Str + "\n\n" +
-            "Ex2: " + Ex2Str + "\n\n" +
-            "Stats: " + GamePersistence.StatsText + "\n\n" +
-            "Game: " + DebugString2 + "\n\n" +
-         "________");
-        //Open the Default Mail App
-        Application.OpenURL("mailto:" + email + "?subject=" + subject + "&body=" + body);
-    }
-
-    string MyEscapeURL(string url)
-    {
-        return WWW.EscapeURL(url).Replace("+", "%20");
-    }
-
-    public void SendEmail()
-    {
-        MailMessage mail = new MailMessage();
-        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-        mail.From = new MailAddress("paulelong@outlooik@gmail.com");
-        mail.To.Add("g.amati@ucl.ac.uk");
-        mail.Subject = "Prova";
-
-        SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
-        SmtpServer.Port = 587;
-        SmtpServer.Credentials = (ICredentialsByHost)CredentialCache.DefaultNetworkCredentials; //(ICredentialsByHost) new NetworkCredential("GMAILACCOUNT","PASSWORD");
-        SmtpServer.EnableSsl = true;
-        SmtpServer.Timeout = 20000;
-        SmtpServer.UseDefaultCredentials = false;
-        try
-        {
-            SmtpServer.Send(mail);
-        }
-        catch (SmtpException myEx)
-        {
-            Debug.Log("Expection: \n" + myEx.ToString());
-        }
-    }
 
     public void ShowOption(string text)
     {
@@ -522,23 +473,14 @@ public class Board : MonoBehaviour
         ControlCanvas.SetActive(true);
 
         WSGameState.InitNewGame();
+        WSGameState.CreateNewBoard(4);
 
         StartDbg("SG1");
-        for (int i = 0; i < WSGameState.maxgridsize; i++)
-        {
-            for (int j = 0; j < WSGameState.maxgridsize; j++)
-            {
-                LetterProp lp = WSGameState.NewLetter(i, j);
-                Transform lbi = NewTile(i, j, lp.TileType);
-                lp.SetTransform(lbi);
-            }
-        }
-        StartDbg("SG2");
 
         WSGameState.NewMusicTile();
 
-        // Check if there is a saved game.
-        WSGameState.Load();
+        // Load save game data
+        //WSGameState.LoadGame();
         StartDbg("SGx");
     }
 
@@ -554,23 +496,6 @@ public class Board : MonoBehaviour
         RefreshStats();
 
         StartCanvas.SetActive(true);
-    }
-
-    public void StartDbg(string s)
-    {
-        DebugString += s + "-";
-        SetUserInfo(DebugString + "\n" + DebugString2);
-    }
-
-    public void PlayDbg(string s, bool last = false)
-    {
-        DebugString2 += s + "-";
-        SetUserInfo(DebugString + "\n" + DebugString2);
-        if(last)
-        {
-            lastPlayDbg = DebugString2;
-            DebugString2 = "";
-        }
     }
 
     #region Controls
@@ -601,7 +526,7 @@ public class Board : MonoBehaviour
 
     public GameObject SelectLet(int i, int j, bool isMagic = false)
     {
-        GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - half_offset) * WSGameState.GridScale, (j - half_offset) * WSGameState.GridScale, 0.6f), Quaternion.identity);
+        GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset) * WSGameState.GridScale, 0.6f), Quaternion.identity);
         t.transform.localScale *= WSGameState.GridScale;
 
         GameObject hl = t.transform.GetChild(0).gameObject;
@@ -903,4 +828,73 @@ public class Board : MonoBehaviour
 
     #endregion SoundFX
 
+    public void SendEmail2()
+    {
+        //email Id to send the mail to
+        string email = "paulelong@outlook.com";
+        //subject of the mail
+        string subject = MyEscapeURL("WordSpell bug report " + Application.version);
+        //body of the mail which consists of Device Model and its Operating System
+        string body = MyEscapeURL("Please add an explantion of the move you just attempted.  For instance, \"I spelled a for letter word to get rid of a lava tile.\"  Try to add any relevant details, like what your intent was or a spell you just attempted.\n\n\n\n" +
+         "________" +
+         "\n\nPlease Do Not Modify This\n\n" +
+         "Model: " + SystemInfo.deviceModel + "\n\n" +
+            "OS: " + SystemInfo.operatingSystem + "\n\n" +
+            "Version: " + Application.version + "\n\n" +
+            "Startup Dbg: " + DebugString + "\n\n" +
+            "Play Dbg: " + lastPlayDbg + "\n\n" +
+            "Ex1: " + Ex1Str + "\n\n" +
+            "Ex2: " + Ex2Str + "\n\n" +
+            "Stats: " + GamePersistence.StatsText + "\n\n" +
+            "Game: " + DebugString2 + "\n\n" +
+         "________");
+        //Open the Default Mail App
+        Application.OpenURL("mailto:" + email + "?subject=" + subject + "&body=" + body);
+    }
+
+    string MyEscapeURL(string url)
+    {
+        return WWW.EscapeURL(url).Replace("+", "%20");
+    }
+
+    public void SendEmail()
+    {
+        MailMessage mail = new MailMessage();
+        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+        mail.From = new MailAddress("paulelong@outlooik@gmail.com");
+        mail.To.Add("g.amati@ucl.ac.uk");
+        mail.Subject = "Prova";
+
+        SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+        SmtpServer.Port = 587;
+        SmtpServer.Credentials = (ICredentialsByHost)CredentialCache.DefaultNetworkCredentials; //(ICredentialsByHost) new NetworkCredential("GMAILACCOUNT","PASSWORD");
+        SmtpServer.EnableSsl = true;
+        SmtpServer.Timeout = 20000;
+        SmtpServer.UseDefaultCredentials = false;
+        try
+        {
+            SmtpServer.Send(mail);
+        }
+        catch (SmtpException myEx)
+        {
+            Debug.Log("Expection: \n" + myEx.ToString());
+        }
+    }
+
+    public void StartDbg(string s)
+    {
+        DebugString += s + "-";
+        SetUserInfo(DebugString + "\n" + DebugString2);
+    }
+
+    public void PlayDbg(string s, bool last = false)
+    {
+        DebugString2 += s + "-";
+        SetUserInfo(DebugString + "\n" + DebugString2);
+        if (last)
+        {
+            lastPlayDbg = DebugString2;
+            DebugString2 = "";
+        }
+    }
 }
