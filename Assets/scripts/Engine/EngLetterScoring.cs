@@ -67,12 +67,14 @@ namespace WordSpell
 
         static public void LoadDictionary()
         {
-            try
+            WSGameState.boardScript.StartDbg("ld0");
+            TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
+
+            if(DictFile != null)
             {
-                WSGameState.boardScript.StartDbg("ld0");
-                TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
-                string[] words = DictFile.text.Split('\n');
                 WSGameState.boardScript.StartDbg("ld1");
+                string[] words = DictFile.text.Split('\n');
+                WSGameState.boardScript.StartDbg("ld2");
 
                 DictionaryLookup = new List<string>();
                 foreach (String rs in words)
@@ -85,16 +87,27 @@ namespace WordSpell
                     }
                 }
 
-                WSGameState.boardScript.StartDbg("ld2");
                 CreatePartialLookup();
             }
-            catch
+            else
             {
                 WSGameState.boardScript.StartDbg("ld!");
+                UnityEngine.Object[] gos = (UnityEngine.Object[])Resources.LoadAll("");
+                foreach (UnityEngine.Object go in gos)
+                {
+                    WSGameState.boardScript.StartDbg(go.ToString());
+                }
+                WSGameState.boardScript.StartDbg("__");
+                gos = (UnityEngine.Object[])Resources.LoadAll("Songs");
+                foreach (UnityEngine.Object go in gos)
+                {
+                    WSGameState.boardScript.StartDbg(go.ToString());
+                }
             }
 
+            WSGameState.boardScript.StartDbg("ldx");
         }
- 
+
         static public void CreatePartialLookup()
         {
             WSGameState.boardScript.StartDbg("cpl0");

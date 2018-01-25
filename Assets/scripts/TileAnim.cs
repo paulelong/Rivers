@@ -5,8 +5,6 @@ using WordSpell;
 
 public class TileAnim : MonoBehaviour
 {
-    static AudioClip[] AmbientSongs;
-    private System.Random r = new System.Random();
     public AudioClip SelectSound;
 
     // Use this for initialization
@@ -19,11 +17,6 @@ public class TileAnim : MonoBehaviour
 		
 	}
 
-    public static void LoadMusic()
-    {
-        AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
-    }
-
     public void FinishSpell()
     {
         Spells.CastSpell();
@@ -31,13 +24,9 @@ public class TileAnim : MonoBehaviour
 
     public void NewSong()
     {
-        if (AmbientSongs != null)
-        {
-            int rs = r.Next(AmbientSongs.Length);
-            AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
-            asrc.clip = AmbientSongs[rs];
-            asrc.PlayDelayed(4);
-        }
+        AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
+        asrc.clip = Songs.GetNextSong();
+        asrc.PlayDelayed(5);
     }
 
     public void StopSong()

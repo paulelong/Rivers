@@ -583,7 +583,14 @@ namespace WordSpell
                 }
             }
 
-            WSGameState.boardScript.ShowMsg("How about " + bw.GetWord);
+            if(bw.GetWord.Length > 3)
+            {
+                WSGameState.boardScript.ShowMsg("How about " + bw.GetWord);
+            }
+            else
+            {
+                WSGameState.boardScript.ShowMsg("Uh oh, do you have any spells that could help?" + bw.GetWord);
+            }
         }
 
         private static void ConvertLetterTile(LetterProp lp)

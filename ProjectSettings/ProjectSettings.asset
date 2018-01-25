@@ -127,7 +127,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 2.3.80
+  bundleVersion: 2.3.89
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -163,7 +163,7 @@ PlayerSettings:
     iOS: com.PaulysHotel.WordSpell
   buildNumber:
     iOS: 80
-  AndroidBundleVersionCode: 80
+  AndroidBundleVersionCode: 89
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -246,7 +246,7 @@ PlayerSettings:
   clonedFromGUID: 00000000000000000000000000000000
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 2800000, guid: bca7aead1f5dd584f97bfea39e2e3cc0, type: 3}
+  androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: E:/users/Paul/Documents/src/WordSpell/wordspell.keystore
   AndroidKeyaliasName: paulelong
   AndroidTVCompatibility: 1
