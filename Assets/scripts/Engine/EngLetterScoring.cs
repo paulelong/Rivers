@@ -95,7 +95,7 @@ namespace WordSpell
                 UnityEngine.Object[] gos = (UnityEngine.Object[])Resources.LoadAll("");
                 foreach (UnityEngine.Object go in gos)
                 {
-                    WSGameState.boardScript.StartDbg(go.ToString());
+                    WSGameState.boardScript.StartDbg(go.ToString().Substring(0,20));
                 }
                 WSGameState.boardScript.StartDbg("__");
                 gos = (UnityEngine.Object[])Resources.LoadAll("Songs");

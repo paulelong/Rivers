@@ -457,8 +457,8 @@ public class Board : MonoBehaviour
             "Play Dbg: " + lastPlayDbg + "\n\n" +
             "Ex1: " + Ex1Str + "\n\n" +
             "Ex2: " + Ex2Str + "\n\n" +
-            "Stats: " + GamePersistence.StatsText + "\n\n" +
-            "Game: " + GamePersistence.GameText + "\n\n" +
+            "Stats(" + GamePersistence.StatsText.Length + "): " + GamePersistence.StatsText + "\n\n" +
+            "Game(" + GamePersistence.GameText.Length + "): " + GamePersistence.GameText + "\n\n" +
          "________");
         //Open the Default Mail App
         Application.OpenURL("mailto:" + email + "?subject=" + subject + "&body=" + body);

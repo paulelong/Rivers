@@ -21,7 +21,7 @@ namespace WordSpell
             }
             else
             {
-                WSGameState.boardScript.PlayDbg("lm!" + AmbientSongs.Length);
+                WSGameState.boardScript.PlayDbg("lm!");
             }
 
             WSGameState.boardScript.PlayDbg("lmx");

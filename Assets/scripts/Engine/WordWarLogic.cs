@@ -927,7 +927,7 @@ namespace WordSpell
             boardScript.PlayDbg("ctl1("+wsi.Word.Length.ToString()+" "+os.LongestWords.Count.ToString()+")");
             foreach(WordScoreItem w in os.LongestWords)
             {
-                boardScript.PlayDbg("clt1.1(" + wsi.Word + "_" + wsi.Score + ")");
+                boardScript.PlayDbg("clt1.1(" + w.Word + "_" + w.Score + ")");
             }
 
             int indx = os.LongestWords.FindIndex(f => (f.Word.Length < wsi.Word.Length));
