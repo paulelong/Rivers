@@ -82,10 +82,17 @@ namespace WordSpell
         public void Clear()
         {
             LayoutGroup lg = list.transform.GetComponent<LayoutGroup>() as LayoutGroup;
-            //LayoutGroup lg = list.GetComponent(typeof(Layout)) as LayoutGroup;
-            foreach (Transform t in lg.transform)
+            if (lg != null)
             {
-                Destroy(t.gameObject);
+                //LayoutGroup lg = list.GetComponent(typeof(Layout)) as LayoutGroup;
+                foreach (Transform t in lg.transform)
+                {
+                    Destroy(t.gameObject);
+                }
+            }
+            else
+            {
+                WSGameState.boardScript.PlayDbg("lb.c!");
             }
         }
     }

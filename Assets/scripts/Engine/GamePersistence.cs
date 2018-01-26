@@ -155,7 +155,6 @@ namespace WordSpell
 
             internal GameStats ReplaceGameData(LetterProp[,] LetterPropGrid)
             {
-
                 foreach (SimpleLetter sl in grid)
                 {
                     LetterPropGrid[sl.i, sl.j].letter = sl.letter;
@@ -300,18 +299,6 @@ namespace WordSpell
                     string s = e.Message;
                 }
             }
-        }
-
-        internal static string TestPersistence()
-        {
-            string filePath = Application.persistentDataPath + "/testme.txt";
-            string worked = "not yet";
-            using (FileStream fs = new FileStream(filePath, FileMode.Create))
-            {
-                worked = "It's opened";
-            }
-
-            return filePath + "\n" + worked;
         }
 
         internal static void ResetSavedData()

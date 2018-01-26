@@ -30,7 +30,7 @@ namespace WordSpell
         const string PartialLookupCache = "LookupCache.xml";
         const string DictionaryCache = "DictionaryCache.lst";
         const string intro0 = "Pangram, the letter volcano, is about to erupt!";
-        const string intro1 = "Legend tells of a magical prodigy who's mastery of words will save the day.  Select adjacent tiles in any direction, for instance following the yellow arrows to spell APPLE.  Longer words improve your fortune, which means better replacement letters.";
+        const string intro1 = "Legend tells of a magical prodigy who's mastery of words will save the day.  Select adjacent tiles in any direction, for instance following the yellow arrows to spell GUITAR.  Longer words improve your fortune, which means better replacement letters.";
         const string intro2 = "Advance levels to gain spells, requiring mana, which you can cast to rearrange letters.";
         const string intro3 = "Beware of lava, e.g. the RED letter tile, because if they reach the bottom, the game is over.";
 
@@ -68,9 +68,11 @@ namespace WordSpell
         static public void LoadDictionary()
         {
             WSGameState.boardScript.StartDbg("ld0");
-            TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
+            TextAsset DictFile = Resources.Load("EngDictA") as TextAsset;
+            //TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
+            //            TextAsset DictFile = (TextAsset)Resources.Load("EngDictA", typeof(TextAsset));
 
-            if(DictFile != null)
+            if (DictFile != null)
             {
                 WSGameState.boardScript.StartDbg("ld1");
                 string[] words = DictFile.text.Split('\n');

@@ -52,6 +52,7 @@ public class Board : MonoBehaviour
 
     // Passed in from Board scene
     #region Unity Objects
+    //public TextAsset dict;
     public Transform LetterBoxPrefab;
     public Transform LetterSpeakerPrefab;
     public GameObject SelectPrefab;
@@ -277,11 +278,13 @@ public class Board : MonoBehaviour
 
     void RefreshStats()
     {
-        StartDbg("RS1");
-        HighScoresListBox.CreateList(WSGameState.BestGameScores);
         StartDbg("RS0");
+        HighScoresListBox.CreateList(WSGameState.BestGameScores);
+        StartDbg("RS1");
         LongestListBox.CreateList(WSGameState.LongestWords, true);
+        StartDbg("RS2");
         BestWordListBox.CreateList(WSGameState.BestWordScores, true);
+        StartDbg("RS3");
         BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
         StartDbg("RSx");
     }

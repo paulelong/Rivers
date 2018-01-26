@@ -10,6 +10,37 @@ namespace WordSpell
 {
     public static class WSGameState
     {
+        #region Constants
+        public const int gridsize = 9;
+
+        private const int EffWordCount = 3;
+        private const int NumberOfTopScores = 20;
+
+        const int EffHigh = 13;
+        const int EffMed = 10;
+        const int FortuneMaxOver = 10;
+        const int glbseed = 0; //319266411;
+
+        private const float LowestWordScore = 3f;
+        private static GameObject selMagicTile;
+        internal static bool dbg = false;
+
+        public enum FortuneLevel
+        {
+            Bad,
+            Good,
+            Great,
+        }
+
+        public enum WordValidity
+        {
+            Garbage,
+            Word,
+            UsedWord,
+        }
+
+        #endregion Constants
+
         public struct ScoreStats
         {
             public int MannaScore;
@@ -190,36 +221,6 @@ namespace WordSpell
         static public LetterProp[,] LetterPropGrid = null;
         #endregion Fields
 
-
-        #region Constants
-        public const int gridsize = 9;
-
-        private const int EffWordCount = 3;
-        private const int NumberOfTopScores = 20;
-
-        const int EffHigh = 13;
-        const int EffMed = 10;
-        const int FortuneMaxOver = 10;
-        private const float LowestWordScore = 3f;
-        private static GameObject selMagicTile;
-        internal static bool dbg = false;
-
-        public enum FortuneLevel
-        {
-            Bad,
-            Good,
-            Great,
-        }
-
-        public enum WordValidity
-        {
-            Garbage,
-            Word,
-            UsedWord,
-        }
-
-        #endregion Constants
-
         internal static void DebugMode()
         {
             gs.mana = 100;
@@ -324,9 +325,19 @@ namespace WordSpell
             // Stuff useful for development, don't ship
 #if UNITY_EDITOR
             AwardAllSpells();
-            r = new System.Random(30);
+            if (glbseed == 0)
+            {
+                int seed = (int)DateTime.Now.Ticks;
+                boardScript.StartDbg("sd=" + seed.ToString());
+                r = new System.Random(seed);
+            }
+            else
+            {
+                boardScript.StartDbg("sd=" + glbseed.ToString());
+                r = new System.Random(glbseed);
+            }
 #else
-            r = new System.Random();
+            int seed = (int)DateTime.Now.Ticks;
 #endif
 
             LetterProp.InitProbability(gs.level);

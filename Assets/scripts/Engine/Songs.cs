@@ -17,14 +17,14 @@ namespace WordSpell
             AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
             if(AmbientSongs != null)
             {
-                WSGameState.boardScript.PlayDbg("lm0_" + AmbientSongs.Length);
+                WSGameState.boardScript.StartDbg("lm0_" + AmbientSongs.Length);
             }
             else
             {
-                WSGameState.boardScript.PlayDbg("lm!");
+                WSGameState.boardScript.StartDbg("lm!");
             }
 
-            WSGameState.boardScript.PlayDbg("lmx");
+            WSGameState.boardScript.StartDbg("lmx");
         }
 
         public static AudioClip GetNextSong()
@@ -35,11 +35,12 @@ namespace WordSpell
                 if (AmbientSongs.Length > 0)
                 {
                     int rs = WSGameState.Rnd.Next(AmbientSongs.Length - 1);
+                    WSGameState.boardScript.PlayDbg("gns1.1_" + rs);
                     return AmbientSongs[rs];
                 }
                 else
                 {
-                    WSGameState.boardScript.PlayDbg("gns1");
+                    WSGameState.boardScript.PlayDbg("gns1.2");
                     return null;
                 }
             }
