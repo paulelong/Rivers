@@ -127,13 +127,8 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 2.3.98
-  preloadedAssets:
-  - {fileID: 8300000, guid: 2b00cd45ccf79bc4e9aba64102424bff, type: 3}
-  - {fileID: 8300000, guid: 9e200740ad458894385c854413ceb074, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  bundleVersion: 2.3.105
+  preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -168,7 +163,7 @@ PlayerSettings:
     iOS: com.PaulysHotel.WordSpell
   buildNumber:
     iOS: 98
-  AndroidBundleVersionCode: 98
+  AndroidBundleVersionCode: 105
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

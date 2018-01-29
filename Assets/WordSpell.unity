@@ -415,7 +415,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000018313915, y: -0.0000072555945}
+  m_AnchoredPosition: {x: 0.00001526256, y: 0.000007038954}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &37288367
@@ -2357,7 +2357,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000028290955, y: 0.000009205749}
+  m_AnchoredPosition: {x: -0.000026700995, y: 0.000009205749}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &331056818
@@ -5631,6 +5631,7 @@ GameObject:
   - component: {fileID: 759855755}
   - component: {fileID: 759855754}
   - component: {fileID: 759855759}
+  - component: {fileID: 759855760}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5723,6 +5724,33 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
+--- !u!114 &759855760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 759855753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e3c45b4e4f0dd4ca2e78288d42a802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dict: {fileID: 4900000, guid: a04b1b69115ac654f83156ce3c070cc0, type: 3}
+  a1: {fileID: 8300000, guid: 9e200740ad458894385c854413ceb074, type: 3}
+  a2: {fileID: 8300000, guid: e01789a9b7bf44740a88c2a6df9ee77b, type: 3}
+  a3: {fileID: 8300000, guid: baebda0b53834014ebbe89c981635643, type: 3}
+  a4: {fileID: 8300000, guid: bfe0668a8f328b74b82404416a821fad, type: 3}
+  a5: {fileID: 8300000, guid: 56e84026f47ab484fac17996c2433f34, type: 3}
+  a6: {fileID: 8300000, guid: 2c15b048fc6520d4ab232867d22ca086, type: 3}
+  a7: {fileID: 8300000, guid: 7c268845dbc4d96418d2f0a524a0323f, type: 3}
+  a8: {fileID: 8300000, guid: 2f43f1aaf722db34f8d648ae53b8e01b, type: 3}
+  a9: {fileID: 8300000, guid: a8181181fdb2cd84bb88f76749e6e376, type: 3}
+  a10: {fileID: 8300000, guid: 5b55a5848df1cab4593be1dcdae1392d, type: 3}
+  a11: {fileID: 8300000, guid: 2b00cd45ccf79bc4e9aba64102424bff, type: 3}
+  silver: {fileID: 2100000, guid: aa15ef15c477633468d3e85e714ceb33, type: 2}
+  gold: {fileID: 2100000, guid: 12c3d69e274b48d45b5081de9c17e577, type: 2}
+  trword: {fileID: 2100000, guid: eee31a1b7c369eb409fc8c91b8b674c7, type: 2}
+  dbword: {fileID: 0}
 --- !u!1 &804034059
 GameObject:
   m_ObjectHideFlags: 0
@@ -12093,7 +12121,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000019624975, y: 0.000007872096}
+  m_AnchoredPosition: {x: 0.000015259024, y: 0.000007872096}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1882276503

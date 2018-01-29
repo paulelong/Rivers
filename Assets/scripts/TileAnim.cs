@@ -25,8 +25,16 @@ public class TileAnim : MonoBehaviour
     public void NewSong()
     {
         AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
-        asrc.clip = Songs.GetNextSong();
-        asrc.PlayDelayed(5);
+        if(asrc != null)
+        {
+            asrc.clip = Songs.GetNextSong();
+            asrc.PlayDelayed(5);
+            WSGameState.boardScript.PlayDbg("ns_" + asrc.clip.ToString().Substring(0, 20), '\n');
+        }
+        else
+        {
+            WSGameState.boardScript.PlayDbg("ns!");
+        }
     }
 
     public void StopSong()

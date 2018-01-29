@@ -24,8 +24,8 @@ public class Board : MonoBehaviour
     private float newFortuneScale;
     private float fortuneScale = 0f;
 
-    string DebugString = "";
-    string DebugString2 = "";
+    string DebugString = " ";
+    string DebugString2 = " ";
 
     string Ex1Str = "";
     string Ex2Str = "";
@@ -158,6 +158,8 @@ public class Board : MonoBehaviour
                 StartGame();
             }
             StartDbg("S5");
+
+            DebugTest();
         }
         catch (Exception ex)
         {
@@ -560,17 +562,60 @@ public class Board : MonoBehaviour
         StartCanvas.SetActive(true);
     }
 
-    public void StartDbg(string s)
+    public void StartDbg(string s, char sep=',')
     {
-        DebugString += s + "-";
-        SetUserInfo(DebugString + "\n" + DebugString2);
+        DebugString += s + sep;
+
+        string s1;
+        if (DebugString.Length > 250)
+        {
+            s1 = DebugString.Substring(0, 250);
+        }
+        else
+        {
+            s1 = DebugString;
+        }
+
+        string s2;
+        if (DebugString2.Length > 250)
+        {
+            s2 = DebugString2.Substring(0, 250);
+        }
+        else
+        {
+            s2 = DebugString2;
+        }
+
+        SetUserInfo(s1 + "\n" + s2);
     }
 
-    public void PlayDbg(string s, bool last = false)
+    public void PlayDbg(string s, char sep = ',', bool last = false)
     {
-        DebugString2 += s + "-";
-        SetUserInfo(DebugString + "\n" + DebugString2);
-        if(last)
+        DebugString2 += s + sep;
+
+        string s1;
+        if (DebugString.Length > 250)
+        {
+            s1 = DebugString.Substring(0, 250);
+        }
+        else
+        {
+            s1 = DebugString;
+        }
+
+        string s2;
+        if (DebugString2.Length > 250)
+        {
+            s2 = DebugString2.Substring(0, 250);
+        }
+        else
+        {
+            s2 = DebugString2;
+        }
+
+        SetUserInfo(s1 + "\n" + s2);
+
+        if (last)
         {
             lastPlayDbg = DebugString2;
             DebugString2 = "";
@@ -775,8 +820,7 @@ public class Board : MonoBehaviour
         {
             Spells.AbortSpell();
 
-            Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
-            t.text = "Cast";
+            SetSpellButton(true);
 
             SpellCasted = false;
         }
@@ -797,8 +841,7 @@ public class Board : MonoBehaviour
         // So spell can be canceled, change button text
         if(Spells.SpellReady())
         {
-            Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
-            t.text = "Abort";
+            SetSpellButton(false);
 
             SpellCasted = true;
         }
@@ -834,12 +877,48 @@ public class Board : MonoBehaviour
         SpellInfo si = WSGameState.AwardedSpells.Find(x => (x.spellType == Spells.LastSuccessfulSpell.spellType));
         WSGameState.AwardedSpells.Remove(si);
 
-        Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
-        t.text = "Cast";
+        SetSpellButton(true);
 
         SpellCasted = false;
     }
+
+    public void SetSpellButton(bool cast)
+    {
+        Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
+        if(cast)
+        {
+            t.text = "Cast";
+        }
+        else
+        {
+            t.text = "Abort";
+        }
+    }
+
+
     #endregion Spells
+
+    public void DebugTest()
+    {
+        UnityEngine.Object[] gos = (UnityEngine.Object[])Resources.LoadAll("");
+        foreach (UnityEngine.Object go in gos)
+        {
+            if(go.ToString().Length > 100)
+            {
+                WSGameState.boardScript.StartDbg(go.ToString().Substring(0, 20), '\n');
+            }
+            else
+            {
+                WSGameState.boardScript.StartDbg(go.ToString(), '\n');
+            }
+        }
+        WSGameState.boardScript.StartDbg("__");
+        gos = (UnityEngine.Object[])Resources.LoadAll("Songs");
+        foreach (UnityEngine.Object go in gos)
+        {
+            WSGameState.boardScript.StartDbg(go.ToString(), '\n');
+        }
+    }
 
     public void IndicateGoodWord(WSGameState.WordValidity wordStatus)
     {

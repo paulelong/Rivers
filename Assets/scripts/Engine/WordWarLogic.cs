@@ -65,6 +65,7 @@ namespace WordSpell
 
         private static bool levelup = false;
         private static int totalwords = 0;
+        private static bool backdoor = false;
 
         static Material BadFortuneMaterial;
         static Material GoodFortuneMaterial;
@@ -541,9 +542,9 @@ namespace WordSpell
             }
             else
             {
-                if(s.Length < 3)
+                if (s.Length < 3)
                 {
-                    if(s.Length == 0)
+                    if (s.Length == 0)
                     {
                         boardScript.ShowMsg("Select adjacent tiles in any direction to spells words.  When the word is valid, submit button will turn green.  Words must be 3 or more letters long.");
                     }
@@ -557,10 +558,27 @@ namespace WordSpell
                     boardScript.ShowMsg(EngLetterScoring.GetIncorrectWordPhrase());
                 }
 
+                if (s == "x")
+                {
+                    backdoor = true;
+                }
+                else
+                {
+                    if (s == "y" && backdoor)
+                    {
+                        boardScript.ShowMsg("You've found the backdoor.");
+                        AwardAllSpells();
+                    }
+                    else
+                    {
+                        backdoor = false;
+                    }
+                }
+
                 Deselect(null);
             }
 
-            boardScript.PlayDbg("SubX", true);
+            boardScript.PlayDbg("SubX", last: true);
         }
 
         internal static Material GetMagicMat()
@@ -935,10 +953,10 @@ namespace WordSpell
             {
                 return;
             }
-            boardScript.PlayDbg("ctl1("+wsi.Word.Length.ToString()+" "+os.LongestWords.Count.ToString()+")");
+            boardScript.PlayDbg("ctl1("+wsi.Word.Length.ToString()+" "+os.LongestWords.Count.ToString()+")", '\n');
             foreach(WordScoreItem w in os.LongestWords)
             {
-                boardScript.PlayDbg("clt1.1(" + w.Word + "_" + w.Score + ")");
+                boardScript.PlayDbg("clt1.1(" + w.Word + "_" + w.Score + ")", '\n');
             }
 
             int indx = os.LongestWords.FindIndex(f => (f.Word.Length < wsi.Word.Length));
