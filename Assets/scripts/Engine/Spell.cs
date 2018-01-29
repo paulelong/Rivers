@@ -393,14 +393,14 @@ namespace WordSpell
                     }
                     break;
                 case SpellInfo.SpellType.ColumnBGone:
-                    for (int i = WSGameState.gridsize - 1; i >= 0; i--)
+                    for (int i = WSGameState.Gridsize - 1; i >= 0; i--)
                     {
                         WSGameState.RemoveAndReplaceTile(lp.I, i);
                     }
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.RowBGone:
-                    for (int i = WSGameState.gridsize - 1; i >= 0; i--)
+                    for (int i = WSGameState.Gridsize - 1; i >= 0; i--)
                     {
                         WSGameState.RemoveAndReplaceTile(i, lp.J);
                     }
@@ -429,12 +429,12 @@ namespace WordSpell
                 }
 
                 _lp1.LetterRotVU = 180f;
-                _lp1.LetterRotVUAxis = _lp1.LetTF.position + new Vector3(0, 0.5f, 0);
+                _lp1.LetterRotVUAxis = _lp1.LetTF.position + new Vector3(0, 0.5f * WSGameState.GridScale, 0);
                 _lp1.LetterRotVUCAxis = _lp1.LetTF.position;
                 //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotVD = 180f;
-                _lp2.LetterRotVDAxis = _lp2.LetTF.position - new Vector3(0, 0.5f, 0);
+                _lp2.LetterRotVDAxis = _lp2.LetTF.position - new Vector3(0, 0.5f * WSGameState.GridScale, 0);
                 _lp2.LetterRotVDCAxis = _lp2.LetTF.position;
                 //_lp2.AnimationEnabled = false;
             } // Side by side
@@ -452,12 +452,12 @@ namespace WordSpell
                 }
 
                 _lp1.LetterRotHL = 180f;
-                _lp1.LetterRotHLAxis = _lp1.LetTF.position - new Vector3(0.5f, 0, 0);
+                _lp1.LetterRotHLAxis = _lp1.LetTF.position - new Vector3(0.5f * WSGameState.GridScale, 0, 0);
                 _lp1.LetterRotHLCAxis = _lp1.LetTF.position;
                 //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotHR = 180f;
-                _lp2.LetterRotHRAxis = _lp2.LetTF.position + new Vector3(0.5f, 0, 0);
+                _lp2.LetterRotHRAxis = _lp2.LetTF.position + new Vector3(0.5f * WSGameState.GridScale, 0, 0);
                 _lp2.LetterRotHLCAxis = _lp2.LetTF.position;
                 //_lp2.AnimationEnabled = false;
             }
@@ -493,7 +493,7 @@ namespace WordSpell
 
         private static bool Rotate(LetterProp lp, int v)
         {
-            if (!(lp.I > 0 && lp.J > 0 && lp.I < WSGameState.gridsize - 1 && lp.J < WSGameState.gridsize - 1))
+            if (!(lp.I > 0 && lp.J > 0 && lp.I < WSGameState.Gridsize - 1 && lp.J < WSGameState.Gridsize - 1))
             {
                 WSGameState.boardScript.ShowMsg("Rotating doesn't work along the edges.");
                 return false;
@@ -603,9 +603,9 @@ namespace WordSpell
 
             RandomLetterList.Clear();
 
-            for (int i = WSGameState.gridsize - 1; i >= 0; i--)
+            for (int i = WSGameState.Gridsize - 1; i >= 0; i--)
             {
-                for (int j = WSGameState.gridsize - 1; j >= 0; j--)
+                for (int j = WSGameState.Gridsize - 1; j >= 0; j--)
                 {
 
                     if (WSGameState.LetterPropGrid[i, j].ASCIIChar == changeletter)
@@ -677,8 +677,8 @@ namespace WordSpell
 
             while (n > 0 && x > 0)
             {
-                int i = WSGameState.Rnd.Next(WSGameState.gridsize);
-                int j = WSGameState.Rnd.Next(WSGameState.gridsize);
+                int i = WSGameState.Rnd.Next(WSGameState.Gridsize);
+                int j = WSGameState.Rnd.Next(WSGameState.Gridsize);
 
                 if (EngLetterScoring.IsConsonant((string)WSGameState.LetterPropGrid[i, j].ASCIIString))
                 {
@@ -707,7 +707,7 @@ namespace WordSpell
                     }
                     WSGameState.RemoveAndReplaceTile(lp.I, lp.J);
 
-                    if (lp.J + 1 < WSGameState.gridsize)
+                    if (lp.J + 1 < WSGameState.Gridsize)
                     {
                         WSGameState.RemoveAndReplaceTile(lp.I, lp.J + 1);
                     }
@@ -719,7 +719,7 @@ namespace WordSpell
                         WSGameState.RemoveAndReplaceTile(lp.I - 1, lp.J);
                     }
 
-                    if (lp.I + 1 < WSGameState.gridsize)
+                    if (lp.I + 1 < WSGameState.Gridsize)
                     {
                         WSGameState.RemoveAndReplaceTile(lp.I + 1, lp.J);
                     }

@@ -65,22 +65,6 @@ namespace WordSpell
 
         #region Properties
 
-        //public bool AnimationEnabled
-        //{
-        //    set
-        //    {
-        //        //Animator a = LetterBlockObj.GetComponent<Animator>();
-        //        //a.Rebind();
-        //        //a.enabled = value;
-        //    }
-        //    get
-        //    {
-        //        //Animator a = LetterBlockObj.GetComponent<Animator>();
-        //        //return (a.enabled);
-        //        return true;
-        //    }
-        //}
-
         public TileTypes TileType
         {
             get { return tt; }
@@ -91,8 +75,8 @@ namespace WordSpell
                     tt = value;
 
                     // The tile might have an alternate position if it's new, remember that for the new tile type.
-                    float altTilePos = J - (WSGameState.gridsize / 2);
-                    altTilePos -= LetTF.position.y;
+                    float altTilePos = J - ((float)(WSGameState.Gridsize - 1) / 2f);
+                    altTilePos -= (LetTF.position.y / WSGameState.GridScale);
 
                     ClearTransform();
                     Transform t = boardScript.NewTile(I, J, tt, -altTilePos);
@@ -542,26 +526,21 @@ namespace WordSpell
             letter = _letter;
         }
 
-        public LetterProp(int level, bool levelup, int _i, int _j, Transform _tf)
+        public LetterProp(int level, bool levelup, int _i, int _j, float fallcount)
         {
-            LetTF = _tf;
             tt = CreateNewTile(level, levelup);
-
-            LetterAnimator = LetterBlockObj.GetComponent<Animator>();
-            //TileScript = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
-
-            //TileScript.SetPos(I, J, this);
 
             letter = EngLetterScoring.GetRandomLetter(IsBurning(), WSGameState.GetFortune());
 
             I = _i;
             J = _j;
 
-            UpdateLetterDisplay();
-            UpdateMaterial();
+            Transform lbi = boardScript.NewTile(I, J, tt, fallcount);
+            SetTransform(lbi);
+
             if(tt == TileTypes.Speaker)
             {
-                Debug.Log("Speaker tile should be zero percent.  What happened?");
+                boardScript.PlayDbg("spk!");
             }
         }
 
@@ -614,7 +593,6 @@ namespace WordSpell
             switch (tt)
             {
                 case TileTypes.Burning:
-                    boardScript.PlayLavaSound();
                     BurnTile();
                     break;
                 case TileTypes.Normal:
@@ -645,6 +623,8 @@ namespace WordSpell
 
         private void BurnTile()
         {
+            boardScript.PlayLavaSound();
+
             LetterBlockObj.GetComponent<MeshRenderer>().material = BurningMat;
             Transform ll = boardScript.NewLavaLight();
             ll.gameObject.SetActive(true);

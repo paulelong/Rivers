@@ -11,7 +11,7 @@ namespace WordSpell
     public static class WSGameState
     {
         #region Constants
-        public const int gridsize = 9;
+        public const int maxgridsize = 9;
 
         private const int EffWordCount = 3;
         private const int NumberOfTopScores = 20;
@@ -214,12 +214,48 @@ namespace WordSpell
             }
         }
 
+        static public float GridScale
+        {
+            get
+            {
+                return scaleSize;
+            }
+        }
+
+        public static int Gridsize
+        {
+            get
+            {
+                return gridsize;
+            }
+
+            set
+            {
+                gridsize = value;
+                scaleSize = (float)maxgridsize / (float)gridsize;
+                halfOffset = (float)(gridsize - 1) / 2f;
+            }
+        }
+
+        public static float HalfOffset
+        {
+            get
+            {
+                return halfOffset;
+            }
+        }
+
         #endregion Properties
 
         #region Fields
         static public Board boardScript;
 
         static public LetterProp[,] LetterPropGrid = null;
+
+        static float scaleSize = 0;
+
+        static int gridsize = 7;
+        static float halfOffset = 0;
         #endregion Fields
 
         internal static void DebugMode()
@@ -238,35 +274,32 @@ namespace WordSpell
 
         internal static void Load()
         {
-            GameStats _gs;
-            _gs = GamePersistence.LoadGame(LetterPropGrid);
-            if(_gs != null)
+            gs = GamePersistence.gs;
+
+            Deselect(null);
+
+            UpdateStats();
+
+            CreateNewBoard(gs.boardsize);
+
+            GamePersistence.RestoreGameData(WSGameState.LetterPropGrid);
+
+            foreach (WordScoreItem wsi in gs.history)
             {
-                Deselect(null);
-                gs = _gs;
-                UpdateStats();
+                boardScript.AddHistory(wsi.Score + " " + wsi.Word + " " + wsi.Wordscorestring);
+            }
 
-                foreach(WordScoreItem wsi in gs.history)
+            bool FoundMusic = false; // Work around bug so multiple speaker tiles don't show after reload
+
+            // Activate any tile specific work, like music.
+            for (int i = 0; i < Gridsize; i++)
+            {
+                for(int j = 0; j< Gridsize; j++)
                 {
-                    boardScript.AddHistory(wsi.Score + " " + wsi.Word + " " + wsi.Wordscorestring);
-                }
-
-                bool FoundMusic = false; // Work around bug so multiple speaker tiles don't show after reload
-
-                // Activate any tile specific work, like music.
-                for (int i = 0; i < gridsize; i++)
-                {
-                    for(int j = 0; j< gridsize; j++)
+                    if(LetterPropGrid[i, j].TileType == LetterProp.TileTypes.Speaker && !FoundMusic)
                     {
-                        if(LetterPropGrid[i, j].TileType == LetterProp.TileTypes.Speaker && !FoundMusic)
-                        {
-                            LetterPropGrid[i, j].PlayBackgroundMusic();
-                            FoundMusic = true;
-                        }
-                        else
-                        {
-                            LetterPropGrid[i, j].TileType = LetterProp.TileTypes.Normal;
-                        }
+                        LetterPropGrid[i, j].PlayBackgroundMusic();
+                        FoundMusic = true;
                     }
                 }
             }
@@ -277,7 +310,7 @@ namespace WordSpell
 
         internal static void LoadStats()
         {
-            OverallStats _os = GamePersistence.LoadOverallStats();
+            OverallStats _os = GamePersistence.Os;
             if(_os != null)
             {
                 os = _os;
@@ -311,11 +344,6 @@ namespace WordSpell
             boardScript.HideMsg();
         }
 
-        static public void DebugSphere(GameObject go)
-        {
-            go.GetComponent<MeshRenderer>().material = GoodFortuneMaterial;
-        }
-
         public static void InitNewGame()
         {
 
@@ -343,8 +371,6 @@ namespace WordSpell
 
             LetterProp.InitProbability(gs.level);
 
-            LetterPropGrid = new LetterProp[gridsize, gridsize];
-
             IsGameOver = false;
 
             UpdateStats();
@@ -352,9 +378,28 @@ namespace WordSpell
             //NewMusicTile();
         }
 
-        public static void NewLetter(int i, int j, Transform tf)
+        public static void LoadGame()
         {
-            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j, tf);
+            WSGameState.Load();
+        }
+
+        public static void CreateNewBoard(int size)
+        {
+            Gridsize = size;
+            LetterPropGrid = new LetterProp[Gridsize, Gridsize];
+
+            for (int i = 0; i < WSGameState.Gridsize; i++)
+            {
+                for (int j = 0; j < WSGameState.Gridsize; j++)
+                {
+                    WSGameState.NewLetter(i, j);
+                }
+            }
+        }
+
+        public static void NewLetter(int i, int j, float fallcount = 0.0f)
+        {
+            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j, fallcount);
 
             if (levelup == true)
             {
@@ -363,23 +408,23 @@ namespace WordSpell
 
         }
 
-        public static LetterProp NewLetter(int i, int j)
-        {
-            LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j);
+        //public static LetterProp NewLetter(int i, int j)
+        //{
+        //    LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j);
 
-            if (levelup == true)
-            {
-                levelup = false;
-            }
+        //    if (levelup == true)
+        //    {
+        //        levelup = false;
+        //    }
 
-            return (LetterPropGrid[i, j]);
-        }
+        //    return (LetterPropGrid[i, j]);
+        //}
 
         internal static void NewMusicTile()
         {
-            int ti = WSGameState.Rnd.Next(gridsize - 1);
-            LetterPropGrid[ti, gridsize - 1].PlayBackgroundMusic();
-            Debug.Log("New Music Tile is " + LetterPropGrid[ti, gridsize - 1].ASCIIString + " at " + ti.ToString() + " 8" );
+            int ti = WSGameState.Rnd.Next(Gridsize - 1);
+            LetterPropGrid[ti, Gridsize - 1].PlayBackgroundMusic();
+            boardScript.PlayDbg("mt(" + LetterPropGrid[ti, Gridsize - 1].ASCIIString + "," + ti + ")");
         }
 
         internal static void Replay()
@@ -613,7 +658,7 @@ namespace WordSpell
 
             Vector3 oldpos = LetterPropGrid[i, j].LetTF.position;
 
-            for (int jp = j; jp < gridsize - 1; jp++)
+            for (int jp = j; jp < Gridsize - 1; jp++)
             {
                 LetterProp LetterOntop = LetterPropGrid[i, jp + 1];
 
@@ -624,18 +669,16 @@ namespace WordSpell
                 LetterOntop.LetterDCount++;
             }
 
-            if (i == 6 && LetterPropGrid[i, gridsize - 1].ASCIIChar == 'O')
+            if (i == 6 && LetterPropGrid[i, Gridsize - 1].ASCIIChar == 'O')
             {
                 dbg = true;
             }
 
-            float fallCount = LetterPropGrid[i, gridsize - 1].LetterDCount;
+            float fallCount = LetterPropGrid[i, Gridsize - 1].LetterDCount;
 
-            LetterProp lp = NewLetter(i, gridsize - 1);
-            Transform lbi = boardScript.NewTile(i, gridsize - 1, lp.TileType, fallCount);
-            lp.SetTransform(lbi);
+            NewLetter(i, Gridsize - 1, fallCount);
 
-            LetterPropGrid[i, gridsize - 1].LetterDCount = fallCount;
+            LetterPropGrid[i, Gridsize - 1].LetterDCount = fallCount;
 
             RemoveTile(toRemove);
         }
@@ -646,7 +689,6 @@ namespace WordSpell
 
             if (toRemove.MusicHolderRole && !IsGameOver)
             {
-                Debug.Log("Old music tile died " + toRemove.ASCIIString + " at " + toRemove.I + " " + toRemove.J);
                 NewMusicTile();
             }
 
@@ -790,9 +832,9 @@ namespace WordSpell
 
         private static void RemoveGameBoard()
         {
-            for(int i = 0; i < gridsize; i++)
+            for(int i = 0; i < Gridsize; i++)
             {
-                for(int j = 0; j < gridsize; j++)
+                for(int j = 0; j < Gridsize; j++)
                 {
                     //LetterPropGrid[i, j].AnimationEnabled = false;
                     RemoveTile(LetterPropGrid[i, j]);
@@ -1131,9 +1173,9 @@ namespace WordSpell
         {
             List<LetterProp> removeList = new List<LetterProp>() ;
 
-            for (int i = 0; i < gridsize; i++)
+            for (int i = 0; i < Gridsize; i++)
             {
-                for (int j = 0; j < gridsize; j++)
+                for (int j = 0; j < Gridsize; j++)
                 {
                     LetterProp curlp = LetterPropGrid[i, j];
                     if (curlp.IsBurning())

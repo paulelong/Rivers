@@ -31,22 +31,22 @@ public class Tile : MonoBehaviour, IPointerClickHandler
             if (lp.LetterDCount > 0.01f)
             {
                 lp.LetterDCount -= fallrate;
-                gameObject.transform.position -= new Vector3(0, fallrate, 0);
+                gameObject.transform.position -= new Vector3(0, fallrate * WSGameState.GridScale, 0);
             }
             if (lp.LetterUCount > 0.01f)
             {
                 lp.LetterUCount -= fallrate;
-                gameObject.transform.position += new Vector3(0, fallrate, 0);
+                gameObject.transform.position += new Vector3(0, fallrate * WSGameState.GridScale, 0);
             }
             if (lp.LetterLCount > 0.01f)
             {
                 lp.LetterLCount -= fallrate;
-                gameObject.transform.position -= new Vector3(fallrate, 0, 0);
+                gameObject.transform.position -= new Vector3(fallrate * WSGameState.GridScale, 0, 0);
             }
             if (lp.LetterRCount > 0.01f)
             {
                 lp.LetterRCount -= fallrate;
-                gameObject.transform.position += new Vector3(fallrate, 0, 0);
+                gameObject.transform.position += new Vector3(fallrate * WSGameState.GridScale, 0, 0);
             }
             if (lp.LetterRotHL > 0.01f)
             {
