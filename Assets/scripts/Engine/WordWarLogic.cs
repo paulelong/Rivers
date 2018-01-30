@@ -568,6 +568,7 @@ namespace WordSpell
                         }
 
                         TurnOver();
+                        boardScript.ScoreWordSound();
 
                         if (GainedNextLevel)
                         {
@@ -583,7 +584,6 @@ namespace WordSpell
                         }
 
                         UpdateStats();
-                        boardScript.ScoreWordSound();
                     }
                 }
             }

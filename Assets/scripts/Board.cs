@@ -510,7 +510,7 @@ public class Board : MonoBehaviour
 
     public void StartSmall()
     {
-        StartGame(6);
+        StartGame(2);
     }
 
     private void StartGame(int _gridsize)
