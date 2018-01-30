@@ -126,9 +126,11 @@ namespace WordSpell
 
                 if (os.BestGameScores != null)
                 {
-                    foreach (int i in os.BestGameScores)
+                    foreach (BestGameScore bgs in os.BestGameScores)
                     {
-                        bestGameScores.Add(i.ToString() + " ");
+                        float ratio = (float)bgs.score / (float)bgs.totalWords;
+                        
+                        bestGameScores.Add(string.Format("{0} {1:0.0} L{2}", bgs.score, ratio, bgs.level));
                     }
                 }
                 else
@@ -635,14 +637,20 @@ namespace WordSpell
         {
             if (totalScore >= 0)
             {
-                int indx = os.BestGameScores.FindIndex(f => (f < totalScore));
+                BestGameScore bsc = new BestGameScore();
+
+                bsc.totalWords = gs.history.Count;
+                bsc.score = totalScore;
+                bsc.level = CurrentLevel;
+
+                int indx = os.BestGameScores.FindIndex(f => (f.score < totalScore));
                 if (indx >= 0)
                 {
-                    os.BestGameScores.Insert(indx, totalScore);
+                    os.BestGameScores.Insert(indx, bsc);
                 }
                 else
                 {
-                    os.BestGameScores.Add(totalScore);
+                    os.BestGameScores.Add(bsc);
                 }
 
                 if (os.BestGameScores.Count > NumberOfTopScores)
@@ -815,11 +823,11 @@ namespace WordSpell
             IsGameOver = true;
             Deselect(null);
 
+            RecoreGameScore(gs.score);
+
             GamePersistence.SaveOverallStats(os);
             GamePersistence.ResetGameData();
             RemoveGameBoard();
-
-            RecoreGameScore(gs.score);
 
             Resume = false;
             boardScript.EndGanme();
@@ -974,6 +982,8 @@ namespace WordSpell
             {
                 AwardedSpells.Add(si);
             }
+
+            boardScript.ShowSpellStuff();
         }
 
         internal static void RemoveAwardedSpells(SpellInfo selectedSpell)
@@ -1050,13 +1060,13 @@ namespace WordSpell
             int idx = os.BestWordScores.FindIndex(f => (f.Word == wsi.Word));
             if (idx >= 0)
             {
-                if(os.BestWordScores[idx].Score == wsi.Score)
+                if(os.BestWordScores[idx].Simplescore <= wsi.Simplescore)
                 {
                     return;
                 }
             }
 
-            int indx = os.BestWordScores.FindIndex(f => (f.Score < wsi.Score));
+            int indx = os.BestWordScores.FindIndex(f => (f.Score < wsi.Simplescore));
             if (indx >= 0)
             {
                 os.BestWordScores.Insert(indx, wsi);

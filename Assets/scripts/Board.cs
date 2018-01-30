@@ -288,13 +288,45 @@ public class Board : MonoBehaviour
     void RefreshStats()
     {
         StartDbg("RS0");
-        HighScoresListBox.CreateList(WSGameState.BestGameScores);
+        if(WSGameState.BestGameScores != null)
+        {
+            HighScoresListBox.CreateList(WSGameState.BestGameScores);
+        }
+        else
+        {
+            StartDbg("RS0!");
+        }
+
         StartDbg("RS1");
-        LongestListBox.CreateList(WSGameState.LongestWords, true);
+        if (WSGameState.LongestWords != null)
+        {
+            LongestListBox.CreateList(WSGameState.LongestWords, true);
+        }
+        else
+        {
+            StartDbg("RS1!");
+        }
+
         StartDbg("RS2");
-        BestWordListBox.CreateList(WSGameState.BestWordScores, true);
+        if (WSGameState.BestWordScores != null)
+        {
+            BestWordListBox.CreateList(WSGameState.BestWordScores, true);
+        }
+        else
+        {
+            StartDbg("RS2!");
+        }
+
         StartDbg("RS3");
-        BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
+        if (WSGameState.BestWordScoresSimple != null)
+        {
+            BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
+        }
+        else
+        {
+            StartDbg("RS3!");
+        }
+
         StartDbg("RSx");
     }
 
@@ -492,6 +524,8 @@ public class Board : MonoBehaviour
         StartDbg("SG1");
 
         WSGameState.NewMusicTile();
+
+        ResetTimer();
 
         // Load save game data
         //WSGameState.LoadGame();

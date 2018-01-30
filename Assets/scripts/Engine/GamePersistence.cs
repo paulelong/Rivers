@@ -17,6 +17,13 @@ namespace WordSpell
         public int Simplescore { get; set; }
     }
 
+    public class BestGameScore
+    {
+        public int score { get; set; }
+        public int totalWords { get; set; }
+        public int level { get; set; }
+    }
+
     public class GameStats
     {
         public int score = 0;
@@ -33,7 +40,7 @@ namespace WordSpell
         public List<WordScoreItem> BestWordScores = new List<WordScoreItem>();
         public List<WordScoreItem> BestWordScoresSimple = new List<WordScoreItem>();
         public List<WordScoreItem> LongestWords = new List<WordScoreItem>();
-        public List<int> BestGameScores = new List<int>();
+        public List<BestGameScore> BestGameScores = new List<BestGameScore>();
     }
 
     public class GameData
@@ -296,7 +303,7 @@ namespace WordSpell
                     XmlSerializer xs = new XmlSerializer(typeof(OverallStats));
                     using (FileStream fs = new FileStream(filePath, FileMode.Open))
                     {
-                        OverallStats os = (OverallStats)xs.Deserialize(fs);
+                        os = (OverallStats)xs.Deserialize(fs);
                     }
                 }
                 catch (InvalidOperationException)
