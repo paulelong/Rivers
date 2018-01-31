@@ -11,10 +11,10 @@ namespace WordSpell
     public static class WSGameState
     {
         #region Constants
-        public const int maxgridsize = 9;
+        public const int MAX_GRID_SIZE = 9;
 
-        private const int EffWordCount = 3;
-        private const int NumberOfTopScores = 20;
+        private const int EFF_WORD_COUNT = 3;
+        private const int TOP_SCORES_MAX = 20;
 
         const int EffHigh = 13;
         const int EffMed = 10;
@@ -22,8 +22,6 @@ namespace WordSpell
         const int glbseed = 0; //319266411;
 
         private const float LowestWordScore = 3f;
-        private static GameObject selMagicTile;
-        internal static bool dbg = false;
 
         public enum FortuneLevel
         {
@@ -49,6 +47,9 @@ namespace WordSpell
         }
 
         #region Privates
+        private static GameObject selMagicTile;
+        internal static bool dbg = false;
+
         static GameStats gs = new GameStats();
         static OverallStats os = new OverallStats();
         static List<WordScoreItem> TryWordList = new List<WordScoreItem>();
@@ -234,7 +235,7 @@ namespace WordSpell
             set
             {
                 gridsize = value;
-                scaleSize = (float)maxgridsize / (float)gridsize;
+                scaleSize = (float)MAX_GRID_SIZE / (float)gridsize;
                 halfOffset = (float)(gridsize - 1) / 2f;
             }
         }
@@ -653,9 +654,9 @@ namespace WordSpell
                     os.BestGameScores.Add(bsc);
                 }
 
-                if (os.BestGameScores.Count > NumberOfTopScores)
+                if (os.BestGameScores.Count > TOP_SCORES_MAX)
                 {
-                    os.BestGameScores.RemoveAt(NumberOfTopScores);
+                    os.BestGameScores.RemoveAt(TOP_SCORES_MAX);
                 }
             }
         }
@@ -792,6 +793,10 @@ namespace WordSpell
             {
                 TotalEfficiency = gs.score / totalwords;
             }
+            else
+            {
+                TotalEfficiency = 0;
+            }
 
             boardScript.SetLevel(gs.level.ToString());
 
@@ -903,7 +908,7 @@ namespace WordSpell
             ss.bonus = EngLetterScoring.LengthBonus(wsi.Word);
 
             gs.fortune.Add(wsi);
-            if (gs.fortune.Count > EffWordCount)
+            if (gs.fortune.Count > EFF_WORD_COUNT)
             {
                 gs.fortune.RemoveAt(0);
             }
@@ -1030,9 +1035,9 @@ namespace WordSpell
 
             boardScript.PlayDbg("ctl3");
 
-            if (os.LongestWords.Count > NumberOfTopScores)
+            if (os.LongestWords.Count > TOP_SCORES_MAX)
             {
-                os.LongestWords.RemoveAt(NumberOfTopScores);
+                os.LongestWords.RemoveAt(TOP_SCORES_MAX);
             }
 
             boardScript.PlayDbg("ctl4");
@@ -1055,9 +1060,9 @@ namespace WordSpell
             {
                 os.BestWordScoresSimple.Add(wsi);
             }
-            if (os.BestWordScoresSimple.Count > NumberOfTopScores)
+            if (os.BestWordScoresSimple.Count > TOP_SCORES_MAX)
             {
-                os.BestWordScoresSimple.RemoveAt(NumberOfTopScores);
+                os.BestWordScoresSimple.RemoveAt(TOP_SCORES_MAX);
             }
         }
 
@@ -1081,9 +1086,9 @@ namespace WordSpell
             {
                 os.BestWordScores.Add(wsi);
             }
-            if (os.BestWordScores.Count > NumberOfTopScores)
+            if (os.BestWordScores.Count > TOP_SCORES_MAX)
             {
-                os.BestWordScores.RemoveAt(NumberOfTopScores);
+                os.BestWordScores.RemoveAt(TOP_SCORES_MAX);
             }
         }
 
