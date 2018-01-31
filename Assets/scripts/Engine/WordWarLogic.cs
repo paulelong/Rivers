@@ -1204,6 +1204,8 @@ namespace WordSpell
 
                         if(LetterPropGrid[i, j -1].TileType != LetterProp.TileTypes.Burning)
                         {
+                            boardScript.PlayLavaSound();
+
                             removeList.Add(LetterPropGrid[i, j - 1]);
                         }
 //                        RemoveAndReplaceTile(curlp.I, curlp.J - 1);

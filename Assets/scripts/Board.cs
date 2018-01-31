@@ -46,9 +46,10 @@ public class Board : MonoBehaviour
     const string SpellCostPath = "TextPanel/Cost";
     const string SpellImagePath = "ButtonPanel/Image";
 
-    const float fortuneChangeSpeed = .002f;
-    private const float TimeTillHint = 200f;
-    private const float fortuneBarSize = .1f;
+    private const float FORTUNE_CHANGE_SPEED = .2f;
+    private const float TIME_TILL_HINT = 200f;
+    private const float FORUTUNE_BAR_SCALE = 17.5f;
+    private const float FORTUNE_BAR_SIZE = 55;
     #endregion Constants
 
     // Passed in from Board scene
@@ -211,7 +212,7 @@ public class Board : MonoBehaviour
         }
 
         CamZ = -16.5f;
-        BoardCam.transform.position = new Vector3(0, gridYoff, CamZ);
+        //BoardCam.transform.position = new Vector3(0, gridYoff, CamZ);
         //BoardCam.orthographicSize = (aspect * -11.0f) + 15.23f;
 
         Debug.Log("pos: " + GameAreaPanel.transform.position);
@@ -337,7 +338,7 @@ public class Board : MonoBehaviour
     {
         try
         {
-            if (WSGameState.CurrentLevel < 4 && WSGameState.GameInProgress && Time.realtimeSinceStartup - LastActionTime > TimeTillHint && !OptionCanvas.activeSelf)
+            if (WSGameState.CurrentLevel < 4 && WSGameState.GameInProgress && Time.realtimeSinceStartup - LastActionTime > TIME_TILL_HINT && !OptionCanvas.activeSelf)
             {
                 ResetTimer();
                 ShowOption("You seem stuck, do you want to me to find you a word?");
@@ -367,14 +368,14 @@ public class Board : MonoBehaviour
 
             if (newFortuneScale - fortuneScale > 0.01f)
             {
-                fortuneScale += fortuneChangeSpeed;
-                FortuneBar.transform.localScale = new Vector3(fortuneScale, .3f, .3f);
+                fortuneScale += FORTUNE_CHANGE_SPEED;
+                FortuneBar.transform.localScale = new Vector3(fortuneScale, FORTUNE_BAR_SIZE, FORTUNE_BAR_SIZE);
             }
 
             if (newFortuneScale - fortuneScale < -0.01f)
             {
-                fortuneScale -= fortuneChangeSpeed;
-                FortuneBar.transform.localScale = new Vector3(fortuneScale, .3f, .3f);
+                fortuneScale -= FORTUNE_CHANGE_SPEED;
+                FortuneBar.transform.localScale = new Vector3(fortuneScale, FORTUNE_BAR_SIZE, FORTUNE_BAR_SIZE);
             }
         }
         catch (Exception ex)
@@ -471,12 +472,16 @@ public class Board : MonoBehaviour
     public void QuitGame()
     {
         SystemMenu.SetActive(false);
+        SpellCanvas.SetActive(false);
+        
         WSGameState.GameOver();
     }
 
     public void ResetApp()
     {
         SystemMenu.SetActive(false);
+        SpellCanvas.SetActive(false);
+
         WSGameState.GameOver();
         GamePersistence.ResetSavedData();
     }
@@ -609,7 +614,7 @@ public class Board : MonoBehaviour
 
     public void SetFortune(float scale, Material m)
     {
-        newFortuneScale = scale * fortuneBarSize;
+        newFortuneScale = scale * FORUTUNE_BAR_SCALE;
 
         MeshRenderer mr = FortuneBar.GetComponent<MeshRenderer>();
 
