@@ -162,7 +162,7 @@ PlayerSettings:
     Android: com.PaulysHotel.WordSpell
     iOS: com.PaulysHotel.WordSpell
   buildNumber:
-    iOS: 106
+    iOS: 108
   AndroidBundleVersionCode: 108
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
