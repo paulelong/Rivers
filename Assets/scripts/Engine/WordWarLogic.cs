@@ -797,6 +797,12 @@ namespace WordSpell
 
             UpdateManaScore();
             UpdateFortune();
+            UpdateEff();
+        }
+
+        private static void UpdateEff()
+        {
+            boardScript.SetEff((float)gs.score / (float)gs.history.Count);
         }
 
         public static void ChangeManna(int manna)

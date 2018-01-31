@@ -39,15 +39,16 @@ public class Board : MonoBehaviour
     #endregion Fields
 
     #region Constants
-    const float gridYoff = -2.45f;
+    const float gridYoff = -3f;
     //const float inc = (float)WSGameState.maxgridsize / (float)WSGameState.gridsize; // (float)(size * scale_factor);
 
     const string SpellNamePath = "TextPanel/Name";
     const string SpellCostPath = "TextPanel/Cost";
     const string SpellImagePath = "ButtonPanel/Image";
 
-    const float fortuneChangeSpeed = .02f;
+    const float fortuneChangeSpeed = .002f;
     private const float TimeTillHint = 200f;
+    private const float fortuneBarSize = .1f;
     #endregion Constants
 
     // Passed in from Board scene
@@ -80,6 +81,7 @@ public class Board : MonoBehaviour
     public GameObject LevelText;
     public GameObject ScoreText;
     public GameObject ManaText;
+    public GameObject Eff;
 
     public GameObject TryList;
     public GameObject HistoryList;
@@ -366,13 +368,13 @@ public class Board : MonoBehaviour
             if (newFortuneScale - fortuneScale > 0.01f)
             {
                 fortuneScale += fortuneChangeSpeed;
-                FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
+                FortuneBar.transform.localScale = new Vector3(fortuneScale, .3f, .3f);
             }
 
             if (newFortuneScale - fortuneScale < -0.01f)
             {
                 fortuneScale -= fortuneChangeSpeed;
-                FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
+                FortuneBar.transform.localScale = new Vector3(fortuneScale, .3f, .3f);
             }
         }
         catch (Exception ex)
@@ -510,7 +512,7 @@ public class Board : MonoBehaviour
 
     public void StartSmall()
     {
-        StartGame(2);
+        StartGame(7);
     }
 
     private void StartGame(int _gridsize)
@@ -607,7 +609,7 @@ public class Board : MonoBehaviour
 
     public void SetFortune(float scale, Material m)
     {
-        newFortuneScale = scale;
+        newFortuneScale = scale * fortuneBarSize;
 
         MeshRenderer mr = FortuneBar.GetComponent<MeshRenderer>();
 
@@ -640,6 +642,12 @@ public class Board : MonoBehaviour
     {
         UnityEngine.UI.Text t = ManaText.GetComponent(typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text;
         t.text = s;
+    }
+
+    public void SetEff(float eff)
+    {
+        UnityEngine.UI.Text t = Eff.GetComponent(typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text;
+        t.text = string.Format("{0:0.00}", eff);
     }
 
     public void AddHistory(string s)
