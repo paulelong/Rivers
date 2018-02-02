@@ -58,28 +58,12 @@ namespace WordSpell
         static List<TileProb> TilesForLevel = new List<TileProb>();
 
 #if UNITY_EDITOR
-        static System.Random r = new System.Random(21);
+        //static System.Random r = new System.Random(21);
 #else
-        static System.Random r = new System.Random();
+        //static System.Random r = new System.Random();
 #endif
 
         #region Properties
-
-        //public bool AnimationEnabled
-        //{
-        //    set
-        //    {
-        //        //Animator a = LetterBlockObj.GetComponent<Animator>();
-        //        //a.Rebind();
-        //        //a.enabled = value;
-        //    }
-        //    get
-        //    {
-        //        //Animator a = LetterBlockObj.GetComponent<Animator>();
-        //        //return (a.enabled);
-        //        return true;
-        //    }
-        //}
 
         public TileTypes TileType
         {
@@ -91,8 +75,8 @@ namespace WordSpell
                     tt = value;
 
                     // The tile might have an alternate position if it's new, remember that for the new tile type.
-                    float altTilePos = J - (WSGameState.gridsize / 2);
-                    altTilePos -= LetTF.position.y;
+                    float altTilePos = J - ((float)(WSGameState.Gridsize - 1) / 2f);
+                    altTilePos -= (LetTF.position.y / WSGameState.GridScale);
 
                     ClearTransform();
                     Transform t = boardScript.NewTile(I, J, tt, -altTilePos);
@@ -542,26 +526,21 @@ namespace WordSpell
             letter = _letter;
         }
 
-        public LetterProp(int level, bool levelup, int _i, int _j, Transform _tf)
+        public LetterProp(int level, bool levelup, int _i, int _j, float fallcount)
         {
-            LetTF = _tf;
             tt = CreateNewTile(level, levelup);
-
-            LetterAnimator = LetterBlockObj.GetComponent<Animator>();
-            //TileScript = (Tile)LetterBlockObj.GetComponent(typeof(Tile));
-
-            //TileScript.SetPos(I, J, this);
 
             letter = EngLetterScoring.GetRandomLetter(IsBurning(), WSGameState.GetFortune());
 
             I = _i;
             J = _j;
 
-            UpdateLetterDisplay();
-            UpdateMaterial();
+            Transform lbi = boardScript.NewTile(I, J, tt, fallcount);
+            SetTransform(lbi);
+
             if(tt == TileTypes.Speaker)
             {
-                Debug.Log("Speaker tile shoudl be zero percent.  What happened?");
+                boardScript.PlayDbg("spk!");
             }
         }
 
@@ -614,7 +593,6 @@ namespace WordSpell
             switch (tt)
             {
                 case TileTypes.Burning:
-                    boardScript.PlayLavaSound();
                     BurnTile();
                     break;
                 case TileTypes.Normal:
@@ -645,6 +623,8 @@ namespace WordSpell
 
         private void BurnTile()
         {
+            boardScript.PlayLavaSound();
+
             LetterBlockObj.GetComponent<MeshRenderer>().material = BurningMat;
             Transform ll = boardScript.NewLavaLight();
             ll.gameObject.SetActive(true);
@@ -690,13 +670,36 @@ namespace WordSpell
             switch(this.ASCIIChar)
             {
                 case 'W':
-                    text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                case 'M':
+                    //text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.35f, 0.49f, -0.06f);
+                    break;
+                case 'G':
+                case 'Q':
+                case 'O':
+                case 'C':
+                    //text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.33f, 0.49f, -0.06f);
+                    break;
+                case 'L':
+                case 'T':
+                    //text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.16f, 0.49f, -0.06f);
+                    break;
+                case 'S':
+                case 'Z':
+                case 'J':
+                    //text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.2f, 0.49f, -0.06f);
                     break;
                 case 'I':
-                    text.transform.localPosition = new Vector3(-0.05f, 0.3f, -0.06f);
+                    //text.transform.localPosition = new Vector3(-0.05f, 0.3f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.1f, 0.49f, -0.06f);
                     break;
                 default:
-                    text.transform.localPosition = new Vector3(-0.15f, 0.3f, -0.06f);
+                    //text.transform.localPosition = new Vector3(-0.17f, 0.3f, -0.06f);
+                    //text.transform.localPosition = new Vector3(-0.22f, 0.6f, -0.06f);
+                    text.transform.localPosition = new Vector3(-0.26f, 0.49f, -0.06f);
                     break;
             }
         }
@@ -727,7 +730,7 @@ namespace WordSpell
                 }
             }
 
-            int index = r.Next(prob_total);
+            int index = WSGameState.Rnd.Next(prob_total);
             int sum = 0;
             int i = 0;
 

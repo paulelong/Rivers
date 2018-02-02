@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using WordSpell;
 using System;
+using System.Net.Mail;
+using System.Net;
 
 public class Board : MonoBehaviour
 {
@@ -22,25 +24,43 @@ public class Board : MonoBehaviour
     private float newFortuneScale;
     private float fortuneScale = 0f;
 
-    string DebugString = "";
+    string DebugString = " ";
+    string DebugString2 = " ";
+
+    string Ex1Str = "";
+    string Ex2Str = "";
+
+    private bool SpellCasted = false;
+    private float LastActionTime;
+    private string lastPlayDbg = "";
+
+    int trigger_nf2 = Animator.StringToHash("nf2");
+    int trigger_nf3 = Animator.StringToHash("nf3");
+
+    //private int half_offset = WSGameState.Gridsize / 2;
+
 
     #endregion Fields
 
     #region Constants
-    const float gridYoff = -2.45f;
-    const int numgrid = 9;
-    const float inc = 1f; // (float)(size * scale_factor);
-    const int half_offset = WSGameState.gridsize / 2;
+    const float gridYoff = -3f;
+    //const float inc = (float)WSGameState.maxgridsize / (float)WSGameState.gridsize; // (float)(size * scale_factor);
 
     const string SpellNamePath = "TextPanel/Name";
     const string SpellCostPath = "TextPanel/Cost";
     const string SpellImagePath = "ButtonPanel/Image";
 
-    const float fortuneChangeSpeed = .02f;
+    private const float FORTUNE_CHANGE_SPEED = .2f;
+    private const float TIME_TILL_HINT = 200f;
+    private const float FORUTUNE_BAR_SCALE = 17.5f;
+    private const float FORTUNE_BAR_SIZE = 55;
+
+
     #endregion Constants
 
     // Passed in from Board scene
     #region Unity Objects
+    //public TextAsset dict;
     public Transform LetterBoxPrefab;
     public Transform LetterSpeakerPrefab;
     public GameObject NotesPrefab;
@@ -53,10 +73,12 @@ public class Board : MonoBehaviour
     public GameObject ControlCanvas;
     public GameObject StartCanvas;
     public GameObject MsgCanvas;
+    public GameObject OptionCanvas;
     public GameObject SpellCanvas;
     public GameObject InputCanvas;
     public GameObject SystemMenu;
     public GameObject SubmitButtonGO;
+    public GameObject CastButton;
     public Camera BoardCam;
 
     // Where the letter grid goes
@@ -67,6 +89,7 @@ public class Board : MonoBehaviour
     public GameObject LevelText;
     public GameObject ScoreText;
     public GameObject ManaText;
+    public GameObject Eff;
 
     public GameObject TryList;
     public GameObject HistoryList;
@@ -99,12 +122,16 @@ public class Board : MonoBehaviour
         //}
         try
         {
+            StartDbg("S0");
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             //        SetUserInfo(GamePersistence.TestPersistence());
 
             WSGameState.InitGameGlobal();
+            StartDbg("S1");
 
             SetStoryInfo(EngLetterScoring.Intro0, EngLetterScoring.Intro1, EngLetterScoring.Intro2, EngLetterScoring.Intro3);
+
+            StartDbg("S2");
 
             SetVersion(Application.version);
 
@@ -128,19 +155,38 @@ public class Board : MonoBehaviour
 
             LocateCamera();
 
+            HideSpellStuff();
+
             StartCanvas.SetActive(true);
+            StartDbg("S3.2");
+
+            GamePersistence.LoadSavedGameData();
 
             LoadStats();
+            StartDbg("S4");
 
             if (GamePersistence.SavedGameExists())
             {
-                StartGame();
+                StartCanvas.SetActive(false);
+                ControlCanvas.SetActive(true);
+
+                WSGameState.InitNewGame();
+
+                WSGameState.Load();
             }
+            StartDbg("S5");
+
+            DebugTest();
         }
         catch (Exception ex)
         {
-            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            StartDbg("!1");
+            ShowMsg(DebugString + "\nEXCEPTION 1\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            Ex1Str += "EXCEPTION 1:\n" + ex.ToString();
         }
+
+        ResetTimer();
+        StartDbg("Sx");
     }
 
     void LocateCamera()
@@ -173,7 +219,7 @@ public class Board : MonoBehaviour
         }
 
         CamZ = -16.5f;
-        BoardCam.transform.position = new Vector3(0, gridYoff, CamZ);
+        //BoardCam.transform.position = new Vector3(0, gridYoff, CamZ);
         //BoardCam.orthographicSize = (aspect * -11.0f) + 15.23f;
 
         Debug.Log("pos: " + GameAreaPanel.transform.position);
@@ -189,8 +235,8 @@ public class Board : MonoBehaviour
     {
         // If it's a new tile, put it above the screen so animation can set it into place.
 
-        Transform lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-        lbi.localScale *= inc;
+        Transform lbi = Instantiate(LetterBoxPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
+        lbi.localScale *= WSGameState.GridScale;
 
         return lbi;
     }
@@ -199,24 +245,38 @@ public class Board : MonoBehaviour
     {
         // If it's a new tile, put it above the screen so animation can set it into place.
         Transform lbi = null;
-        GameObject notes = null;
 
         switch (tt)
         {
             case LetterProp.TileTypes.Speaker:
-                lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-                lbi.localScale *= inc;
-                notes = Instantiate(NotesPrefab, new Vector3(0, 0 , 0), Quaternion.identity);
-                notes.transform.parent = lbi;
+                lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
+                AttachNotes(lbi);
                 break;
             default:
-                //lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-                lbi = Instantiate(LetterBoxPrefab, new Vector3((i - half_offset) * inc, (j - half_offset + newtilepos) * inc, 0), Quaternion.identity);
-                lbi.localScale *= inc;
+                //lbi = Instantiate(LetterSpeakerPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.ScaleSize, (j - WSGameState.HalfOffset + newtilepos) * WSGameState.ScaleSize, 0), Quaternion.identity);
+                lbi = Instantiate(LetterBoxPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset + newtilepos) * WSGameState.GridScale, 0), Quaternion.identity);
                 break;
         }
 
+        lbi.transform.localScale *= WSGameState.GridScale;
+
         return lbi;
+    }
+
+    private void AttachNotes(Transform lbi)
+    {
+        GameObject notes = Instantiate(NotesPrefab, new Vector3(0, 0, 0), LetterSpeakerPrefab.transform.rotation, lbi);
+        notes.transform.position = lbi.transform.position - new Vector3(.1f, .2f, 0);
+
+        GameObject notes2 = Instantiate(NotesPrefab, new Vector3(0, 0, 0), LetterSpeakerPrefab.transform.rotation, lbi);
+        notes2.transform.position = lbi.transform.position - new Vector3(0, .2f, 0);
+        Animator na2 = notes2.transform.GetChild(0).transform.GetComponent<Animator>();
+        na2.SetTrigger(trigger_nf2);
+
+        GameObject notes3 = Instantiate(NotesPrefab, new Vector3(0, 0, 0), LetterSpeakerPrefab.transform.rotation, lbi);
+        notes3.transform.position = lbi.transform.position - new Vector3(.2f, .2f, 0);
+        Animator na3 = notes3.transform.GetChild(0).transform.GetComponent<Animator>();
+        na3.SetTrigger(trigger_nf3);
     }
 
     public void DestroyLetterObject(Transform _tf)
@@ -231,20 +291,70 @@ public class Board : MonoBehaviour
         return lavalight;
     }
 
+    public void HideSpellStuff()
+    {
+        CastButton.SetActive(false);
+    }
+
+    public void ShowSpellStuff()
+    {
+        CastButton.SetActive(true);
+    }
+
     #endregion Init
 
     void LoadStats()
     {
+        StartDbg("LS0");
         WSGameState.LoadStats();
+        StartDbg("LS1");
         RefreshStats();
+        StartDbg("LSx");
     }
 
     void RefreshStats()
     {
-        LongestListBox.CreateList(WSGameState.LongestWords, true);
-        HighScoresListBox.CreateList(WSGameState.BestGameScores);
-        BestWordListBox.CreateList(WSGameState.BestWordScores, true);
-        BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
+        StartDbg("RS0");
+        if(WSGameState.BestGameScores != null)
+        {
+            HighScoresListBox.CreateList(WSGameState.BestGameScores);
+        }
+        else
+        {
+            StartDbg("RS0!");
+        }
+
+        StartDbg("RS1");
+        if (WSGameState.LongestWords != null)
+        {
+            LongestListBox.CreateList(WSGameState.LongestWords, true);
+        }
+        else
+        {
+            StartDbg("RS1!");
+        }
+
+        StartDbg("RS2");
+        if (WSGameState.BestWordScores != null)
+        {
+            BestWordListBox.CreateList(WSGameState.BestWordScores, true);
+        }
+        else
+        {
+            StartDbg("RS2!");
+        }
+
+        StartDbg("RS3");
+        if (WSGameState.BestWordScoresSimple != null)
+        {
+            BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
+        }
+        else
+        {
+            StartDbg("RS3!");
+        }
+
+        StartDbg("RSx");
     }
 
     // Update is called once per frame
@@ -252,10 +362,10 @@ public class Board : MonoBehaviour
     {
         try
         {
-            if (WSGameState.dbg && WSGameState.LetterPropGrid[5, 8].LetTF.position.y - 5f < .1)
+            if (WSGameState.CurrentLevel < 4 && WSGameState.GameInProgress && Time.realtimeSinceStartup - LastActionTime > TIME_TILL_HINT && !OptionCanvas.activeSelf)
             {
-                Debug.Log("here");
-                WSGameState.dbg = false;
+                ResetTimer();
+                ShowOption("You seem stuck, do you want to me to find you a word?");
             }
 
             if (MsgCanvas.activeSelf)
@@ -282,20 +392,28 @@ public class Board : MonoBehaviour
 
             if (newFortuneScale - fortuneScale > 0.01f)
             {
-                fortuneScale += fortuneChangeSpeed;
-                FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
+                fortuneScale += FORTUNE_CHANGE_SPEED;
+                FortuneBar.transform.localScale = new Vector3(fortuneScale, FORTUNE_BAR_SIZE, FORTUNE_BAR_SIZE);
             }
 
             if (newFortuneScale - fortuneScale < -0.01f)
             {
-                fortuneScale -= fortuneChangeSpeed;
-                FortuneBar.transform.localScale = new Vector3(fortuneScale, 1, 1);
+                fortuneScale -= FORTUNE_CHANGE_SPEED;
+                FortuneBar.transform.localScale = new Vector3(fortuneScale, FORTUNE_BAR_SIZE, FORTUNE_BAR_SIZE);
             }
         }
         catch (Exception ex)
         {
-            ShowMsg("Exception captured,  Please take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            StartDbg("!2");
+            ShowMsg(DebugString2 + "\nEXCEPTION 2\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            Ex2Str += "EXCEPTION2:\n" + ex.ToString();
+
         }
+    }
+
+    public void ResetTimer()
+    {
+        LastActionTime = Time.realtimeSinceStartup;
     }
 
     // Handlers
@@ -303,7 +421,14 @@ public class Board : MonoBehaviour
 
     public void OnMouseClick()
     {
+        ResetTimer();
+
         HideMsg();
+
+        if (SystemMenu.activeSelf)
+        {
+            SystemMenu.SetActive(false);
+        }
     }
 
     public void OnApplicationQuit()
@@ -326,9 +451,8 @@ public class Board : MonoBehaviour
         if (!StartCanvas.activeSelf && WSGameState.GameInProgress)
         {
             WSGameState.Save();
+            WSGameState.SaveStats();
         }
-
-        WSGameState.SaveStats();
     }
 
     // Button commands
@@ -340,6 +464,7 @@ public class Board : MonoBehaviour
 
     public void SubmitWord()
     {
+        ResetTimer();
         WSGameState.SubmitWord();
     }
 
@@ -351,6 +476,7 @@ public class Board : MonoBehaviour
 
     public void HamburgerMenu()
     {
+        ResetTimer();
         if (SystemMenu.activeSelf)
         {
             SystemMenu.SetActive(false);
@@ -370,33 +496,71 @@ public class Board : MonoBehaviour
     public void QuitGame()
     {
         SystemMenu.SetActive(false);
+        SpellCanvas.SetActive(false);
         
         WSGameState.GameOver();
     }
 
+    public void ResetApp()
+    {
+        SystemMenu.SetActive(false);
+        SpellCanvas.SetActive(false);
+
+        WSGameState.GameOver();
+        GamePersistence.ResetSavedData();
+    }
+
+    public void ShowOption(string text)
+    {
+        Text t = OptionCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
+        RectTransform rt = MsgCanvas.transform.GetChild(0).GetComponent<RectTransform>();
+        t.text = text;
+
+        OptionCanvas.SetActive(true);
+    }
+
+    public void OptionYes()
+    {
+        Spells.GetBestHint(10);
+        OptionCanvas.SetActive(false);
+        ResetTimer();
+    }
+
+    public void OptionNo()
+    {
+        OptionCanvas.SetActive(false);
+        ResetTimer();
+    }
+
     #endregion Handlers
 
-    public void StartGame()
+    public void StartBig()
+    {
+        StartGame(9);
+    }
+
+    public void StartSmall()
+    {
+        StartGame(7);
+    }
+
+    private void StartGame(int _gridsize)
     {
         StartCanvas.SetActive(false);
         ControlCanvas.SetActive(true);
 
         WSGameState.InitNewGame();
+        WSGameState.CreateNewBoard(_gridsize);
 
-        for (int i = 0; i < WSGameState.gridsize; i++)
-        {
-            for (int j = 0; j < WSGameState.gridsize; j++)
-            {
-                LetterProp lp = WSGameState.NewLetter(i, j);
-                Transform lbi = NewTile(i, j, lp.TileType);
-                lp.SetTransform(lbi);
-            }
-        }
+        StartDbg("SG1");
 
         WSGameState.NewMusicTile();
 
-        // Check if there is a saved game.
-        WSGameState.Load();
+        ResetTimer();
+
+        // Load save game data
+        //WSGameState.LoadGame();
+        StartDbg("SGx");
     }
 
     IEnumerator EndGameDelay()
@@ -412,13 +576,6 @@ public class Board : MonoBehaviour
 
         StartCanvas.SetActive(true);
     }
-
-    public void MyDebug(string s)
-    {
-        DebugString += s + "-";
-        SetUserInfo(DebugString);
-    }
-
     #region Controls
 
     // ----------------------------------------------------------
@@ -431,17 +588,11 @@ public class Board : MonoBehaviour
         t.text = text;
         if(bigmsg)
         {
-            rt.sizeDelta = new Vector2(850f, 1400f);
-            rt.localPosition = new Vector3(2.5f, 0f, 0);
-            t.alignment = TextAnchor.MiddleLeft;
-            t.fontSize = 38;
+            t.fontSize = 24;
         }
         else
         {
-            rt.sizeDelta = new Vector2(777f, 388f);
-            rt.localPosition = new Vector3(2.5f, 194f, 0);
-            t.alignment = TextAnchor.MiddleCenter;
-            t.fontSize = 52;
+            t.fontSize = 40;
         }
         MsgCanvas.SetActive(true);
     }
@@ -453,7 +604,8 @@ public class Board : MonoBehaviour
 
     public GameObject SelectLet(int i, int j, bool isMagic = false)
     {
-        GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - half_offset) * inc, (j - half_offset) * inc, 0.6f), Quaternion.identity);
+        GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset) * WSGameState.GridScale, 0.6f), Quaternion.identity);
+        t.transform.localScale *= WSGameState.GridScale;
 
         GameObject hl = t.transform.GetChild(0).gameObject;
         GameObject vt = t.transform.GetChild(1).gameObject;
@@ -475,11 +627,6 @@ public class Board : MonoBehaviour
         hr.GetComponent<MeshRenderer>().material = m;
         vb.GetComponent<MeshRenderer>().material = m;
 
-        //Animator anim_hr = hl.GetComponent<Animator>();
-        //Animator anim_vt = vt.GetComponent<Animator>();
-        //Animator anim_hl = hr.GetComponent<Animator>();
-        //Animator anim_vb= vb.GetComponent<Animator>();
-
         return t;
     }
 
@@ -491,13 +638,11 @@ public class Board : MonoBehaviour
 
     public void SetFortune(float scale, Material m)
     {
-        newFortuneScale = scale;
+        newFortuneScale = scale * FORUTUNE_BAR_SCALE;
 
         MeshRenderer mr = FortuneBar.GetComponent<MeshRenderer>();
 
-        MyDebug("SF1");
         FortuneBar.GetComponent<MeshRenderer>().material = m;
-        MyDebug("SF2");
     }
 
     /// <summary>
@@ -528,6 +673,12 @@ public class Board : MonoBehaviour
         t.text = s;
     }
 
+    public void SetEff(float eff)
+    {
+        UnityEngine.UI.Text t = Eff.GetComponent(typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text;
+        t.text = string.Format("{0:0.00}", eff);
+    }
+
     public void AddHistory(string s)
     {
         // bugbug: why does the left side get cut off?  I'll add a space as a workaround.
@@ -551,20 +702,20 @@ public class Board : MonoBehaviour
 
     public void SetUserInfo(string s)
     {
-        SystemMenu.transform.GetChild(0).GetChild(2).GetComponent<Text>().text = s;
+        SystemMenu.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = s;
     }
 
     public void SetVersion(string s)
     {
-        SystemMenu.transform.GetChild(0).GetChild(3).GetComponent<Text>().text = s;
+        SystemMenu.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = s;
     }
 
     public void SetStoryInfo(string s0, string s1, string s2, string s3)
     {
-        StartCanvas.transform.Find("Intro0").GetComponent<Text>().text = s0;
-        StartCanvas.transform.Find("Intro1").GetComponent<Text>().text = s1;
-        StartCanvas.transform.Find("Intro2").GetComponent<Text>().text = s2;
-        StartCanvas.transform.Find("Intro3").GetComponent<Text>().text = s3;
+        StartCanvas.transform.Find("Back0/Intro0").GetComponent<Text>().text = s0;
+        StartCanvas.transform.Find("Back1/Intro1").GetComponent<Text>().text = s1;
+        StartCanvas.transform.Find("Back2/Intro2").GetComponent<Text>().text = s2;
+        StartCanvas.transform.Find("Back3/Intro3").GetComponent<Text>().text = s3;
     }
 
     #endregion Controls
@@ -608,21 +759,32 @@ public class Board : MonoBehaviour
 
     public void ShowSpells()
     {
-        ClearSpellList(SpellListBox);
-
-        foreach (SpellInfo si in Spells.AvailableSpells)
+        if (!SpellCasted)
         {
-            AddSpellList(SpellListBox, si);
+            ClearSpellList(SpellListBox);
+
+            foreach (SpellInfo si in Spells.AvailableSpells)
+            {
+                AddSpellList(SpellListBox, si);
+            }
+
+            ClearSpellList(AwardedSpellListBox);
+
+            foreach (SpellInfo si in WSGameState.AwardedSpells)
+            {
+                AddSpellList(AwardedSpellListBox, si, true);
+            }
+
+            SpellCanvas.SetActive(true);
         }
-
-        ClearSpellList(AwardedSpellListBox);
-
-        foreach (SpellInfo si in WSGameState.AwardedSpells)
+        else
         {
-            AddSpellList(AwardedSpellListBox, si, true);
-        }
+            Spells.AbortSpell();
 
-        SpellCanvas.SetActive(true);
+            SetSpellButton(true);
+
+            SpellCasted = false;
+        }
     }
 
     public void CancelSpells()
@@ -636,6 +798,14 @@ public class Board : MonoBehaviour
 
         // Awarded spells need to be removed from the list
         Spells.ReadySpell(spellName, awarded, SpellSucceded);
+
+        // So spell can be canceled, change button text
+        if(Spells.SpellReady())
+        {
+            SetSpellButton(false);
+
+            SpellCasted = true;
+        }
     }
 
     public void SelectLetterToChange()
@@ -667,8 +837,49 @@ public class Board : MonoBehaviour
 
         SpellInfo si = WSGameState.AwardedSpells.Find(x => (x.spellType == Spells.LastSuccessfulSpell.spellType));
         WSGameState.AwardedSpells.Remove(si);
+
+        SetSpellButton(true);
+
+        SpellCasted = false;
     }
+
+    public void SetSpellButton(bool cast)
+    {
+        Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
+        if(cast)
+        {
+            t.text = "Cast";
+        }
+        else
+        {
+            t.text = "Abort";
+        }
+    }
+
+
     #endregion Spells
+
+    public void DebugTest()
+    {
+        UnityEngine.Object[] gos = (UnityEngine.Object[])Resources.LoadAll("");
+        foreach (UnityEngine.Object go in gos)
+        {
+            if(go.ToString().Length > 100)
+            {
+                WSGameState.boardScript.StartDbg(go.ToString().Substring(0, 20), '\n');
+            }
+            else
+            {
+                WSGameState.boardScript.StartDbg(go.ToString(), '\n');
+            }
+        }
+        WSGameState.boardScript.StartDbg("__");
+        gos = (UnityEngine.Object[])Resources.LoadAll("Songs");
+        foreach (UnityEngine.Object go in gos)
+        {
+            WSGameState.boardScript.StartDbg(go.ToString(), '\n');
+        }
+    }
 
     public void IndicateGoodWord(WSGameState.WordValidity wordStatus)
     {
@@ -735,4 +946,116 @@ public class Board : MonoBehaviour
 
     #endregion SoundFX
 
+    public void SendEmail2()
+    {
+        //email Id to send the mail to
+        string email = "paulelong@outlook.com";
+        //subject of the mail
+        string subject = MyEscapeURL("WordSpell bug report " + Application.version);
+        //body of the mail which consists of Device Model and its Operating System
+        string body = MyEscapeURL("Please add an explantion of the move you just attempted.  For instance, I spelled a for letter word to get rid of a lava tile.  Try to add anything relevant, like a spell you just attempted.\n\n\n\n" +
+         "________" +
+         "\n\nPlease Do Not Modify This\n\n" +
+         "Model: " + SystemInfo.deviceModel + "\n\n" +
+            "OS: " + SystemInfo.operatingSystem + "\n\n" +
+            "Version: " + Application.version + "\n\n" +
+            "Startup Dbg: " + DebugString + "\n\n" +
+            "Play Dbg: " + lastPlayDbg + "\n\n" +
+            "Ex1: " + Ex1Str + "\n\n" +
+            "Ex2: " + Ex2Str + "\n\n" +
+            "Stats(" + GamePersistence.StatsText.Length + "): " + GamePersistence.StatsText + "\n\n" +
+            "Game(" + GamePersistence.GameText.Length + "): " + GamePersistence.GameText + "\n\n" +
+         "________");
+        //Open the Default Mail App
+        Application.OpenURL("mailto:" + email + "?subject=" + subject + "&body=" + body);
+    }
+
+    string MyEscapeURL(string url)
+    {
+        return WWW.EscapeURL(url).Replace("+", "%20");
+    }
+
+    public void SendEmail()
+    {
+        MailMessage mail = new MailMessage();
+        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+        mail.From = new MailAddress("paulelong@outlooik@gmail.com");
+        mail.To.Add("g.amati@ucl.ac.uk");
+        mail.Subject = "Prova";
+
+        SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+        SmtpServer.Port = 587;
+        SmtpServer.Credentials = (ICredentialsByHost)CredentialCache.DefaultNetworkCredentials; //(ICredentialsByHost) new NetworkCredential("GMAILACCOUNT","PASSWORD");
+        SmtpServer.EnableSsl = true;
+        SmtpServer.Timeout = 20000;
+        SmtpServer.UseDefaultCredentials = false;
+        try
+        {
+            SmtpServer.Send(mail);
+        }
+        catch (SmtpException myEx)
+        {
+            Debug.Log("Expection: \n" + myEx.ToString());
+        }
+    }
+
+    public void StartDbg(string s, char sep = ',')
+    {
+        DebugString += s + sep;
+
+        string s1;
+        if (DebugString.Length > 250)
+        {
+            s1 = DebugString.Substring(0, 250);
+        }
+        else
+        {
+            s1 = DebugString;
+        }
+
+        string s2;
+        if (DebugString2.Length > 250)
+        {
+            s2 = DebugString2.Substring(0, 250);
+        }
+        else
+        {
+            s2 = DebugString2;
+        }
+
+        SetUserInfo(s1 + "\n" + s2);
+    }
+
+    public void PlayDbg(string s, char sep = ',', bool last = false)
+    {
+        DebugString2 += s + sep;
+
+        string s1;
+        if (DebugString.Length > 250)
+        {
+            s1 = DebugString.Substring(0, 250);
+        }
+        else
+        {
+            s1 = DebugString;
+        }
+
+        string s2;
+        if (DebugString2.Length > 250)
+        {
+            s2 = DebugString2.Substring(0, 250);
+        }
+        else
+        {
+            s2 = DebugString2;
+        }
+
+        SetUserInfo(s1 + "\n" + s2);
+
+        if (last)
+        {
+            lastPlayDbg = DebugString2;
+            DebugString2 = "";
+        }
+    }
 }

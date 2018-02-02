@@ -11,6 +11,7 @@ namespace WordSpell
     {
         GameObject list;
         Transform prefab;
+        public string dbg = "";
 
         public void InitWSListBox(GameObject _list, Transform _prefab)
         {
@@ -52,12 +53,18 @@ namespace WordSpell
         public void CreateList(List<string> l, bool addSpace = false)
         {
             Clear();
+            WSGameState.boardScript.StartDbg("cl0");
+            int debugcnt = 0;
 
             foreach(string s in l)
             {
+                if (debugcnt < 2) { WSGameState.boardScript.StartDbg("cl1"); }
+
                 Transform item = Add();
+                if(debugcnt < 2){ WSGameState.boardScript.StartDbg("cl2(" + s.Length + ")");  }
 
                 UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
+                if (debugcnt < 2) { WSGameState.boardScript.StartDbg("cl3"); }
 
                 if (addSpace)
                 {
@@ -67,16 +74,25 @@ namespace WordSpell
                 {
                     t.text = s;
                 }
+                debugcnt++;
             }
+            WSGameState.boardScript.StartDbg("clx");
         }
 
         public void Clear()
         {
             LayoutGroup lg = list.transform.GetComponent<LayoutGroup>() as LayoutGroup;
-            //LayoutGroup lg = list.GetComponent(typeof(Layout)) as LayoutGroup;
-            foreach (Transform t in lg.transform)
+            if (lg != null)
             {
-                Destroy(t.gameObject);
+                //LayoutGroup lg = list.GetComponent(typeof(Layout)) as LayoutGroup;
+                foreach (Transform t in lg.transform)
+                {
+                    Destroy(t.gameObject);
+                }
+            }
+            else
+            {
+                WSGameState.boardScript.PlayDbg("lb.c!");
             }
         }
     }

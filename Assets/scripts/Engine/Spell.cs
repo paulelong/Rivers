@@ -60,7 +60,7 @@ namespace WordSpell
     {
         #region Privates
         private const int SpellPerRow = 3;
-        static System.Random r = new System.Random();
+        //static System.Random r = new System.Random();
         private static SpellInfo NextSpell;
         private static LetterProp LetterSwapFirst;
         private static bool awarded = false;
@@ -72,18 +72,18 @@ namespace WordSpell
 
         static List<SpellInfo> allSpells = new List<SpellInfo>
         {
-            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyLetter, FriendlyName = "Snipe",    MannaPoints = 10, SpellLevel = 13, Immediate = false, ImageName = "Snipe" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyGroup, FriendlyName = "Bomb",      MannaPoints = 8, SpellLevel = 8, Immediate = false, ImageName = "Bomb" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.ChangeToVowel, FriendlyName = "Vowelize", MannaPoints = 7, SpellLevel = 10, Immediate = false, ImageName = "Vowelize" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint,     FriendlyName = "Hint",      MannaPoints = 10, SpellLevel = 11, Immediate = true,ImageName = "Hint" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2,    FriendlyName = "Hint++",    MannaPoints = 14, SpellLevel = 14, Immediate = true,ImageName = "HintPlus" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap,   FriendlyName = "Swap",      MannaPoints = 10, SpellLevel = 5, Immediate = false, ImageName = "Swap" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.Burn,         FriendlyName = "Lava" ,     MannaPoints = 6, SpellLevel = 6, Immediate = false, ImageName = "Burn"  }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap,   FriendlyName = "Swap",      MannaPoints = 6, SpellLevel = 5, Immediate = false, ImageName = "Swap" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 10, SpellLevel = 15, Immediate = true, ImageName = "VowelDust" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 12, SpellLevel = 7, Immediate = false, ImageName = "ConvertLetter" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCW,     FriendlyName = "Rotate CW",  MannaPoints = 3, SpellLevel = 9, Immediate = false, ImageName = "CWRotate"  }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCCW,    FriendlyName = "Rotate CCW",  MannaPoints = 3, SpellLevel = 9, Immediate = false, ImageName = "CCWRotate"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 10, SpellLevel = 7, Immediate = true, ImageName = "VowelDust" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 12, SpellLevel = 8, Immediate = false, ImageName = "ConvertLetter" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyGroup, FriendlyName = "Bomb",      MannaPoints = 8, SpellLevel = 9, Immediate = false, ImageName = "Bomb" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCW,     FriendlyName = "Rotate CW",  MannaPoints = 3, SpellLevel = 10, Immediate = false, ImageName = "CWRotate"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCCW,    FriendlyName = "Rotate CCW",  MannaPoints = 3, SpellLevel = 10, Immediate = false, ImageName = "CCWRotate"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint,     FriendlyName = "Hint",      MannaPoints = 10, SpellLevel = 11, Immediate = true,ImageName = "Hint" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.Rotate180,    FriendlyName = "Rotate 180",  MannaPoints = 5, SpellLevel = 12, Immediate = false, ImageName = "Rotate180"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyLetter, FriendlyName = "Snipe",    MannaPoints = 10, SpellLevel = 13, Immediate = false, ImageName = "Snipe" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2,    FriendlyName = "Hint++",    MannaPoints = 14, SpellLevel = 14, Immediate = true,ImageName = "HintPlus" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.ChangeToVowel, FriendlyName = "Vowelize", MannaPoints = 7, SpellLevel = 15, Immediate = false, ImageName = "Vowelize" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.HintOnLetter, FriendlyName = "Letter Hint",  MannaPoints = 15, SpellLevel = 16, Immediate = false,ImageName = "HintLet" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter,    FriendlyName = "Any Letter",  MannaPoints = 12, SpellLevel = 17, Immediate = false, ImageName = "AnyLetter" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.RowBGone,     FriendlyName = "Row b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false, ImageName = "RowGone" }},
@@ -122,7 +122,7 @@ namespace WordSpell
                 }
             }
 
-            int itemnumber = r.Next(inplay.Count);
+            int itemnumber = WSGameState.Rnd.Next(inplay.Count);
             SpellInfo rsi = inplay[itemnumber];
 
             return rsi;
@@ -133,6 +133,10 @@ namespace WordSpell
             return( allSpells.Find(x => (x.FriendlyName == name)) );
         }
 
+        public static bool SpellReady()
+        {
+            return NextSpell != null;
+        }
 
         internal static void UpdateSpellsForLevel(int level)
         {
@@ -143,6 +147,11 @@ namespace WordSpell
                 {
                     AvailableSpells.Add(si);
                 }
+            }
+
+            if (Spells.AvailableSpells.Count > 0 || WSGameState.AwardedSpells.Count > 0)
+            {
+                WSGameState.boardScript.ShowSpellStuff();
             }
         }
 
@@ -196,8 +205,18 @@ namespace WordSpell
                 // Why do I need a delegate here?
                 spellCompelteDelegate();
             }
+
+            WSGameState.boardScript.SetSpellButton(true);
             NextSpell = null;
             state = 0;
+        }
+
+        public static void AbortSpell()
+        {
+            WSGameState.MagicDeselect();
+            NextSpell = null;
+            state = 0;
+            WSGameState.boardScript.SetSpellButton(true);
         }
 
         public static void CastSpell(string s = null)
@@ -374,14 +393,14 @@ namespace WordSpell
                     }
                     break;
                 case SpellInfo.SpellType.ColumnBGone:
-                    for (int i = WSGameState.gridsize - 1; i >= 0; i--)
+                    for (int i = WSGameState.Gridsize - 1; i >= 0; i--)
                     {
                         WSGameState.RemoveAndReplaceTile(lp.I, i);
                     }
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.RowBGone:
-                    for (int i = WSGameState.gridsize - 1; i >= 0; i--)
+                    for (int i = WSGameState.Gridsize - 1; i >= 0; i--)
                     {
                         WSGameState.RemoveAndReplaceTile(i, lp.J);
                     }
@@ -410,12 +429,12 @@ namespace WordSpell
                 }
 
                 _lp1.LetterRotVU = 180f;
-                _lp1.LetterRotVUAxis = _lp1.LetTF.position + new Vector3(0, 0.5f, 0);
+                _lp1.LetterRotVUAxis = _lp1.LetTF.position + new Vector3(0, 0.5f * WSGameState.GridScale, 0);
                 _lp1.LetterRotVUCAxis = _lp1.LetTF.position;
                 //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotVD = 180f;
-                _lp2.LetterRotVDAxis = _lp2.LetTF.position - new Vector3(0, 0.5f, 0);
+                _lp2.LetterRotVDAxis = _lp2.LetTF.position - new Vector3(0, 0.5f * WSGameState.GridScale, 0);
                 _lp2.LetterRotVDCAxis = _lp2.LetTF.position;
                 //_lp2.AnimationEnabled = false;
             } // Side by side
@@ -433,12 +452,12 @@ namespace WordSpell
                 }
 
                 _lp1.LetterRotHL = 180f;
-                _lp1.LetterRotHLAxis = _lp1.LetTF.position - new Vector3(0.5f, 0, 0);
+                _lp1.LetterRotHLAxis = _lp1.LetTF.position - new Vector3(0.5f * WSGameState.GridScale, 0, 0);
                 _lp1.LetterRotHLCAxis = _lp1.LetTF.position;
                 //_lp1.AnimationEnabled = false;
 
                 _lp2.LetterRotHR = 180f;
-                _lp2.LetterRotHRAxis = _lp2.LetTF.position + new Vector3(0.5f, 0, 0);
+                _lp2.LetterRotHRAxis = _lp2.LetTF.position + new Vector3(0.5f * WSGameState.GridScale, 0, 0);
                 _lp2.LetterRotHLCAxis = _lp2.LetTF.position;
                 //_lp2.AnimationEnabled = false;
             }
@@ -474,7 +493,7 @@ namespace WordSpell
 
         private static bool Rotate(LetterProp lp, int v)
         {
-            if (!(lp.I > 0 && lp.J > 0 && lp.I < WSGameState.gridsize - 1 && lp.J < WSGameState.gridsize - 1))
+            if (!(lp.I > 0 && lp.J > 0 && lp.I < WSGameState.Gridsize - 1 && lp.J < WSGameState.Gridsize - 1))
             {
                 WSGameState.boardScript.ShowMsg("Rotating doesn't work along the edges.");
                 return false;
@@ -552,7 +571,7 @@ namespace WordSpell
             return true;
         }
 
-        private static void GetBestHint(int min)
+        public static void GetBestHint(int min)
         {
             WordWarAI wwai = new WordWarAI(WSGameState.LetterPropGrid);
             List<WordWarAI.Word> wl = wwai.FindAllWords();
@@ -567,7 +586,14 @@ namespace WordSpell
                 }
             }
 
-            WSGameState.boardScript.ShowMsg("Best word is " + bw.GetWord);
+            if(bw.GetWord.Length > 3)
+            {
+                WSGameState.boardScript.ShowMsg("How about " + bw.GetWord);
+            }
+            else
+            {
+                WSGameState.boardScript.ShowMsg("Uh oh, do you have any spells that could help?" + bw.GetWord);
+            }
         }
 
         private static void ConvertLetterTile(LetterProp lp)
@@ -577,9 +603,9 @@ namespace WordSpell
 
             RandomLetterList.Clear();
 
-            for (int i = WSGameState.gridsize - 1; i >= 0; i--)
+            for (int i = WSGameState.Gridsize - 1; i >= 0; i--)
             {
-                for (int j = WSGameState.gridsize - 1; j >= 0; j--)
+                for (int j = WSGameState.Gridsize - 1; j >= 0; j--)
                 {
 
                     if (WSGameState.LetterPropGrid[i, j].ASCIIChar == changeletter)
@@ -651,8 +677,8 @@ namespace WordSpell
 
             while (n > 0 && x > 0)
             {
-                int i = r.Next(WSGameState.gridsize);
-                int j = r.Next(WSGameState.gridsize);
+                int i = WSGameState.Rnd.Next(WSGameState.Gridsize);
+                int j = WSGameState.Rnd.Next(WSGameState.Gridsize);
 
                 if (EngLetterScoring.IsConsonant((string)WSGameState.LetterPropGrid[i, j].ASCIIString))
                 {
@@ -681,7 +707,7 @@ namespace WordSpell
                     }
                     WSGameState.RemoveAndReplaceTile(lp.I, lp.J);
 
-                    if (lp.J + 1 < WSGameState.gridsize)
+                    if (lp.J + 1 < WSGameState.Gridsize)
                     {
                         WSGameState.RemoveAndReplaceTile(lp.I, lp.J + 1);
                     }
@@ -693,7 +719,7 @@ namespace WordSpell
                         WSGameState.RemoveAndReplaceTile(lp.I - 1, lp.J);
                     }
 
-                    if (lp.I + 1 < WSGameState.gridsize)
+                    if (lp.I + 1 < WSGameState.Gridsize)
                     {
                         WSGameState.RemoveAndReplaceTile(lp.I + 1, lp.J);
                     }

@@ -25,20 +25,39 @@ namespace WordSpell
         }
     }
 
-    class EngLetterScoring
+    static class EngLetterScoring
     {
         const string PartialLookupCache = "LookupCache.xml";
         const string DictionaryCache = "DictionaryCache.lst";
         const string intro0 = "Pangram, the letter volcano, is about to erupt!";
-        const string intro1 = "Legend tells of a magical prodigy who's mastery of words will save the day.  Select adjacent tiles in any direction, for instance following the yellow arrows to spell APPLE.  Longer words improve your fortune, which means better replacement letters.";
+        const string intro1 = "Legend tells of a magical prodigy who's mastery of words will save the day.  Select adjacent tiles in any direction, for instance following the yellow arrows to spell GUITAR.  Longer words improve your fortune, which means better replacement letters.";
         const string intro2 = "Advance levels to gain spells, requiring mana, which you can cast to rearrange letters.";
         const string intro3 = "Beware of lava, e.g. the RED letter tile, because if they reach the bottom, the game is over.";
 
-#if UNITY_EDITOR
-        static System.Random r = new System.Random(21);
-#else
-        static System.Random r = new System.Random();
-#endif
+        public static readonly string[] LevelMsgs = 
+        {
+            "Level 2 brings blue tiles which are worth double the letter value",
+            "Beware of lava tiles, if they reach the bottom, the game is over",
+            "Level 4 brings double word tiles which double the word score",
+            "Level 5 brings tripple letter tiles which triple the leter value.",
+            "Level 6 brings triple word tiles which triple the word score",
+        };
+
+        public static readonly string[] IncorrectWordPhrases =
+        {
+            "Nice word...if you are a Martian :)  Please try again.",
+            "Good try, but only earthbound languages will work.",
+            "I'm sure you think that's a word, but it's not in my dictionary",
+            "Creative, but that's not a word.",
+            "Not every combination of letters spell a word.",
+        };
+
+
+        static public string GetIncorrectWordPhrase()
+        {
+            int r = WSGameState.Rnd.Next(IncorrectWordPhrases.Length);
+            return IncorrectWordPhrases[r];
+        }
 
         static char[] Vowels = { 'A', 'E', 'I', 'O', 'U' };
         static char[] RequiredLettersForWord = { 'a', 'e', 'i', 'o', 'u', 'y' };
@@ -48,29 +67,48 @@ namespace WordSpell
 
         static public void LoadDictionary()
         {
-            TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
-            string[] words = DictFile.text.Split('\n');
+            WSGameState.boardScript.StartDbg("ld0");
+            TextAsset DictFile = Resources.Load("EngDictA") as TextAsset;
+            //TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
+            //            TextAsset DictFile = (TextAsset)Resources.Load("EngDictA", typeof(TextAsset));
 
-            DictionaryLookup = new List<string>();
-            foreach (String rs in words)
+            if (DictFile != null)
             {
-                string s = rs.TrimEnd();
+                WSGameState.boardScript.StartDbg("ld1");
+                string[] words = DictFile.text.Split('\n');
+                WSGameState.boardScript.StartDbg("ld2");
 
-                if (!s.Contains("'") && s.Length > 2 && s.IndexOfAny(RequiredLettersForWord) >= 0)
+                DictionaryLookup = new List<string>();
+                foreach (String rs in words)
                 {
-                    DictionaryLookup.Add(s);
+                    string s = rs.TrimEnd();
+
+                    if (!s.Contains("'") && s.Length > 2 && s.IndexOfAny(RequiredLettersForWord) >= 0)
+                    {
+                        DictionaryLookup.Add(s);
+                    }
                 }
+
+                CreatePartialLookup();
+            }
+            else
+            {
+                WSGameState.boardScript.StartDbg("ld!");
+
             }
 
-            CreatePartialLookup();
+            WSGameState.boardScript.StartDbg("ldx");
         }
- 
+
         static public void CreatePartialLookup()
         {
+            WSGameState.boardScript.StartDbg("cpl0");
+
             string filePath = Application.persistentDataPath + "/" + PartialLookupCache;
             // Is it cached already?
             if (File.Exists(filePath))
             {
+                WSGameState.boardScript.StartDbg("cpl1");
                 try
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
@@ -83,17 +121,22 @@ namespace WordSpell
                 catch(System.Xml.XmlException)
                 {
                     // Something went wrong, so let's rebuilld
+                    WSGameState.boardScript.StartDbg("cpl!");
                     BuildPartialLookup(filePath);
+                    WSGameState.boardScript.StartDbg("cpl2");
                 }
             }
             else
             {
+                WSGameState.boardScript.StartDbg("cpl3");
                 BuildPartialLookup(filePath);
+                WSGameState.boardScript.StartDbg("cpl4");
             }
         }
 
         static private void BuildPartialLookup(string filePath)
         {
+            WSGameState.boardScript.StartDbg("bpl0");
             // Build partial list for each unique letter combination.
             foreach (string s in DictionaryLookup)
             {
@@ -106,12 +149,28 @@ namespace WordSpell
                     }
                 }
             }
+            WSGameState.boardScript.StartDbg("bpl1");
 
             XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
+
+            WSGameState.boardScript.StartDbg("bpl2");
 
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 xs.Serialize(fs, PartialLookup);
+            }
+            WSGameState.boardScript.StartDbg("bplx");
+        }
+
+        static public string GetLevelMsg(int n)
+        {
+            if ((n-2) < LevelMsgs.Length)
+            {
+                return LevelMsgs[n-2];
+            }
+            else
+            {
+                return "";
             }
         }
 
@@ -221,13 +280,13 @@ namespace WordSpell
 
             if (fl == WSGameState.FortuneLevel.Bad)
             {
-                b = (byte)r.Next('A', 'Z'+1);
+                b = (byte)WSGameState.Rnd.Next('A', 'Z'+1);
             }
             else if (fl == WSGameState.FortuneLevel.Good)
             {
                 int maxvalue = 10;
 
-                int p = r.Next(5);
+                int p = WSGameState.Rnd.Next(5);
                 if (p <= 2)
                 {
                     maxvalue = 3;
@@ -243,21 +302,21 @@ namespace WordSpell
 
                 do
                 {
-                    b = (byte)r.Next('A', 'Z'+1);
+                    b = (byte)WSGameState.Rnd.Next('A', 'Z'+1);
                 } while (values[(char)b] >= maxvalue);
             }
             else
             {
                 bool goodletter = false;
 
-                if (r.Next(10) < 8)
+                if (WSGameState.Rnd.Next(10) < 8)
                 {
                     goodletter = true;
                 }
 
                 do
                 {
-                    b = (byte)r.Next('A', 'Z'+1);
+                    b = (byte)WSGameState.Rnd.Next('A', 'Z'+1);
                 } while (values[(char)b] >= 3 && goodletter);
             }
 
@@ -479,7 +538,7 @@ namespace WordSpell
 
         internal static byte RandomVowel()
         {
-            int vowelnum = r.Next(5);
+            int vowelnum = WSGameState.Rnd.Next(5);
             return (byte)Vowels[vowelnum];
         }
     }

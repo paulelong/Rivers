@@ -17,6 +17,13 @@ namespace WordSpell
         public int Simplescore { get; set; }
     }
 
+    public class BestGameScore
+    {
+        public int score { get; set; }
+        public int totalWords { get; set; }
+        public int level { get; set; }
+    }
+
     public class GameStats
     {
         public int score = 0;
@@ -25,6 +32,7 @@ namespace WordSpell
         public List<WordScoreItem> history = new List<WordScoreItem>();
         public List<WordScoreItem> fortune = new List<WordScoreItem>();
         public List<SpellInfo> awarded = new List<SpellInfo>();
+        public int boardsize = 0;
     }
 
     public class OverallStats
@@ -32,78 +40,185 @@ namespace WordSpell
         public List<WordScoreItem> BestWordScores = new List<WordScoreItem>();
         public List<WordScoreItem> BestWordScoresSimple = new List<WordScoreItem>();
         public List<WordScoreItem> LongestWords = new List<WordScoreItem>();
-        public List<int> BestGameScores = new List<int>();
+        public List<BestGameScore> BestGameScores = new List<BestGameScore>();
     }
 
-    public class GamePersistence
+    public class GameData
+    {
+        public List<SimpleLetter> grid = new List<SimpleLetter>();
+        public GameStats gs = new GameStats();
+    }
+
+    public class SimpleLetter
+    {
+        public void Addletter(int _i, int _j, byte _letter, LetterProp.TileTypes _tt)
+        {
+            i = _i;
+            j = _j;
+            letter = _letter;
+            tt = _tt;
+        }
+
+        public int i;
+        public int j;
+        public byte letter;
+        public LetterProp.TileTypes tt;
+    }
+
+    static public class GamePersistence
     {
         private const string SaveGamePath = "WordSpellSave.xml";
         private const string OverallStatsPath = "WordSpellStats.xml";
 
-        // [XmlRootAttribute("Letter")]
-        public class SimpleLetter
-        {
-            public void Addletter(int _i, int _j, byte _letter, LetterProp.TileTypes _tt)
-            {
-                i = _i;
-                j = _j;
-                letter = _letter;
-                tt = _tt;
-            }
+        static private GameData gd = new GameData();
+        static private OverallStats os = new OverallStats();
+        static private bool loaded = false;
 
-            public int i;
-            public int j;
-            public byte letter;
-            public LetterProp.TileTypes tt;
+        static public GameStats gs
+        {
+            get
+            {
+                return gd.gs;
+            }
         }
 
-        //[XmlRootAttribute("StringList")]
-        public class GameData
+        static public OverallStats Os
         {
-            public List<SimpleLetter> grid = new List<SimpleLetter>();
-            public GameStats gs = new GameStats();
-
-
-            public void FillGameData(LetterProp[,] LetterPropGrid, GameStats _gs)
+            get
             {
-                if (LetterPropGrid != null)
-                {
-                    gs = _gs;
+                return os;
+            }
+        }
 
-                    for (int i = 0; i < WSGameState.gridsize; i++)
+        static public void LoadSavedGameData()
+        {
+            LoadOverallStats();
+            LoadGame();
+        }
+
+        static public string StatsText
+        {
+            get
+            {
+                string filePath = Application.persistentDataPath + "/" + OverallStatsPath;
+
+                if (File.Exists(filePath))
+                {
+                    try
                     {
-                        for (int j = 0; j < WSGameState.gridsize; j++)
+
+                        XmlSerializer xs = new XmlSerializer(typeof(GameData));
+                        using (FileStream fs = new FileStream(filePath, FileMode.Open))
                         {
-                            SimpleLetter sl = new SimpleLetter();
-                            sl.Addletter(i, j, LetterPropGrid[i, j].letter, LetterPropGrid[i, j].TileType);
-                            grid.Add(sl);
+                            using (StreamReader reader = new StreamReader(fs))
+                            {
+                                return reader.ReadToEnd();
+                            }
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        WSGameState.boardScript.PlayDbg("gameFile!");
+                        string s = e.Message;
+                        return s;
                     }
                 }
                 else
                 {
-                    Debug.Log("Grid not intialized yet");
+                    return "Couldn't open " + filePath;
                 }
             }
+        }
 
-            internal GameStats ReplaceGameData(LetterProp[,] LetterPropGrid)
+        static public string GameText
+        {
+            get
             {
+                string filePath = Application.persistentDataPath + "/" + SaveGamePath;
 
-                foreach (SimpleLetter sl in grid)
+                if(File.Exists(filePath))
                 {
-                    LetterPropGrid[sl.i, sl.j].letter = sl.letter;
-                    LetterPropGrid[sl.i, sl.j].TileType = sl.tt;
-                    LetterPropGrid[sl.i, sl.j].UpdateLetterDisplay();
-                }
+                    try
+                    {
 
-                return (gs);
+                        XmlSerializer xs = new XmlSerializer(typeof(GameData));
+                        using (FileStream fs = new FileStream(filePath, FileMode.Open))
+                        {
+                            using (StreamReader reader = new StreamReader(fs))
+                            {
+                                return reader.ReadToEnd();
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        WSGameState.boardScript.PlayDbg("gameFile!");
+                        string s = e.Message;
+                        return s;
+                    }
+                }
+                else
+                {
+                    return "Couldn't open " + filePath;
+                }
             }
+        }
+
+        // [XmlRootAttribute("Letter")]
+        static public void SaveGameData(LetterProp[,] LetterPropGrid, GameStats _gs)
+        {
+            if (LetterPropGrid != null)
+            {
+                gd.gs = _gs;
+                gd.grid.Clear();
+
+                for (int i = 0; i < WSGameState.Gridsize; i++)
+                {
+                    for (int j = 0; j < WSGameState.Gridsize; j++)
+                    {
+                        SimpleLetter sl = new SimpleLetter();
+                        sl.Addletter(i, j, LetterPropGrid[i, j].letter, LetterPropGrid[i, j].TileType);
+                        gd.grid.Add(sl);
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("Grid not intialized yet");
+            }
+        }
+
+        static internal void RestoreGameData(LetterProp[,] LetterPropGrid)
+        {
+
+            foreach (SimpleLetter sl in gd.grid)
+            {
+                LetterPropGrid[sl.i, sl.j].letter = sl.letter;
+                LetterPropGrid[sl.i, sl.j].TileType = sl.tt;
+                LetterPropGrid[sl.i, sl.j].UpdateLetterDisplay();
+            }
+        }
+
+        static  int CalculateGridSize()
+        {
+            int largest = 0;
+
+            foreach (SimpleLetter sl in gd.grid)
+            {
+                if(sl.i > largest)
+                {
+                    largest = sl.i;
+                }
+            }
+
+            return largest + 1;
         }
 
         internal static void SaveGame(LetterProp[,] LetterPropGrid, GameStats gs)
         {
-            GameData gd = new GameData();
-            gd.FillGameData(LetterPropGrid, gs);
+            //File.Delete(Application.persistentDataPath + "/" + SaveGamePath);
+
+            SaveGameData(LetterPropGrid, gs);
 
             string filePath = Application.persistentDataPath + "/" + SaveGamePath;
 
@@ -122,34 +237,7 @@ namespace WordSpell
             }
         }
 
-        internal static GameStats LoadGame(LetterProp[,] LetterPropGrid)
-        {
-            GameData gd = null;
-            string filePath = Application.persistentDataPath + "/" + SaveGamePath;
-
-            if(File.Exists(filePath))
-            {
-                try
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof(GameData));
-                    using (FileStream fs = new FileStream(filePath, FileMode.Open))
-                    {
-                        gd = (GameData)xs.Deserialize(fs);
-                    }
-  
-                    return (gd.ReplaceGameData(LetterPropGrid));
-                }
-                catch (Exception e)
-                {
-                    string s = e.Message;
-                }
-            }
-
-
-            return null;
-        }
-
-        internal static bool SavedGameExists()
+        internal static void LoadGame()
         {
             string filePath = Application.persistentDataPath + "/" + SaveGamePath;
 
@@ -160,22 +248,34 @@ namespace WordSpell
                     XmlSerializer xs = new XmlSerializer(typeof(GameData));
                     using (FileStream fs = new FileStream(filePath, FileMode.Open))
                     {
-                        xs.Deserialize(fs);
+                        gd = (GameData)xs.Deserialize(fs);
+                        gd.gs.boardsize = CalculateGridSize();
+                        loaded = true;
                     }
-                    return true;
                 }
-                catch
+                catch (Exception e)
                 {
-                    // We'll assume that the game save file is not there.
-                    return false;
+                    WSGameState.boardScript.PlayDbg(e.ToString());
                 }
             }
-
-            return false;
         }
 
-        internal static void SaveOverallStats(OverallStats os)
+        internal static bool SavedGameExists()
         {
+            if(loaded && gd.gs.boardsize > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        internal static void SaveOverallStats(OverallStats _os)
+        {
+            os = _os;
+
             string filePath = Application.persistentDataPath + "/" + OverallStatsPath;
 
             try
@@ -192,7 +292,7 @@ namespace WordSpell
             }
         }
 
-        internal static OverallStats LoadOverallStats()
+        internal static void LoadOverallStats()
         {
             string filePath = Application.persistentDataPath + "/" + OverallStatsPath;
 
@@ -203,17 +303,14 @@ namespace WordSpell
                     XmlSerializer xs = new XmlSerializer(typeof(OverallStats));
                     using (FileStream fs = new FileStream(filePath, FileMode.Open))
                     {
-                        OverallStats os = (OverallStats)xs.Deserialize(fs);
-                        return (os);
+                        os = (OverallStats)xs.Deserialize(fs);
                     }
                 }
-                catch (Exception e)
+                catch (InvalidOperationException)
                 {
-                    throw e;
+                    WSGameState.boardScript.StartDbg("los!");
                 }
             }
-
-            return null;
         }
 
         internal static void ResetGameData()
@@ -233,16 +330,11 @@ namespace WordSpell
             }
         }
 
-        internal static string TestPersistence()
+        internal static void ResetSavedData()
         {
-            string filePath = Application.persistentDataPath + "/testme.txt";
-            string worked = "not yet";
-            using (FileStream fs = new FileStream(filePath, FileMode.Create))
-            {
-                worked = "It's opened";
-            }
+            File.Delete(Application.persistentDataPath + "/" + SaveGamePath);
 
-            return filePath + "\n" + worked;
+            File.Delete(Application.persistentDataPath + "/" + OverallStatsPath);
         }
     }
 }

@@ -15,7 +15,6 @@ namespace WordSpell
         private char[] curword = new char[32];
         private int curwordoff = 0;
 
-
         int i_length;
         int j_length;
         
@@ -160,7 +159,7 @@ namespace WordSpell
                         {
                             ret = true;
                         }
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             if(!ret && FindAnyWord(i - 1, j + 1))
                             {
@@ -175,14 +174,14 @@ namespace WordSpell
                             ret = true;
                         }
                     }
-                    if (j < WSGameState.gridsize - 1)
+                    if (j < WSGameState.Gridsize - 1)
                     {
                         if(!ret && FindAnyWord(i, j + 1))
                         {
                             ret = true;
                         }
                     }
-                    if (i < WSGameState.gridsize - 1)
+                    if (i < WSGameState.Gridsize - 1)
                     {
                         if (j > 0)
                         {
@@ -195,7 +194,7 @@ namespace WordSpell
                         {
                             ret = true;
                         }
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             if(!ret && FindAnyWord(i + 1, j + 1))
                             {
@@ -253,7 +252,7 @@ namespace WordSpell
                         {
                             ret = true;
                         }
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             if (!ret && FindAnyWord(i - 1, j + 1))
                             {
@@ -268,14 +267,14 @@ namespace WordSpell
                             ret = true;
                         }
                     }
-                    if (j < WSGameState.gridsize - 1)
+                    if (j < WSGameState.Gridsize - 1)
                     {
                         if (!ret && FindAnyWord(i, j + 1))
                         {
                             ret = true;
                         }
                     }
-                    if (i < WSGameState.gridsize - 1)
+                    if (i < WSGameState.Gridsize - 1)
                     {
                         if (j > 0)
                         {
@@ -288,7 +287,7 @@ namespace WordSpell
                         {
                             ret = true;
                         }
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             if (!ret && FindAnyWord(i + 1, j + 1))
                             {
@@ -392,7 +391,7 @@ namespace WordSpell
                             FindAllWords(curword, i - 1, j - 1);
                         }
                         FindAllWords(curword, i - 1, j);
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             FindAllWords(curword, i - 1, j + 1);
                         }
@@ -401,18 +400,18 @@ namespace WordSpell
                     {
                         FindAllWords(curword, i, j - 1);
                     }
-                    if (j < WSGameState.gridsize - 1)
+                    if (j < WSGameState.Gridsize - 1)
                     {
                         FindAllWords(curword, i, j + 1);
                     }
-                    if (i < WSGameState.gridsize - 1)
+                    if (i < WSGameState.Gridsize - 1)
                     {
                         if (j > 0)
                         {
                             FindAllWords(curword, i + 1, j - 1);
                         }
                         FindAllWords(curword, i + 1, j);
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             FindAllWords(curword, i + 1, j + 1);
                         }
@@ -459,7 +458,7 @@ namespace WordSpell
                             FindAllWords(i - 1, j - 1);
                         }
                         FindAllWords(i - 1, j);
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             FindAllWords(i - 1, j + 1);
                         }
@@ -468,18 +467,18 @@ namespace WordSpell
                     {
                         FindAllWords(i, j - 1);
                     }
-                    if (j < WSGameState.gridsize - 1)
+                    if (j < WSGameState.Gridsize - 1)
                     {
                         FindAllWords(i, j + 1);
                     }
-                    if (i < WSGameState.gridsize - 1)
+                    if (i < WSGameState.Gridsize - 1)
                     {
                         if (j > 0)
                         {
                             FindAllWords(i + 1, j - 1);
                         }
                         FindAllWords(i + 1, j);
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             FindAllWords(i + 1, j + 1);
                         }
@@ -526,7 +525,7 @@ namespace WordSpell
                             FindAllWords(i - 1, j - 1, lp);
                         }
                         FindAllWords(i - 1, j, lp);
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             FindAllWords(i - 1, j + 1, lp);
                         }
@@ -535,18 +534,18 @@ namespace WordSpell
                     {
                         FindAllWords(i, j - 1, lp);
                     }
-                    if (j < WSGameState.gridsize - 1)
+                    if (j < WSGameState.Gridsize - 1)
                     {
                         FindAllWords(i, j + 1, lp);
                     }
-                    if (i < WSGameState.gridsize - 1)
+                    if (i < WSGameState.Gridsize - 1)
                     {
                         if (j > 0)
                         {
                             FindAllWords(i + 1, j - 1, lp);
                         }
                         FindAllWords(i + 1, j, lp);
-                        if (j < WSGameState.gridsize - 1)
+                        if (j < WSGameState.Gridsize - 1)
                         {
                             FindAllWords(i + 1, j + 1, lp);
                         }
