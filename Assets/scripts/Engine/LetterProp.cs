@@ -783,9 +783,14 @@ namespace WordSpell
             if (tt == TileTypes.WordDouble)
             {
                 return 2;
-            } else if(tt == TileTypes.WordTriple)
+            }
+            else if (tt == TileTypes.WordTriple)
             {
                 return 3;
+            }
+            else if (tt == TileTypes.Speaker)
+            {
+                return 2;
             }
 
             return 0;
