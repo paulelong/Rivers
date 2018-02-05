@@ -25,10 +25,26 @@ namespace WordSpell
         }
     }
 
+    [XmlRootAttribute("ValidDictionaryWords")]
+    public class SerializableDictList
+    {
+        public List<string> list = new List<string>();
+
+        public void Add(string s)
+        {
+            list.Add(s);
+        }
+
+        public int BinarySearch(string s)
+        {
+            return list.BinarySearch(s);
+        }
+    }
+
     static class EngLetterScoring
     {
         const string PartialLookupCache = "LookupCache.xml";
-        const string DictionaryCache = "DictionaryCache.lst";
+        const string DictionaryCache = "DictionaryCache.xml";
         const string intro0 = "Pangram, the letter volcano, is about to erupt!";
         const string intro1 = "Legend tells of a magical prodigy who's mastery of words will save the day.  Select adjacent tiles in any direction, for instance following the yellow arrows to spell GUITAR.  Longer words improve your fortune, which means better replacement letters.";
         const string intro2 = "Advance levels to gain spells, requiring mana, which you can cast to rearrange letters.";
@@ -62,23 +78,57 @@ namespace WordSpell
         static char[] Vowels = { 'A', 'E', 'I', 'O', 'U' };
         static char[] RequiredLettersForWord = { 'a', 'e', 'i', 'o', 'u', 'y' };
 
-        static private List<string> DictionaryLookup = new List<string>();
+        static private SerializableDictList DictionaryLookup = new SerializableDictList();
         static private SerializableStringList PartialLookup = new SerializableStringList();
 
         static public void LoadDictionary()
         {
-            WSGameState.boardScript.StartDbg("ld0");
-            TextAsset DictFile = Resources.Load("EngDictA") as TextAsset;
-            //TextAsset DictFile = (TextAsset)Resources.Load("EngDictA");
-            //            TextAsset DictFile = (TextAsset)Resources.Load("EngDictA", typeof(TextAsset));
+            Logging.StartDbg("ld0", timestamp:true);
 
+            string filePath = Application.persistentDataPath + "/" + DictionaryCache;
+            // Is it cached already?
+            if (File.Exists(filePath))
+            {
+                Logging.StartDbg("ld1", timestamp: true);
+                try
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(SerializableDictList));
+
+                    using (FileStream fs = new FileStream(filePath, FileMode.Open))
+                    {
+                        DictionaryLookup = (SerializableDictList)xs.Deserialize(fs);
+                    }
+                }
+                catch (System.Xml.XmlException)
+                {
+                    // Something went wrong, so let's rebuilld
+                    Logging.StartDbg("ld0!", timestamp:true);
+                    RebuildDictionaryFromTextFile(filePath);
+                    Logging.StartDbg("ld1!", timestamp: true);
+                }
+            }
+            else
+            {
+                Logging.StartDbg("ld2", timestamp: true);
+                RebuildDictionaryFromTextFile(filePath);
+                Logging.StartDbg("ld3", timestamp: true);
+            }
+
+            Logging.StartDbg("ld4", timestamp: true);
+            CreatePartialLookup();
+            Logging.StartDbg("ldx", timestamp: true);
+        }
+
+        static public void RebuildDictionaryFromTextFile(string filePath)
+        {
+            Logging.StartDbg("rdftf0", timestamp: true);
+            TextAsset DictFile = Resources.Load("EngDictA") as TextAsset;
             if (DictFile != null)
             {
-                WSGameState.boardScript.StartDbg("ld1");
+                Logging.StartDbg("rdftf1", timestamp: true);
                 string[] words = DictFile.text.Split('\n');
-                WSGameState.boardScript.StartDbg("ld2");
+                Logging.StartDbg("rdftf2", timestamp: true);
 
-                DictionaryLookup = new List<string>();
                 foreach (String rs in words)
                 {
                     string s = rs.TrimEnd();
@@ -88,27 +138,31 @@ namespace WordSpell
                         DictionaryLookup.Add(s);
                     }
                 }
+                Logging.StartDbg("rdftf3", timestamp: true);
 
-                CreatePartialLookup();
+                XmlSerializer xs = new XmlSerializer(typeof(SerializableDictList));
+
+                Logging.StartDbg("rdftf4", timestamp: true);
+
+                using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                {
+                    xs.Serialize(fs, DictionaryLookup);
+                }
+                Logging.StartDbg("rdftf5", timestamp: true);
             }
-            else
-            {
-                WSGameState.boardScript.StartDbg("ld!");
 
-            }
-
-            WSGameState.boardScript.StartDbg("ldx");
+            Logging.StartDbg("rdftfx", timestamp: true);
         }
 
         static public void CreatePartialLookup()
         {
-            WSGameState.boardScript.StartDbg("cpl0");
+            Logging.StartDbg("cpl0", timestamp: true);
 
             string filePath = Application.persistentDataPath + "/" + PartialLookupCache;
             // Is it cached already?
             if (File.Exists(filePath))
             {
-                WSGameState.boardScript.StartDbg("cpl1");
+                Logging.StartDbg("cpl1", timestamp: true);
                 try
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
@@ -121,24 +175,24 @@ namespace WordSpell
                 catch(System.Xml.XmlException)
                 {
                     // Something went wrong, so let's rebuilld
-                    WSGameState.boardScript.StartDbg("cpl!");
+                    Logging.StartDbg("cpl!");
                     BuildPartialLookup(filePath);
-                    WSGameState.boardScript.StartDbg("cpl2");
+                    Logging.StartDbg("cpl2");
                 }
             }
             else
             {
-                WSGameState.boardScript.StartDbg("cpl3");
+                Logging.StartDbg("cpl3", timestamp: true);
                 BuildPartialLookup(filePath);
-                WSGameState.boardScript.StartDbg("cpl4");
+                Logging.StartDbg("cpl4", timestamp: true);
             }
         }
 
         static private void BuildPartialLookup(string filePath)
         {
-            WSGameState.boardScript.StartDbg("bpl0");
+            Logging.StartDbg("bpl0");
             // Build partial list for each unique letter combination.
-            foreach (string s in DictionaryLookup)
+            foreach (string s in DictionaryLookup.list)
             {
                 for (int i = 1; i <= s.Length; i++)
                 {
@@ -149,17 +203,17 @@ namespace WordSpell
                     }
                 }
             }
-            WSGameState.boardScript.StartDbg("bpl1");
+            Logging.StartDbg("bpl1");
 
             XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
 
-            WSGameState.boardScript.StartDbg("bpl2");
+            Logging.StartDbg("bpl2");
 
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 xs.Serialize(fs, PartialLookup);
             }
-            WSGameState.boardScript.StartDbg("bplx");
+            Logging.StartDbg("bplx");
         }
 
         static public string GetLevelMsg(int n)
