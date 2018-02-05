@@ -53,18 +53,18 @@ namespace WordSpell
         public void CreateList(List<string> l, bool addSpace = false)
         {
             Clear();
-            WSGameState.boardScript.StartDbg("cl0");
+            Logging.StartDbg("cl0");
             int debugcnt = 0;
 
-            foreach(string s in l)
+            foreach (string s in l)
             {
-                if (debugcnt < 2) { WSGameState.boardScript.StartDbg("cl1"); }
+                if (debugcnt < 2) { Logging.StartDbg("cl1"); }
 
                 Transform item = Add();
-                if(debugcnt < 2){ WSGameState.boardScript.StartDbg("cl2(" + s.Length + ")");  }
+                if (debugcnt < 2) { Logging.StartDbg("cl2(" + s.Length + ")"); }
 
                 UnityEngine.UI.Text t = item.GetComponent<UnityEngine.UI.Text>();
-                if (debugcnt < 2) { WSGameState.boardScript.StartDbg("cl3"); }
+                if (debugcnt < 2) { Logging.StartDbg("cl3"); }
 
                 if (addSpace)
                 {
@@ -76,7 +76,7 @@ namespace WordSpell
                 }
                 debugcnt++;
             }
-            WSGameState.boardScript.StartDbg("clx");
+            Logging.StartDbg("clx");
         }
 
         public void Clear()
@@ -92,7 +92,7 @@ namespace WordSpell
             }
             else
             {
-                WSGameState.boardScript.PlayDbg("lb.c!");
+                    Logging.PlayDbg("lb.c!");
             }
         }
     }

@@ -118,7 +118,7 @@ namespace WordSpell
                     }
                     catch (Exception e)
                     {
-                        WSGameState.boardScript.PlayDbg("gameFile!");
+                        Logging.PlayDbg("gameFile!");
                         string s = e.Message;
                         return s;
                     }
@@ -127,6 +127,21 @@ namespace WordSpell
                 {
                     return "Couldn't open " + filePath;
                 }
+            }
+        }
+
+        static public string GameWords
+        {
+            get
+            {
+                string ret = "";
+
+                foreach(WordScoreItem wsi in gd.gs.history)
+                {
+                    ret += wsi.Word + ",";
+                }
+
+                return ret;
             }
         }
 
@@ -152,7 +167,7 @@ namespace WordSpell
                     }
                     catch (Exception e)
                     {
-                        WSGameState.boardScript.PlayDbg("gameFile!");
+                        Logging.PlayDbg("gameFile!");
                         string s = e.Message;
                         return s;
                     }
@@ -255,7 +270,7 @@ namespace WordSpell
                 }
                 catch (Exception e)
                 {
-                    WSGameState.boardScript.PlayDbg(e.ToString());
+                    Logging.PlayDbg(e.ToString());
                 }
             }
         }
@@ -308,7 +323,7 @@ namespace WordSpell
                 }
                 catch (InvalidOperationException)
                 {
-                    WSGameState.boardScript.StartDbg("los!");
+                    Logging.StartDbg("los!");
                 }
             }
         }

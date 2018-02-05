@@ -112,7 +112,7 @@ namespace WordSpell
                 }
                 else
                 {
-                    boardScript.StartDbg("lwp!");
+                    Logging.StartDbg("lwp!");
                 }
 
                 return longestWordStrings;
@@ -136,7 +136,7 @@ namespace WordSpell
                 }
                 else
                 {
-                    boardScript.StartDbg("bgsp!");
+                    Logging.StartDbg("bgsp!");
                 }
 
                 return bestGameScores; 
@@ -158,7 +158,7 @@ namespace WordSpell
                 }
                 else
                 {
-                    boardScript.StartDbg("bwsp!");
+                    Logging.StartDbg("bwsp!");
                 }
 
                 return bestWordStrings;
@@ -180,7 +180,7 @@ namespace WordSpell
                 }
                 else
                 {
-                    boardScript.StartDbg("bwss!");
+                    Logging.StartDbg("bwss!");
                 }
 
                 return bestWordScoresSimple;
@@ -350,7 +350,7 @@ namespace WordSpell
         public static void InitNewGame()
         {
 
-            boardScript.StartDbg("Ing0");
+            Logging.StartDbg("Ing0");
             // Reset all variables
             Replay();
 
@@ -360,12 +360,12 @@ namespace WordSpell
             if (glbseed == 0)
             {
                 int seed = (int)DateTime.Now.Ticks;
-                boardScript.StartDbg("sd=" + seed.ToString());
+                Logging.StartDbg("sd=" + seed.ToString());
                 r = new System.Random(seed);
             }
             else
             {
-                boardScript.StartDbg("sd=" + glbseed.ToString());
+                Logging.StartDbg("sd=" + glbseed.ToString());
                 r = new System.Random(glbseed);
             }
 #else
@@ -377,7 +377,7 @@ namespace WordSpell
             IsGameOver = false;
 
             UpdateStats();
-            boardScript.StartDbg("Ingx");
+            Logging.StartDbg("Ingx");
             //NewMusicTile();
         }
 
@@ -427,7 +427,7 @@ namespace WordSpell
         {
             int ti = WSGameState.Rnd.Next(Gridsize - 1);
             LetterPropGrid[ti, Gridsize - 1].PlayBackgroundMusic();
-            boardScript.PlayDbg("mt(" + LetterPropGrid[ti, Gridsize - 1].ASCIIString + "," + ti + ")");
+            Logging.PlayDbg("mt(" + LetterPropGrid[ti, Gridsize - 1].ASCIIString + "," + ti + ")");
         }
 
         internal static void Replay()
@@ -444,7 +444,7 @@ namespace WordSpell
             //HighScoreWord = "";
             totalwords = 0;
 
-            boardScript.StartDbg("r1");
+            Logging.StartDbg("r1");
             UpdateStats();
         }
 
@@ -508,9 +508,9 @@ namespace WordSpell
 
         internal static void SubmitWord()
         {
-            boardScript.PlayDbg("Subx");
+            Logging.PlayDbg("Subx");
             string s = GetCurrentWord().ToLower();
-            boardScript.PlayDbg("Sub00");
+            Logging.PlayDbg("Sub00");
 
             if (EngLetterScoring.IsWord(s))
             {
@@ -521,11 +521,11 @@ namespace WordSpell
                 }
                 else
                 {
-                    boardScript.PlayDbg("Sub0");
+                    Logging.PlayDbg("Sub0");
                     ScoreStats ss = RecordWordScore();
 
 #if UNITY_EDITOR
-                    boardScript.PlayDbg("Sub0.1");
+                    Logging.PlayDbg("Sub0.1");
                     Save();
 #endif
                     bool GainedNextLevel = false;
@@ -534,10 +534,10 @@ namespace WordSpell
                         levelup = true;
                     }
 
-                    boardScript.PlayDbg("Sub1");
+                    Logging.PlayDbg("Sub1");
                     RemoveWordAndReplaceTiles();
                     IsGameOver = ProcessLetters();
-                    boardScript.PlayDbg("Sub2");
+                    Logging.PlayDbg("Sub2");
 
                     Deselect(null);
 
@@ -626,7 +626,7 @@ namespace WordSpell
                 Deselect(null);
             }
 
-            boardScript.PlayDbg("SubX", last: true);
+            Logging.PlayDbg("SubX", last: true);
         }
 
         internal static Material GetMagicMat()
@@ -913,16 +913,16 @@ namespace WordSpell
                 gs.fortune.RemoveAt(0);
             }
 
-            boardScript.PlayDbg("rws4");
+            Logging.PlayDbg("rws4");
             gs.history.Add(wsi);
-            boardScript.PlayDbg("rws4.1");
+            Logging.PlayDbg("rws4.1");
 
             CheckTopBestWordScores(wsi);
-            boardScript.PlayDbg("rws4.2");
+            Logging.PlayDbg("rws4.2");
             CheckTopBestWordScoresSimple(wsi);
-            boardScript.PlayDbg("rws4.3");
+            Logging.PlayDbg("rws4.3");
             CheckTopLongestWordScores(wsi);
-            boardScript.PlayDbg("rws5");
+            Logging.PlayDbg("rws5");
 
             totalwords++;
 
@@ -942,7 +942,7 @@ namespace WordSpell
                 gs.mana += (FortuneLevelCount - 4);
             }
             ss.MannaScore = ScoreManna();
-            boardScript.PlayDbg("rws6");
+            Logging.PlayDbg("rws6");
 
             // If it's a big or price word, give them a spell based on the word.
             string curword = GetCurrentWord();
@@ -982,7 +982,7 @@ namespace WordSpell
                 AwardedSpells.Add(si);
                 ss.si = si;
             }
-            boardScript.PlayDbg("rwsX");
+            Logging.PlayDbg("rwsX");
 
             return ss;
         }
@@ -1011,19 +1011,19 @@ namespace WordSpell
 
         private static void CheckTopLongestWordScores(WordScoreItem wsi)
         {
-            boardScript.PlayDbg("ctl0");
+            Logging.PlayDbg("ctl0");
             if (os.LongestWords.FindIndex(f => (f.Word == wsi.Word)) >= 0)
             {
                 return;
             }
-            boardScript.PlayDbg("ctl1("+wsi.Word.Length.ToString()+" "+os.LongestWords.Count.ToString()+")", '\n');
+            Logging.PlayDbg("ctl1("+wsi.Word.Length.ToString()+" "+os.LongestWords.Count.ToString()+")", '\n');
             foreach(WordScoreItem w in os.LongestWords)
             {
-                boardScript.PlayDbg("clt1.1(" + w.Word + "_" + w.Score + ")", '\n');
+                Logging.PlayDbg("clt1.1(" + w.Word + "_" + w.Score + ")", '\n');
             }
 
             int indx = os.LongestWords.FindIndex(f => (f.Word.Length < wsi.Word.Length));
-            boardScript.PlayDbg("ctl2");
+            Logging.PlayDbg("ctl2");
             if (indx >= 0)
             {
                 os.LongestWords.Insert(indx, wsi);
@@ -1033,14 +1033,14 @@ namespace WordSpell
                 os.LongestWords.Add(wsi);
             }
 
-            boardScript.PlayDbg("ctl3");
+            Logging.PlayDbg("ctl3");
 
             if (os.LongestWords.Count > TOP_SCORES_MAX)
             {
                 os.LongestWords.RemoveAt(TOP_SCORES_MAX);
             }
 
-            boardScript.PlayDbg("ctl4");
+            Logging.PlayDbg("ctl4");
 
         }
 

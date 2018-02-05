@@ -540,7 +540,7 @@ namespace WordSpell
 
             if(tt == TileTypes.Speaker)
             {
-                boardScript.PlayDbg("spk!");
+                Logging.PlayDbg("spk!");
             }
         }
 

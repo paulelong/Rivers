@@ -24,15 +24,11 @@ public class Board : MonoBehaviour
     private float newFortuneScale;
     private float fortuneScale = 0f;
 
-    string DebugString = " ";
-    string DebugString2 = " ";
-
     string Ex1Str = "";
     string Ex2Str = "";
 
     private bool SpellCasted = false;
     private float LastActionTime;
-    private string lastPlayDbg = "";
 
     int trigger_nf2 = Animator.StringToHash("nf2");
     int trigger_nf3 = Animator.StringToHash("nf3");
@@ -122,16 +118,16 @@ public class Board : MonoBehaviour
         //}
         try
         {
-            StartDbg("S0");
+            Logging.StartDbg("S0", timestamp: true);
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             //        SetUserInfo(GamePersistence.TestPersistence());
 
             WSGameState.InitGameGlobal();
-            StartDbg("S1");
+            Logging.StartDbg("S1", timestamp: true);
 
             SetStoryInfo(EngLetterScoring.Intro0, EngLetterScoring.Intro1, EngLetterScoring.Intro2, EngLetterScoring.Intro3);
 
-            StartDbg("S2");
+            Logging.StartDbg("S2", timestamp: true);
 
             SetVersion(Application.version);
 
@@ -158,12 +154,12 @@ public class Board : MonoBehaviour
             HideSpellStuff();
 
             StartCanvas.SetActive(true);
-            StartDbg("S3.2");
+            Logging.StartDbg("S3.2", timestamp: true);
 
             GamePersistence.LoadSavedGameData();
 
             LoadStats();
-            StartDbg("S4");
+            Logging.StartDbg("S4", timestamp: true);
 
             if (GamePersistence.SavedGameExists())
             {
@@ -174,19 +170,19 @@ public class Board : MonoBehaviour
 
                 WSGameState.Load();
             }
-            StartDbg("S5");
+            Logging.StartDbg("S5", timestamp: true);
 
             DebugTest();
         }
         catch (Exception ex)
         {
-            StartDbg("!1");
-            ShowMsg(DebugString + "\nEXCEPTION 1\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            Logging.StartDbg("!1");
+            ShowMsg(Logging.NewestLog + "\nEXCEPTION 1\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
             Ex1Str += "EXCEPTION 1:\n" + ex.ToString();
         }
 
         ResetTimer();
-        StartDbg("Sx");
+        Logging.StartDbg("Sx", timestamp: true);
     }
 
     void LocateCamera()
@@ -305,56 +301,56 @@ public class Board : MonoBehaviour
 
     void LoadStats()
     {
-        StartDbg("LS0");
+        Logging.StartDbg("LS0");
         WSGameState.LoadStats();
-        StartDbg("LS1");
+        Logging.StartDbg("LS1");
         RefreshStats();
-        StartDbg("LSx");
+        Logging.StartDbg("LSx");
     }
 
     void RefreshStats()
     {
-        StartDbg("RS0");
+        Logging.StartDbg("RS0");
         if(WSGameState.BestGameScores != null)
         {
             HighScoresListBox.CreateList(WSGameState.BestGameScores);
         }
         else
         {
-            StartDbg("RS0!");
+            Logging.StartDbg("RS0!");
         }
 
-        StartDbg("RS1");
+        Logging.StartDbg("RS1");
         if (WSGameState.LongestWords != null)
         {
             LongestListBox.CreateList(WSGameState.LongestWords, true);
         }
         else
         {
-            StartDbg("RS1!");
+            Logging.StartDbg("RS1!");
         }
 
-        StartDbg("RS2");
+        Logging.StartDbg("RS2");
         if (WSGameState.BestWordScores != null)
         {
             BestWordListBox.CreateList(WSGameState.BestWordScores, true);
         }
         else
         {
-            StartDbg("RS2!");
+            Logging.StartDbg("RS2!");
         }
 
-        StartDbg("RS3");
+        Logging.StartDbg("RS3");
         if (WSGameState.BestWordScoresSimple != null)
         {
             BestWordSimpleListBox.CreateList(WSGameState.BestWordScoresSimple, true);
         }
         else
         {
-            StartDbg("RS3!");
+            Logging.StartDbg("RS3!");
         }
 
-        StartDbg("RSx");
+        Logging.StartDbg("RSx");
     }
 
     // Update is called once per frame
@@ -404,8 +400,8 @@ public class Board : MonoBehaviour
         }
         catch (Exception ex)
         {
-            StartDbg("!2");
-            ShowMsg(DebugString2 + "\nEXCEPTION 2\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
+            Logging.StartDbg("!2");
+            ShowMsg(Logging.NewestLog + "\nEXCEPTION 2\nPlease take screen shot (on iOS hold down power and press home button), to take a picture to send to me.  Exception is: " + ex.ToString(), true);
             Ex2Str += "EXCEPTION2:\n" + ex.ToString();
 
         }
@@ -483,6 +479,8 @@ public class Board : MonoBehaviour
         }
         else
         {
+            SetUserInfo(Logging.NewestLog);
+
             SystemMenu.SetActive(true);
         }
     }
@@ -552,7 +550,7 @@ public class Board : MonoBehaviour
         WSGameState.InitNewGame();
         WSGameState.CreateNewBoard(_gridsize);
 
-        StartDbg("SG1");
+        Logging.StartDbg("SG1");
 
         WSGameState.NewMusicTile();
 
@@ -560,7 +558,7 @@ public class Board : MonoBehaviour
 
         // Load save game data
         //WSGameState.LoadGame();
-        StartDbg("SGx");
+        Logging.StartDbg("SGx");
     }
 
     IEnumerator EndGameDelay()
@@ -866,18 +864,19 @@ public class Board : MonoBehaviour
         {
             if(go.ToString().Length > 100)
             {
-                WSGameState.boardScript.StartDbg(go.ToString().Substring(0, 20), '\n');
+                Logging.StartDbg(go.ToString().Substring(0, 20), '\n');
             }
             else
             {
-                WSGameState.boardScript.StartDbg(go.ToString(), '\n');
+                Logging.StartDbg(go.ToString(), '\n');
             }
         }
-        WSGameState.boardScript.StartDbg("__");
+
+        Logging.StartDbg("__");
         gos = (UnityEngine.Object[])Resources.LoadAll("Songs");
         foreach (UnityEngine.Object go in gos)
         {
-            WSGameState.boardScript.StartDbg(go.ToString(), '\n');
+            Logging.StartDbg(go.ToString(), '\n');
         }
     }
 
@@ -959,12 +958,12 @@ public class Board : MonoBehaviour
          "Model: " + SystemInfo.deviceModel + "\n\n" +
             "OS: " + SystemInfo.operatingSystem + "\n\n" +
             "Version: " + Application.version + "\n\n" +
-            "Startup Dbg: " + DebugString + "\n\n" +
-            "Play Dbg: " + lastPlayDbg + "\n\n" +
+            "Startup Dbg: " + Logging.StartDbgInfo + "\n\n" +
+            "Play Dbg: " + Logging.LastPlayLog + "\n\n" +
             "Ex1: " + Ex1Str + "\n\n" +
             "Ex2: " + Ex2Str + "\n\n" +
-            "Stats(" + GamePersistence.StatsText.Length + "): " + GamePersistence.StatsText + "\n\n" +
-            "Game(" + GamePersistence.GameText.Length + "): " + GamePersistence.GameText + "\n\n" +
+            //"Stats(" + GamePersistence.StatsText.Length + "): " + GamePersistence.StatsText + "\n\n" +
+            "Game(" + GamePersistence.GameWords.Length + "): " + GamePersistence.GameWords + "\n\n" +
          "________");
         //Open the Default Mail App
         Application.OpenURL("mailto:" + email + "?subject=" + subject + "&body=" + body);
@@ -973,89 +972,5 @@ public class Board : MonoBehaviour
     string MyEscapeURL(string url)
     {
         return WWW.EscapeURL(url).Replace("+", "%20");
-    }
-
-    public void SendEmail()
-    {
-        MailMessage mail = new MailMessage();
-        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-        mail.From = new MailAddress("paulelong@outlooik@gmail.com");
-        mail.To.Add("g.amati@ucl.ac.uk");
-        mail.Subject = "Prova";
-
-        SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
-        SmtpServer.Port = 587;
-        SmtpServer.Credentials = (ICredentialsByHost)CredentialCache.DefaultNetworkCredentials; //(ICredentialsByHost) new NetworkCredential("GMAILACCOUNT","PASSWORD");
-        SmtpServer.EnableSsl = true;
-        SmtpServer.Timeout = 20000;
-        SmtpServer.UseDefaultCredentials = false;
-        try
-        {
-            SmtpServer.Send(mail);
-        }
-        catch (SmtpException myEx)
-        {
-            Debug.Log("Expection: \n" + myEx.ToString());
-        }
-    }
-
-    public void StartDbg(string s, char sep = ',')
-    {
-        DebugString += s + sep;
-
-        string s1;
-        if (DebugString.Length > 250)
-        {
-            s1 = DebugString.Substring(0, 250);
-        }
-        else
-        {
-            s1 = DebugString;
-        }
-
-        string s2;
-        if (DebugString2.Length > 250)
-        {
-            s2 = DebugString2.Substring(0, 250);
-        }
-        else
-        {
-            s2 = DebugString2;
-        }
-
-        SetUserInfo(s1 + "\n" + s2);
-    }
-
-    public void PlayDbg(string s, char sep = ',', bool last = false)
-    {
-        DebugString2 += s + sep;
-
-        string s1;
-        if (DebugString.Length > 250)
-        {
-            s1 = DebugString.Substring(0, 250);
-        }
-        else
-        {
-            s1 = DebugString;
-        }
-
-        string s2;
-        if (DebugString2.Length > 250)
-        {
-            s2 = DebugString2.Substring(0, 250);
-        }
-        else
-        {
-            s2 = DebugString2;
-        }
-
-        SetUserInfo(s1 + "\n" + s2);
-
-        if (last)
-        {
-            lastPlayDbg = DebugString2;
-            DebugString2 = "";
-        }
     }
 }

@@ -29,11 +29,11 @@ public class TileAnim : MonoBehaviour
         {
             asrc.clip = Songs.GetNextSong();
             asrc.PlayDelayed(5);
-            WSGameState.boardScript.PlayDbg("ns_" + asrc.clip.ToString().Substring(0, 20), '\n');
+            Logging.PlayDbg("ns_" + asrc.clip.ToString().Substring(0, 20), '\n');
         }
         else
         {
-            WSGameState.boardScript.PlayDbg("ns!");
+            Logging.PlayDbg("ns!");
         }
     }
 
