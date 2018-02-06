@@ -5,8 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using WordSpell;
 using System;
-using System.Net.Mail;
-using System.Net;
+//using System.Net.Mail;
+//using System.Net;
 
 public class Board : MonoBehaviour
 {
@@ -215,11 +215,6 @@ public class Board : MonoBehaviour
         }
 
         CamZ = -16.5f;
-        //BoardCam.transform.position = new Vector3(0, gridYoff, CamZ);
-        //BoardCam.orthographicSize = (aspect * -11.0f) + 15.23f;
-
-        Debug.Log("pos: " + GameAreaPanel.transform.position);
-        Debug.Log("local: " + GameAreaPanel.transform.localPosition);
     }
 
     public void EndGanme()
