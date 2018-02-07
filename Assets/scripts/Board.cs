@@ -85,7 +85,7 @@ public class Board : MonoBehaviour
     public GameObject LevelText;
     public GameObject ScoreText;
     public GameObject ManaText;
-    public GameObject Eff;
+    //public GameObject Eff;
 
     public GameObject TryList;
     public GameObject HistoryList;
@@ -668,8 +668,8 @@ public class Board : MonoBehaviour
 
     public void SetEff(float eff)
     {
-        UnityEngine.UI.Text t = Eff.GetComponent(typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text;
-        t.text = string.Format("{0:0.00}", eff);
+        //UnityEngine.UI.Text t = Eff.GetComponent(typeof(UnityEngine.UI.Text)) as UnityEngine.UI.Text;
+        //t.text = string.Format("{0:0.00}", eff);
     }
 
     public void AddHistory(string s)

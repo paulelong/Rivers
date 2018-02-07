@@ -370,6 +370,8 @@ namespace WordSpell
             }
 #else
             int seed = (int)DateTime.Now.Ticks;
+            Logging.StartDbg("sd=" + seed.ToString());
+            r = new System.Random(seed);
 #endif
 
             LetterProp.InitProbability(gs.level);
@@ -378,7 +380,6 @@ namespace WordSpell
 
             UpdateStats();
             Logging.StartDbg("Ingx");
-            //NewMusicTile();
         }
 
         public static void LoadGame()
