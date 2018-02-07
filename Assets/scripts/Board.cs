@@ -104,6 +104,9 @@ public class Board : MonoBehaviour
     public AudioClip SnipeSound;
     public AudioClip LavaSound;
 
+    // Particle System
+    public ParticleSystem MagicParticles;
+
     #endregion Unity Objects
 
     #region Init
@@ -405,6 +408,7 @@ public class Board : MonoBehaviour
     public void ResetTimer()
     {
         LastActionTime = Time.realtimeSinceStartup;
+        Logging.PlayDbg("tm=" + LastActionTime.ToString(), timestamp: true);
     }
 
     // Handlers
@@ -777,6 +781,7 @@ public class Board : MonoBehaviour
             SetSpellButton(true);
 
             SpellCasted = false;
+            PlayMagicParticle(SpellCasted);
         }
     }
 
@@ -798,6 +803,8 @@ public class Board : MonoBehaviour
             SetSpellButton(false);
 
             SpellCasted = true;
+
+            PlayMagicParticle(SpellCasted);
         }
     }
 
@@ -834,6 +841,7 @@ public class Board : MonoBehaviour
         SetSpellButton(true);
 
         SpellCasted = false;
+        PlayMagicParticle(SpellCasted);
     }
 
     public void SetSpellButton(bool cast)
@@ -897,6 +905,18 @@ public class Board : MonoBehaviour
                 SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
                 break;
 
+        }
+    }
+
+    public void PlayMagicParticle(bool play)
+    {
+        if(play)
+        {
+            MagicParticles.Play();
+        }
+        else
+        {
+            MagicParticles.Stop();
         }
     }
 
