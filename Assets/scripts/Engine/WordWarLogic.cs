@@ -1241,5 +1241,23 @@ namespace WordSpell
         {
             return EngLetterScoring.GetCurrentWord(SelLetterList);
         }
+
+        public static string PrintGameBoard()
+        {
+            string ret = "";
+
+            // Activate any tile specific work, like music.
+            for (int j = Gridsize - 1; j >= 0; j--)
+            {
+                for (int i = 0; i < Gridsize; i++)
+                {
+                    ret += LetterPropGrid[i, j].ASCIIChar + " ";
+                }
+
+                ret += "\n";
+            }
+
+            return ret;
+        }
     }
 }

@@ -176,7 +176,7 @@ public class Board : MonoBehaviour
             }
             Logging.StartDbg("S5", timestamp: true);
 
-            DebugTest();
+            //DebugTest();
         }
         catch (Exception ex)
         {
@@ -997,6 +997,7 @@ public class Board : MonoBehaviour
             "Ex2: " + Ex2Str + "\n\n" +
             //"Stats(" + GamePersistence.StatsText.Length + "): " + GamePersistence.StatsText + "\n\n" +
             "Game(" + GamePersistence.GameWords.Length + "): " + GamePersistence.GameWords + "\n\n" +
+            "GameBoard:\n" + WSGameState.PrintGameBoard() + 
          "________");
         //Open the Default Mail App
         Application.OpenURL("mailto:" + email + "?subject=" + subject + "&body=" + body);
