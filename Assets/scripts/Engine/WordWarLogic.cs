@@ -839,10 +839,11 @@ namespace WordSpell
 
             GamePersistence.SaveOverallStats(os);
             GamePersistence.ResetGameData();
+
             RemoveGameBoard();
 
             Resume = false;
-            boardScript.EndGanme();
+            boardScript.EndGameAction();
         }
 
         internal static bool EnoughMana(int mannaPoints)

@@ -46,7 +46,7 @@ public class Board : MonoBehaviour
     const string SpellCostPath = "TextPanel/Cost";
     const string SpellImagePath = "ButtonPanel/Image";
 
-    private const float FORTUNE_CHANGE_SPEED = .2f;
+    private const float FORTUNE_CHANGE_SPEED = .8f;
     private const float TIME_TILL_HINT = 200f;
     private const float FORUTUNE_BAR_SCALE = 17.5f;
     private const float FORTUNE_BAR_SIZE = 55;
@@ -221,8 +221,9 @@ public class Board : MonoBehaviour
         CamZ = -16.5f;
     }
 
-    public void EndGanme()
+    public void EndGameAction()
     {
+        ResetSubmitButton();
         StartCoroutine(EndGameDelay());
     }
 
@@ -387,13 +388,13 @@ public class Board : MonoBehaviour
 
             if (newFortuneScale - fortuneScale > 0.01f)
             {
-                fortuneScale += FORTUNE_CHANGE_SPEED;
+                fortuneScale += FORTUNE_CHANGE_SPEED * Time.deltaTime;
                 FortuneBar.transform.localScale = new Vector3(fortuneScale, FORTUNE_BAR_SIZE, FORTUNE_BAR_SIZE);
             }
 
             if (newFortuneScale - fortuneScale < -0.01f)
             {
-                fortuneScale -= FORTUNE_CHANGE_SPEED;
+                fortuneScale -= FORTUNE_CHANGE_SPEED * Time.deltaTime;
                 FortuneBar.transform.localScale = new Vector3(fortuneScale, FORTUNE_BAR_SIZE, FORTUNE_BAR_SIZE);
             }
         }

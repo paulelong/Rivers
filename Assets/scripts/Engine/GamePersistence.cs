@@ -343,6 +343,9 @@ namespace WordSpell
                     string s = e.Message;
                 }
             }
+
+//            gs.history.Clear();
+            gs.fortune.Clear();
         }
 
         internal static void ResetSavedData()
