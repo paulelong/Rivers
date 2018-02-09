@@ -106,6 +106,7 @@ public class Board : MonoBehaviour
 
     // Particle System
     public ParticleSystem MagicParticles;
+    public ParticleSystem Horray;
 
     #endregion Unity Objects
 
@@ -260,15 +261,15 @@ public class Board : MonoBehaviour
     private void AttachNotes(Transform lbi)
     {
         GameObject notes = Instantiate(NotesPrefab, new Vector3(0, 0, 0), LetterSpeakerPrefab.transform.rotation, lbi);
-        notes.transform.position = lbi.transform.position - new Vector3(.1f, .2f, 0);
+        notes.transform.position = lbi.transform.position - new Vector3(.1f, .2f, -0.1f);
 
         GameObject notes2 = Instantiate(NotesPrefab, new Vector3(0, 0, 0), LetterSpeakerPrefab.transform.rotation, lbi);
-        notes2.transform.position = lbi.transform.position - new Vector3(0, .2f, 0);
+        notes2.transform.position = lbi.transform.position - new Vector3(0, .2f, -0.1f);
         Animator na2 = notes2.transform.GetChild(0).transform.GetComponent<Animator>();
         na2.SetTrigger(trigger_nf2);
 
         GameObject notes3 = Instantiate(NotesPrefab, new Vector3(0, 0, 0), LetterSpeakerPrefab.transform.rotation, lbi);
-        notes3.transform.position = lbi.transform.position - new Vector3(.2f, .2f, 0);
+        notes3.transform.position = lbi.transform.position - new Vector3(.2f, .2f, -0.1f);
         Animator na3 = notes3.transform.GetChild(0).transform.GetComponent<Animator>();
         na3.SetTrigger(trigger_nf3);
     }
@@ -407,8 +408,8 @@ public class Board : MonoBehaviour
 
     public void ResetTimer()
     {
+        Logging.PlayDbg("rtm=" + LastActionTime.ToString(), timestamp: true);
         LastActionTime = Time.realtimeSinceStartup;
-        Logging.PlayDbg("tm=" + LastActionTime.ToString(), timestamp: true);
     }
 
     // Handlers
@@ -469,7 +470,7 @@ public class Board : MonoBehaviour
         IndicateGoodWord(WSGameState.WordValidity.Garbage);
     }
 
-    public void HamburgerMenu()
+    public void HelpMenu()
     {
         ResetTimer();
         if (SystemMenu.activeSelf)
@@ -482,6 +483,11 @@ public class Board : MonoBehaviour
 
             SystemMenu.SetActive(true);
         }
+    }
+
+    public void HelpMenuClose()
+    {
+        SystemMenu.SetActive(false);
     }
 
     public void SaveGame()
@@ -509,8 +515,8 @@ public class Board : MonoBehaviour
 
     public void ShowOption(string text)
     {
-        Text t = OptionCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
-        RectTransform rt = MsgCanvas.transform.GetChild(0).GetComponent<RectTransform>();
+        Text t = OptionCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
+        RectTransform rt = OptionCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<RectTransform>();
         t.text = text;
 
         OptionCanvas.SetActive(true);
@@ -580,8 +586,8 @@ public class Board : MonoBehaviour
 
     public void ShowMsg(string text, bool bigmsg = false)
     {
-        Text t = MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
-        RectTransform rt = MsgCanvas.transform.GetChild(0).GetComponent<RectTransform>();
+        Text t = MsgCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
+       // RectTransform rt = MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
         t.text = text;
         if(bigmsg)
         {
@@ -601,7 +607,7 @@ public class Board : MonoBehaviour
 
     public GameObject SelectLet(int i, int j, bool isMagic = false)
     {
-        GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset) * WSGameState.GridScale, 0.6f), Quaternion.identity);
+        GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset) * WSGameState.GridScale, 0.65f), Quaternion.identity);
         t.transform.localScale *= WSGameState.GridScale;
 
         GameObject hl = t.transform.GetChild(0).gameObject;
@@ -699,12 +705,12 @@ public class Board : MonoBehaviour
 
     public void SetUserInfo(string s)
     {
-        SystemMenu.transform.GetChild(0).GetChild(0).GetComponent<Text>().text = s;
+        SystemMenu.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Text>().text = s;
     }
 
     public void SetVersion(string s)
     {
-        SystemMenu.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = s;
+        SystemMenu.transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<Text>().text = s;
     }
 
     public void SetStoryInfo(string s0, string s1, string s2, string s3)
@@ -724,6 +730,12 @@ public class Board : MonoBehaviour
     {
         Transform item = spellbox.Add();
         item.transform.name = si.FriendlyName;
+
+        // Z position seems to get set random value, setting it to -3 so spells show up.
+        Vector3 t = item.transform.localPosition;
+        t.z = -3f;
+        item.transform.localPosition = t;
+
 
         UnityEngine.UI.Text s = item.Find(SpellNamePath).GetComponent<UnityEngine.UI.Text>();
         s.text = si.FriendlyName;
@@ -885,24 +897,28 @@ public class Board : MonoBehaviour
 
     public void IndicateGoodWord(WSGameState.WordValidity wordStatus)
     {
-        var theColor = SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors;
+        //var theColor = SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors;
+        var test = SubmitButtonGO.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>();
 
         switch (wordStatus)
         {
             case WSGameState.WordValidity.Garbage:
-                theColor.normalColor = Color.gray;
-                theColor.highlightedColor = Color.gray;
-                SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+                test.color = new Color32(200,200,200, 255);
+                //theColor.normalColor = Color.gray;
+                //theColor.highlightedColor = Color.gray;
+                //SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
                 break;
             case WSGameState.WordValidity.Word:
-                theColor.normalColor = new Color32(72, 234, 94, 255);
-                theColor.highlightedColor = new Color32(72, 234, 94, 255);
-                SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+                test.color = new Color32(72, 234, 94, 255);
+                //theColor.normalColor = new Color32(72, 234, 94, 255);
+                //theColor.highlightedColor = new Color32(72, 234, 94, 255);
+                //SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
                 break;
             case WSGameState.WordValidity.UsedWord:
-                theColor.normalColor = Color.yellow;
-                theColor.highlightedColor = Color.yellow;
-                SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+                test.color = Color.yellow;
+                //theColor.normalColor = Color.yellow;
+                //theColor.highlightedColor = Color.yellow;
+                //SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
                 break;
 
         }
@@ -919,7 +935,7 @@ public class Board : MonoBehaviour
             MagicParticles.Stop();
         }
     }
-
+    
     // Sounds to play
     #region SoundFX
     public void ScoreWordSound()
@@ -932,6 +948,7 @@ public class Board : MonoBehaviour
     {
         AudioSource audio = GetComponent<AudioSource>();
         audio.PlayOneShot(NewLevelSound, 0.4f);
+        Horray.Play();
     }
 
     public void PlayEndGameSound()

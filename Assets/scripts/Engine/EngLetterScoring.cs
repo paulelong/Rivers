@@ -49,6 +49,8 @@ namespace WordSpell
         const string intro1 = "Legend tells of a magical prodigy who's mastery of words will save the day.  Select adjacent tiles in any direction, for instance following the yellow arrows to spell GUITAR.  Longer words improve your fortune, which means better replacement letters.";
         const string intro2 = "Advance levels to gain spells, requiring mana, which you can cast to rearrange letters.";
         const string intro3 = "Beware of lava, e.g. the RED letter tile, because if they reach the bottom, the game is over.";
+        const string availableSpells = "New spells appear as you advance levels.  Available spells can only be cast if you have enough mana.  Each spell show an image, hinting at the effect, a name, and cost.";
+        const string awardedSpells = "Awarded spells are earned by spelling long or high scoring words.  Use them any time.";
 
         public static readonly string[] LevelMsgs = 
         {

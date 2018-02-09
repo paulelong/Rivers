@@ -8,8 +8,8 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 {
     public LetterProp lp;
 
-    float fallrate = 0.1f;
-    float spinrate = 5f;
+    const float FALL_RATE = 1f;
+    const float SPIN_RATE = 25f;
 
     // Use this for initialization
     void Start ()
@@ -30,47 +30,47 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         {
             if (lp.LetterDCount > 0.01f)
             {
-                lp.LetterDCount -= fallrate;
-                gameObject.transform.position -= new Vector3(0, fallrate * WSGameState.GridScale, 0);
+                lp.LetterDCount -= FALL_RATE * Time.deltaTime;
+                gameObject.transform.position -= new Vector3(0, FALL_RATE * Time.deltaTime * WSGameState.GridScale, 0);
             }
             if (lp.LetterUCount > 0.01f)
             {
-                lp.LetterUCount -= fallrate;
-                gameObject.transform.position += new Vector3(0, fallrate * WSGameState.GridScale, 0);
+                lp.LetterUCount -= FALL_RATE * Time.deltaTime;
+                gameObject.transform.position += new Vector3(0, FALL_RATE * Time.deltaTime * WSGameState.GridScale, 0);
             }
             if (lp.LetterLCount > 0.01f)
             {
-                lp.LetterLCount -= fallrate;
-                gameObject.transform.position -= new Vector3(fallrate * WSGameState.GridScale, 0, 0);
+                lp.LetterLCount -= FALL_RATE * Time.deltaTime;
+                gameObject.transform.position -= new Vector3(FALL_RATE * Time.deltaTime * WSGameState.GridScale, 0, 0);
             }
             if (lp.LetterRCount > 0.01f)
             {
-                lp.LetterRCount -= fallrate;
-                gameObject.transform.position += new Vector3(fallrate * WSGameState.GridScale, 0, 0);
+                lp.LetterRCount -= FALL_RATE * Time.deltaTime;
+                gameObject.transform.position += new Vector3(FALL_RATE * Time.deltaTime * WSGameState.GridScale, 0, 0);
             }
             if (lp.LetterRotHL > 0.01f)
             {
-                lp.LetterRotHL -= spinrate;
-                gameObject.transform.RotateAround(lp.LetterRotHLAxis, Vector3.up, spinrate);
-                gameObject.transform.Rotate(Vector3.up, spinrate);
+                lp.LetterRotHL -= SPIN_RATE * Time.deltaTime;
+                gameObject.transform.RotateAround(lp.LetterRotHLAxis, Vector3.up, SPIN_RATE * Time.deltaTime);
+                gameObject.transform.Rotate(Vector3.up, SPIN_RATE);
             }
             if (lp.LetterRotHR > 0.01f)
             {
-                lp.LetterRotHR -= spinrate;
-                gameObject.transform.RotateAround(lp.LetterRotHRAxis, Vector3.up, -spinrate);
-                gameObject.transform.Rotate(Vector3.up, -spinrate);
+                lp.LetterRotHR -= SPIN_RATE * Time.deltaTime;
+                gameObject.transform.RotateAround(lp.LetterRotHRAxis, Vector3.up, -SPIN_RATE * Time.deltaTime);
+                gameObject.transform.Rotate(Vector3.up, -SPIN_RATE);
             }
             if (lp.LetterRotVU > 0.01f)
             {
-                lp.LetterRotVU -= spinrate;
-                gameObject.transform.RotateAround(lp.LetterRotVUAxis, Vector3.right, spinrate);
-                gameObject.transform.Rotate(Vector3.right, spinrate);
+                lp.LetterRotVU -= SPIN_RATE * Time.deltaTime;
+                gameObject.transform.RotateAround(lp.LetterRotVUAxis, Vector3.right, SPIN_RATE * Time.deltaTime);
+                gameObject.transform.Rotate(Vector3.right, SPIN_RATE);
             }
             if (lp.LetterRotVD > 0.01f)
             {
-                lp.LetterRotVD -= spinrate;
-                gameObject.transform.RotateAround(lp.LetterRotVDAxis, Vector3.right, -spinrate);
-                gameObject.transform.Rotate(Vector3.right, -spinrate);
+                lp.LetterRotVD -= SPIN_RATE * Time.deltaTime;
+                gameObject.transform.RotateAround(lp.LetterRotVDAxis, Vector3.right, -SPIN_RATE * Time.deltaTime);
+                gameObject.transform.Rotate(Vector3.right, -SPIN_RATE);
             }
         }
     }
