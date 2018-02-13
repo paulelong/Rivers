@@ -947,19 +947,17 @@ public class Board : MonoBehaviour
         PlayMagicParticle(SpellCasted);
     }
 
-    //public void SetSpellButton(bool cast)
-    //{
-    //    Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
-    //    if(cast)
-    //    {
-    //        t.text = "Cast";
-    //    }
-    //    else
-    //    {
-    //        t.text = "Abort";
-    //    }
-    //}
-
+    public void PlayMagicParticle(bool play)
+    {
+        if (play)
+        {
+            MagicParticles.Play();
+        }
+        else
+        {
+            MagicParticles.Stop();
+        }
+    }
 
     #endregion Spells
 
@@ -1015,18 +1013,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void PlayMagicParticle(bool play)
-    {
-        if(play)
-        {
-            MagicParticles.Play();
-        }
-        else
-        {
-            MagicParticles.Stop();
-        }
-    }
-    
+
     // Sounds to play
     #region SoundFX
     public void ScoreWordSound()

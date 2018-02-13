@@ -131,7 +131,7 @@ namespace WordSpell
                     {
                         float ratio = (float)bgs.score / (float)bgs.totalWords;
                         
-                        bestGameScores.Add(string.Format("{0} {1:0.0} L{2}", bgs.score, ratio, bgs.level));
+                        bestGameScores.Add(string.Format("{0} L{2} {1:0.0} ", bgs.score, ratio, bgs.level));
                     }
                 }
                 else
