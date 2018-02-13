@@ -15,6 +15,7 @@ public class Board : MonoBehaviour
     WSListBox HistoryListBox;
     WSListBox SpellListBox;
     WSListBox AwardedSpellListBox;
+    WSListBox SpellsListBox;
 
     WSListBox BestWordListBox;
     WSListBox BestWordSimpleListBox;
@@ -45,6 +46,7 @@ public class Board : MonoBehaviour
     const string SpellNamePath = "TextPanel/Name";
     const string SpellCostPath = "TextPanel/Cost";
     const string SpellImagePath = "ButtonPanel/Image";
+    const string SpellSelPath = "ButtonPanel/Selector";
 
     private const float FORTUNE_CHANGE_SPEED = .8f;
     private const float TIME_TILL_HINT = 200f;
@@ -91,11 +93,17 @@ public class Board : MonoBehaviour
     public GameObject HistoryList;
     public GameObject SpelllList;
     public GameObject AwardedSpellList;
+    public GameObject SpellsList;
 
     public GameObject BestWordList;
     public GameObject BestWordSimpleList;
     public GameObject HighScoresList;
     public GameObject LongestList;
+
+    public GameObject MenuHelpIntro0;
+    public GameObject MenuHelpIntro1;
+    public GameObject StartHelpIntro0;
+    public GameObject StartHelpIntro1;
 
     public AudioClip SubmitWordSound;
     public AudioClip NewLevelSound;
@@ -107,6 +115,9 @@ public class Board : MonoBehaviour
     // Particle System
     public ParticleSystem MagicParticles;
     public ParticleSystem Horray;
+
+    private string NextSpellName = "";
+    private bool NextSpellAwardState = false;
 
     #endregion Unity Objects
 
@@ -144,6 +155,10 @@ public class Board : MonoBehaviour
             AwardedSpellListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
             AwardedSpellListBox.InitWSListBox(AwardedSpellList, SpellPrefab);
 
+            SpellsListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
+            SpellsListBox.InitWSListBox(SpellsList, SpellPrefab);
+
+
             BestWordListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
             BestWordListBox.InitWSListBox(BestWordList, TextPrefab);
             BestWordSimpleListBox = ScriptableObject.CreateInstance(typeof(WSListBox)) as WSListBox;
@@ -175,6 +190,8 @@ public class Board : MonoBehaviour
                 WSGameState.Load();
             }
             Logging.StartDbg("S5", timestamp: true);
+
+            RefreshSpells();
 
             //DebugTest();
         }
@@ -289,12 +306,14 @@ public class Board : MonoBehaviour
 
     public void HideSpellStuff()
     {
-        CastButton.SetActive(false);
+        //CastButton.SetActive(false);
+        CastButton.GetComponent<Button>().interactable = false;
     }
 
     public void ShowSpellStuff()
     {
-        CastButton.SetActive(true);
+        //CastButton.SetActive(true);
+        CastButton.GetComponent<Button>().interactable = true;
     }
 
     #endregion Init
@@ -720,11 +739,71 @@ public class Board : MonoBehaviour
         StartCanvas.transform.Find("Back1/Intro1").GetComponent<Text>().text = s1;
         StartCanvas.transform.Find("Back2/Intro2").GetComponent<Text>().text = s2;
         StartCanvas.transform.Find("Back3/Intro3").GetComponent<Text>().text = s3;
+
+        StartHelpIntro0.GetComponent<Text>().text = s0;
+        StartHelpIntro1.GetComponent<Text>().text = s1;
+        MenuHelpIntro0.GetComponent<Text>().text = s0;
+        MenuHelpIntro1.GetComponent<Text>().text = s1;
     }
 
     #endregion Controls
 
     #region Spells
+
+    public void AddSpells(WSListBox spellbox, SpellInfo si, bool awarded = false)
+    {
+        Transform item = spellbox.Add();
+        item.transform.name = si.FriendlyName;
+
+        // Z position seems to get set random value, setting it to -3 so spells show up.
+        Vector3 t = item.transform.localPosition;
+        t.z = -3f;
+        item.transform.localPosition = t;
+
+
+        UnityEngine.UI.Text s = item.Find(SpellNamePath).GetComponent<UnityEngine.UI.Text>();
+        s.text = si.FriendlyName;
+
+        UnityEngine.UI.Text c = item.Find(SpellCostPath).GetComponent<UnityEngine.UI.Text>();
+        if (!awarded)
+        {
+            c.text = si.MannaPoints.ToString() + " mana";
+        }
+        else
+        {
+            c.text = "free";
+        }
+
+        UnityEngine.UI.Image i = item.Find(SpellImagePath).GetComponent<UnityEngine.UI.Image>();
+        i.sprite = si.Image;
+
+        Button b = item.Find(SpellImagePath).GetComponent<Button>();
+        b.onClick.AddListener(delegate { SelectSpell(si.FriendlyName, awarded); });
+        if (!awarded && WSGameState.EnoughMana(si.MannaPoints))
+        {
+            b.enabled = false;
+        }
+    }
+
+    public void RefreshSpells()
+    {
+        ClearSpellList(SpellsListBox);
+
+        foreach (SpellInfo si in Spells.AvailableSpells)
+        {
+            AddSpells(SpellsListBox, si);
+        }
+
+        foreach (SpellInfo si in WSGameState.AwardedSpells)
+        {
+            AddSpells(SpellsListBox, si, true);
+        }
+    }
+
+    public void SelectSpell(BaseEventData data)
+    {
+        Debug.Log(data.ToString());
+    }
 
     // Spell related stuff
     public void AddSpellList(WSListBox spellbox, SpellInfo si, bool awarded = false)
@@ -769,31 +848,15 @@ public class Board : MonoBehaviour
 
     public void ShowSpells()
     {
-        if (!SpellCasted)
+        if(!SpellCasted)
         {
-            ClearSpellList(SpellListBox);
-
-            foreach (SpellInfo si in Spells.AvailableSpells)
-            {
-                AddSpellList(SpellListBox, si);
-            }
-
-            ClearSpellList(AwardedSpellListBox);
-
-            foreach (SpellInfo si in WSGameState.AwardedSpells)
-            {
-                AddSpellList(AwardedSpellListBox, si, true);
-            }
-
-            SpellCanvas.SetActive(true);
+            StartSpell();
         }
         else
         {
-            Spells.AbortSpell();
-
-            SetSpellButton(true);
-
             SpellCasted = false;
+            ShowCancelCast(SpellCasted);
+            Spells.AbortSpell();
             PlayMagicParticle(SpellCasted);
         }
     }
@@ -805,19 +868,43 @@ public class Board : MonoBehaviour
 
     void SelectSpell(string spellName, bool awarded)
     {
-        SpellCanvas.SetActive(false);
+        NextSpellName = spellName;
+        NextSpellAwardState = awarded;
+    }
+
+    void StartSpell()
+    {
+        string spellName = NextSpellName;
+        bool awarded = NextSpellAwardState;
+
+//        SpellCanvas.SetActive(false);
 
         // Awarded spells need to be removed from the list
         Spells.ReadySpell(spellName, awarded, SpellSucceded);
 
         // So spell can be canceled, change button text
-        if(Spells.SpellReady())
+        if (Spells.SpellReady())
         {
-            SetSpellButton(false);
+            //SetSpellButton(false);
 
             SpellCasted = true;
+            ShowCancelCast(true);
 
             PlayMagicParticle(SpellCasted);
+        }
+    }
+
+    public void ShowCancelCast(bool enable)
+    {
+        Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
+
+        if (enable)
+        {
+            t.enabled = true;            
+        }
+        else
+        {
+            t.enabled = false;
         }
     }
 
@@ -851,24 +938,27 @@ public class Board : MonoBehaviour
         SpellInfo si = WSGameState.AwardedSpells.Find(x => (x.spellType == Spells.LastSuccessfulSpell.spellType));
         WSGameState.AwardedSpells.Remove(si);
 
-        SetSpellButton(true);
+        RefreshSpells();
+
+        //SetSpellButton(true);
+        ShowCancelCast(true);
 
         SpellCasted = false;
         PlayMagicParticle(SpellCasted);
     }
 
-    public void SetSpellButton(bool cast)
-    {
-        Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
-        if(cast)
-        {
-            t.text = "Cast";
-        }
-        else
-        {
-            t.text = "Abort";
-        }
-    }
+    //public void SetSpellButton(bool cast)
+    //{
+    //    Text t = CastButton.transform.GetChild(0).GetComponent<Text>();
+    //    if(cast)
+    //    {
+    //        t.text = "Cast";
+    //    }
+    //    else
+    //    {
+    //        t.text = "Abort";
+    //    }
+    //}
 
 
     #endregion Spells

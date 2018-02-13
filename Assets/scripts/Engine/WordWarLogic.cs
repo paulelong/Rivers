@@ -567,6 +567,7 @@ namespace WordSpell
                         if (ss.si != null)
                         {
                             boardScript.ShowMsg("Nice word, you've earned a " + ss.si.FriendlyName + " spell.");
+                            boardScript.RefreshSpells();
                         }
 
                         TurnOver();
@@ -579,6 +580,7 @@ namespace WordSpell
                             if (Spells.HasSpells())
                             {
                                 levelmsg += "You have new spells.  Spells require Mana which you collect by spelling words using purple Mana tiles.\n\n";
+                                boardScript.RefreshSpells();
                             }
                             levelmsg += EngLetterScoring.GetLevelMsg(CurrentLevel);
 

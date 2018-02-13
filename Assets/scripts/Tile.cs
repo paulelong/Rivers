@@ -8,8 +8,8 @@ public class Tile : MonoBehaviour, IPointerClickHandler
 {
     public LetterProp lp;
 
-    const float FALL_RATE = 1f;
-    const float SPIN_RATE = 25f;
+    const float FALL_RATE = 1.5f;
+    const float SPIN_RATE = 45f;
 
     // Use this for initialization
     void Start ()
@@ -52,25 +52,25 @@ public class Tile : MonoBehaviour, IPointerClickHandler
             {
                 lp.LetterRotHL -= SPIN_RATE * Time.deltaTime;
                 gameObject.transform.RotateAround(lp.LetterRotHLAxis, Vector3.up, SPIN_RATE * Time.deltaTime);
-                gameObject.transform.Rotate(Vector3.up, SPIN_RATE);
+                gameObject.transform.Rotate(Vector3.up, SPIN_RATE * Time.deltaTime);
             }
             if (lp.LetterRotHR > 0.01f)
             {
                 lp.LetterRotHR -= SPIN_RATE * Time.deltaTime;
                 gameObject.transform.RotateAround(lp.LetterRotHRAxis, Vector3.up, -SPIN_RATE * Time.deltaTime);
-                gameObject.transform.Rotate(Vector3.up, -SPIN_RATE);
+                gameObject.transform.Rotate(Vector3.up, -SPIN_RATE * Time.deltaTime);
             }
             if (lp.LetterRotVU > 0.01f)
             {
                 lp.LetterRotVU -= SPIN_RATE * Time.deltaTime;
                 gameObject.transform.RotateAround(lp.LetterRotVUAxis, Vector3.right, SPIN_RATE * Time.deltaTime);
-                gameObject.transform.Rotate(Vector3.right, SPIN_RATE);
+                gameObject.transform.Rotate(Vector3.right, SPIN_RATE * Time.deltaTime);
             }
             if (lp.LetterRotVD > 0.01f)
             {
                 lp.LetterRotVD -= SPIN_RATE * Time.deltaTime;
                 gameObject.transform.RotateAround(lp.LetterRotVDAxis, Vector3.right, -SPIN_RATE * Time.deltaTime);
-                gameObject.transform.Rotate(Vector3.right, -SPIN_RATE);
+                gameObject.transform.Rotate(Vector3.right, -SPIN_RATE * Time.deltaTime);
             }
         }
     }

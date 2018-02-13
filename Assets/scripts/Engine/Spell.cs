@@ -205,8 +205,9 @@ namespace WordSpell
                 // Why do I need a delegate here?
                 spellCompelteDelegate();
             }
-
-            WSGameState.boardScript.SetSpellButton(true);
+            
+            WSGameState.boardScript.ShowCancelCast(false);
+            
             NextSpell = null;
             state = 0;
         }
@@ -216,7 +217,7 @@ namespace WordSpell
             WSGameState.MagicDeselect();
             NextSpell = null;
             state = 0;
-            WSGameState.boardScript.SetSpellButton(true);
+            //WSGameState.boardScript.SetSpellButton(true);
         }
 
         public static void CastSpell(string s = null)
@@ -645,7 +646,7 @@ namespace WordSpell
             }
             else
             {
-                WSGameState.boardScript.ShowMsg("Swapping only works with adjcent letters, up/down/left/right.");
+                WSGameState.boardScript.ShowMsg("Swapping only works with adjacent letters, up/down or left/right.");
                 return false;
             }
 
