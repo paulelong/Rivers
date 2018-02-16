@@ -48,7 +48,7 @@ public class Board : MonoBehaviour
     const string SpellImagePath = "ButtonPanel/Image";
     const string SpellSelPath = "ButtonPanel/Selector";
 
-    private const float FORTUNE_CHANGE_SPEED = .8f;
+    private const float FORTUNE_CHANGE_SPEED = 1f;
     private const float TIME_TILL_HINT = 200f;
     private const float FORUTUNE_BAR_SCALE = 17.5f;
     private const float FORTUNE_BAR_SIZE = 55;

@@ -9,8 +9,11 @@ using WordSpell;
 public class LocalizationManager : MonoBehaviour
 {
     public static LocalizationManager instance;
+    private static LocalizationData localizationData;
 
-    private Dictionary<string, string> localizedText;
+    private static Dictionary<string, string> localizedText;
+    private static bool XMLisReady = false;
+
     private bool isReady = false;
     private string missingTextString = "Localized text not found";
 
@@ -26,20 +29,30 @@ public class LocalizationManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        StartCoroutine(ParseXML(Path.Combine(Application.streamingAssetsPath, "EngLocale.xml")));
+
         DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
-        Logging.StartDbg("w1", timestamp: true);
 
-        //StartCoroutine(Example());
+        Logging.StartDbg("w1", timestamp: true);
+        Logging.StartDbg("lld1");
+        //while (!instance.GetIsXMLReady())
+        //{
+        //    yield return null;
+        //}
+        //Logging.StartDbg("lld2");
+
+        //instance.LoadLocalizaitonToDictionary();
+        EngLetterScoring.LoadDictionary();
+
+        isReady = true;
 
         Logging.StartDbg("w2", timestamp:true);
 
-        instance.LoadLocalizedText("EngLocale.xml");
-
-        EngLetterScoring.LoadDictionary();
+        //instance.LoadLocalizedText("EngLocale.xml");
     }
 
     IEnumerator Example()
@@ -49,6 +62,19 @@ public class LocalizationManager : MonoBehaviour
         Logging.StartDbg("waitx", timestamp: true);
     }
 
+    private void LoadLocalizaitonToDictionary()
+    {
+        Logging.StartDbg("lld0");
+
+        localizedText = new Dictionary<string, string>();
+
+        foreach (LocalizationItem li in localizationData.items)
+        {
+            localizedText.Add(li.key, li.value);
+        }
+
+        Logging.StartDbg("lld3");
+    }
 
     public void LoadLocalizedText(string fileName)
     {
@@ -77,6 +103,7 @@ public class LocalizationManager : MonoBehaviour
             {
                 Logging.StartDbg("Dl3.1");
                 WWW www = new WWW(filePath);
+
 
                 if(string.IsNullOrEmpty(www.error))
                 {
@@ -130,34 +157,40 @@ public class LocalizationManager : MonoBehaviour
         Logging.StartDbg("Dlx");
     }
 
+    static IEnumerator ParseXML(string filePath)
+    {
+        Logging.StartDbg("px1");
 
-    //IEnumerator ParseXML(string filePath)
-    //{
-    //    if (filePath.Contains("://"))
-    //    {
-    //        WWW www = new WWW(filePath);
-    //        yield return www;
+        WWW www = new WWW(filePath);
+        yield return www;
+        Logging.StartDbg("px2");
 
-    //        XmlData = DataCollection.DeSerialize(www);
-    //    }
-    //    else
-    //    {
-    //        XmlData = DataCollection.DeSerialize(filePath);
-    //    }
-    //}
+        localizationData = DeSerializeLocalization(www);
+        XMLisReady = true;
 
-    //public static LocalizationData DeSerialize(WWW www)
-    //{
-    //    using (TextReader textReader = new StringReader(www.text))
-    //    {
-    //        XmlSerializer serializer = new XmlSerializer(typeof(LocalizationData));
+        localizedText = new Dictionary<string, string>();
 
-    //        LocalizationData XmlData = serializer.Deserialize(textReader) as LocalizationData;
+        foreach (LocalizationItem li in localizationData.items)
+        {
+            localizedText.Add(li.key, li.value);
+        }
 
-    //        return XmlData;
-    //    }
-    //}
 
+        Logging.StartDbg("pxx");
+    }
+
+    public static LocalizationData DeSerializeLocalization(WWW www)
+    {
+        using (TextReader textReader = new StringReader(www.text))
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(LocalizationData));
+
+            LocalizationData XmlData = serializer.Deserialize(textReader) as LocalizationData;
+
+            return XmlData;
+        }
+    }
+    
     public string GetLocalizedValue(string key)
     {
         string result = missingTextString;
@@ -173,6 +206,11 @@ public class LocalizationManager : MonoBehaviour
     public bool GetIsReady()
     {
         return isReady;
+    }
+
+    public bool GetIsXMLReady()
+    {
+        return XMLisReady;
     }
 
 }

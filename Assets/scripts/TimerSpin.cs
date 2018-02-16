@@ -8,7 +8,7 @@ public class TimerSpin : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        transform.Rotate(Vector3.down, 1000f * Time.deltaTime);
+        transform.Rotate(Vector3.down, 100f * Time.deltaTime);
         Logging.StartDbg("tic " + transform.rotation.ToString(), timestamp:true);
     }
 }
