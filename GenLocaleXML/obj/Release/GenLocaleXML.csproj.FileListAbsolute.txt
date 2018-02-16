@@ -1,0 +1,7 @@
+E:\users\Paul\Documents\src\WordSpell\GenLocaleXML\obj\Release\GenLocaleXML.csprojResolveAssemblyReference.cache
+E:\users\Paul\Documents\src\WordSpell\GenLocaleXML\obj\Release\GenLocaleXML.csproj.CoreCompileInputs.cache
+E:\users\Paul\Documents\src\WordSpell\GenLocaleXML\bin\Release\GenLocaleXML.exe.config
+E:\users\Paul\Documents\src\WordSpell\GenLocaleXML\bin\Release\GenLocaleXML.exe
+E:\users\Paul\Documents\src\WordSpell\GenLocaleXML\bin\Release\GenLocaleXML.pdb
+E:\users\Paul\Documents\src\WordSpell\GenLocaleXML\obj\Release\GenLocaleXML.exe
+E:\users\Paul\Documents\src\WordSpell\GenLocaleXML\obj\Release\GenLocaleXML.pdb
