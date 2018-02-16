@@ -342,9 +342,9 @@ namespace WordSpell
             // Load the music for the speaker tiles just once.
             Songs.LoadMusic();
 
-            boardScript.ShowMsg("Loading dictionary...");
-            EngLetterScoring.LoadDictionary();
-            boardScript.HideMsg();
+            //boardScript.ShowMsg("Loading dictionary...");
+            //EngLetterScoring.LoadDictionary();
+           // boardScript.HideMsg();
         }
 
         public static void InitNewGame()

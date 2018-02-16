@@ -106,8 +106,6 @@ namespace WordSpell
                 {
                     try
                     {
-
-                        XmlSerializer xs = new XmlSerializer(typeof(GameData));
                         using (FileStream fs = new FileStream(filePath, FileMode.Open))
                         {
                             using (StreamReader reader = new StreamReader(fs))
@@ -155,8 +153,6 @@ namespace WordSpell
                 {
                     try
                     {
-
-                        XmlSerializer xs = new XmlSerializer(typeof(GameData));
                         using (FileStream fs = new FileStream(filePath, FileMode.Open))
                         {
                             using (StreamReader reader = new StreamReader(fs))

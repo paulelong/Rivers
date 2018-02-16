@@ -123,7 +123,7 @@ public class Board : MonoBehaviour
 
     #region Init
     // Use this for initialization
-    void Start()
+    private void Start()
     {
 
         //var gol = GameObject.FindGameObjectsWithTag("ScoreText");
@@ -140,7 +140,7 @@ public class Board : MonoBehaviour
             WSGameState.InitGameGlobal();
             Logging.StartDbg("S1", timestamp: true);
 
-            SetStoryInfo(EngLetterScoring.Intro0, EngLetterScoring.Intro1, EngLetterScoring.Intro2, EngLetterScoring.Intro3);
+            //SetStoryInfo(EngLetterScoring.Intro0, EngLetterScoring.Intro1, EngLetterScoring.Intro2, EngLetterScoring.Intro3);
 
             Logging.StartDbg("S2", timestamp: true);
 
@@ -536,7 +536,7 @@ public class Board : MonoBehaviour
     public void ShowOption(string text)
     {
         Text t = OptionCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
-        RectTransform rt = OptionCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<RectTransform>();
+        //RectTransform rt = OptionCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<RectTransform>();
         t.text = text;
 
         OptionCanvas.SetActive(true);
@@ -663,8 +663,6 @@ public class Board : MonoBehaviour
     {
         newFortuneScale = scale * FORUTUNE_BAR_SCALE;
 
-        MeshRenderer mr = FortuneBar.GetComponent<MeshRenderer>();
-
         FortuneBar.GetComponent<MeshRenderer>().material = m;
     }
 
@@ -740,7 +738,7 @@ public class Board : MonoBehaviour
         StartCanvas.transform.Find("Back2/Intro2").GetComponent<Text>().text = s2;
         StartCanvas.transform.Find("Back3/Intro3").GetComponent<Text>().text = s3;
 
-        StartHelpIntro0.GetComponent<Text>().text = s0;
+        //StartHelpIntro0.GetComponent<Text>().text = s0;
         StartHelpIntro1.GetComponent<Text>().text = s1;
         MenuHelpIntro0.GetComponent<Text>().text = s0;
         MenuHelpIntro1.GetComponent<Text>().text = s1;

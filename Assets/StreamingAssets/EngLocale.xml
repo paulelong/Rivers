@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<LocalizationData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <items>
+    <LocalizationItem>
+      <key>intro0</key>
+      <value>Pangram, the letter volcano, is about to erupt!
+	  
+Legend tells of a magical prodigy who's mastery of words and strategy will save the day.  Select adjacent tiles in any direction, for instance following the yellow arrows to spell GUITAR.  Longer words improve your fortune, which means better replacement letters.
+	  </value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>intro1</key>
+      <value>Advance levels to gain spells, requiring mana, which you can cast to rearrange letters.
+	  
+Beware of lava, e.g. the RED letter tile in the above example, because if they reach the bottom, the game is over.
+
+You gain new spells as you advance levels.  Available spells can only be cast if you have enough mana, which can be earned by spelling words with the special purple mana tiles.  Each spell displays an image, hinting at the effect, a name, and cost.  
+
+To cast a spell, select the spell and then press the wand button.  Depending on the spell, you might have to select one or more letters.
+
+You are also awarded free spells, earned by spelling long or high scoring words.  They do not require any mana to cast.
+	  </value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>HelpButton</key>
+      <value>Help</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>HighScore</key>
+      <value>High Scores</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>BestWords</key>
+      <value>Best Word</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>LongestWords</key>
+      <value>Longest</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>BestOverallWords</key>
+      <value>Best Overall Words</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Start9x9</key>
+      <value>Start 9x9</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Start7x7</key>
+      <value>Start 7x7</value>
+    </LocalizationItem>
+  </items>
+</LocalizationData>

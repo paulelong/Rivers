@@ -56,7 +56,8 @@ namespace WordSpell
         {
             get
             {
-                return intro0 + "\n\n" + intro1 + "\n\n" ;
+                return LocalizationManager.instance.GetLocalizedValue("intro0");
+//                return intro0 + "\n\n" + intro1 + "\n\n" ;
             }
         }
 
@@ -86,11 +87,11 @@ namespace WordSpell
 
         public static readonly string[] LevelMsgs = 
         {
-            "Level 2 brings blue tiles which are worth double the letter value",
+            "Level 2 introduces blue tiles which are worth double the letter value",
             "Beware of lava tiles, if they reach the bottom, the game is over",
-            "Level 4 brings double word tiles which double the word score",
-            "Level 5 brings tripple letter tiles which triple the leter value.",
-            "Level 6 brings triple word tiles which triple the word score",
+            "Level 4 introduces double word tiles which double the word score",
+            "Level 5 introduces tripple letter tiles which triple the leter value.",
+            "Level 6 introduces triple word tiles which triple the word score",
         };
 
         public static readonly string[] IncorrectWordPhrases =
@@ -551,7 +552,6 @@ namespace WordSpell
 
         public static string GetWordTally(List<LetterProp> lp_list)
         {
-            string curword = GetCurrentWord(lp_list);
             return EngLetterScoring.ScoreWordString(lp_list);
         }
 
