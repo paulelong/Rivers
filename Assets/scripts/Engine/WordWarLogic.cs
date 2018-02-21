@@ -103,11 +103,19 @@ namespace WordSpell
             get
             {
                 List<string> longestWordStrings = new List<string>();
+
                 if (os.LongestWords != null)
                 {
                     foreach (WordScoreItem wsi in os.LongestWords)
                     {
-                        longestWordStrings.Add(wsi.Word + " " + wsi.Word.Length.ToString());
+                        if(wsi.Word != null)
+                        {
+                            longestWordStrings.Add(wsi.Word + " " + wsi.Word.Length.ToString());
+                        }
+                        else
+                        {
+                            Logging.StartDbg("StatXMLCorrupt!!!");
+                        }
                     }
                 }
                 else

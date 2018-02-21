@@ -22,8 +22,6 @@ public class LocalizationManager : MonoBehaviour
     private static Dictionary<string, string> localizedText;
     private static bool XMLisReady = false;
 
-    private static bool abortLoad = false;
-
     private bool isReady = false;
     private string missingTextString = "Localized text not found";
 
@@ -40,7 +38,8 @@ public class LocalizationManager : MonoBehaviour
         }
 
         StartCoroutine(LoadFileAsync(Path.Combine(Application.streamingAssetsPath, "EngLocale.xml"), LoadLocalizationData));
-        StartCoroutine(LoadFileAsync(EngLetterScoring.DictionaryCachePath, EngLetterScoring.LoadDictionaryData));
+        StartCoroutine(LoadFileAsync(Path.Combine(Application.streamingAssetsPath, "EngDictACache.xml"), EngLetterScoring.LoadDictionaryData));
+        //StartCoroutine(LoadFileAsync(EngLetterScoring.DictionaryCachePath, EngLetterScoring.LoadDictionaryData));
         StartCoroutine(LoadFileAsync(EngLetterScoring.PartialLookupCachePath, EngLetterScoring.PartialLookupData));
         //StartCoroutine(LoadFileAsync(EngLetterScoring.DictionaryTextPath, EngLetterScoring.DictionaryTextData));
 
@@ -72,15 +71,15 @@ public class LocalizationManager : MonoBehaviour
 
         UpdateStatus("Loading partial lookup cache...");
 
-        while (!EngLetterScoring.DictionharyPartialCacheReady)
-        {
-            yield return null;
-        }
-        Logging.StartDbg("w5");
+        //while (!EngLetterScoring.DictionharyPartialCacheReady)
+        //{
+        //    yield return null;
+        //}
+        //Logging.StartDbg("w5");
 
-        UpdateStatus("Checking dictionary...");
+        //UpdateStatus("Checking dictionary...");
 
-        EngLetterScoring.ReloadDictionary();
+        //EngLetterScoring.ReloadDictionary();
 
         UpdateStatus("Ready!");
 

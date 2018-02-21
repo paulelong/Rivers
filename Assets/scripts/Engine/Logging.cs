@@ -40,14 +40,18 @@ namespace WordSpell
 
         public static void StartDbg(string s, char sep = ',', bool timestamp = false)
         {
+            string dbgs;
+
             if(timestamp)
             {
-                DebugString += "\n[" + DateTime.Now.ToString("mm:ss.ff") + "] " + s + "\n";
+                dbgs = "\n[" + DateTime.Now.ToString("mm:ss.ff") + "] " + s + "\n";
             }
             else
             {
-                DebugString += s + sep;
+                dbgs = s + sep;
             }
+
+            DebugString += dbgs;
         }
 
         public static void PlayDbg(string s, char sep = ',', bool last = false, bool timestamp = false)
