@@ -20,7 +20,7 @@ namespace GenDict
             if(args.Length <= 0)
             {
                 Console.WriteLine("Usage GenDict DictionaryText [directory]");
-                Console.WriteLine(" creates GenDictCache.xml and GenDictLookupCache.xml");
+                Console.WriteLine(" Creates GenDictCache.xml and GenDictLookupCache.xml which are used by WordSpell as dictionary lookup.  Input is a dictionary list of words separated by newlines.");
             }
             else
             {
