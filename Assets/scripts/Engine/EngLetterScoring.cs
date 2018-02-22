@@ -121,21 +121,13 @@ namespace WordSpell
 
         static string DictionaryText;
 
-        static public void LoadDictionaryData(WWW www)
+        static public void LoadDictionaryData(string test)
         {
             try
             {
-                if (string.IsNullOrEmpty(www.error))
-                {
-                    DictionaryLookup = LocalizationManager.XmlDeserializeFromWWW<SerializableDictList>(www);
+                DictionaryLookup = LocalizationManager.XmlDeserializeFromText<SerializableDictList>(test);
 
-                    Logging.StartDbg("ldd=" + dictionaryLookup.list.Count);
-                }
-                else
-                {
-                    Logging.StartDbg("ldd!" + www.url + ":::" + www.error);
-                }
-
+                Logging.StartDbg("ldd=" + dictionaryLookup.list.Count);
             }
             catch(Exception e)
             {
@@ -145,20 +137,13 @@ namespace WordSpell
             DictionaryCacheReady = true;
         }
 
-        static public void PartialLookupData(WWW www)
+        static public void PartialLookupData(string text)
         {
             try
             {
-                if (string.IsNullOrEmpty(www.error))
-                {
-                    PartialLookup = LocalizationManager.XmlDeserializeFromWWW<SerializableStringList>(www);
+                PartialLookup = LocalizationManager.XmlDeserializeFromText<SerializableStringList>(text);
 
-                    Logging.StartDbg("pld=" + PartialLookup.list.Count);
-                }
-                else
-                {
-                    Logging.StartDbg("pld!" + www.url + ":::" + www.error);
-                }
+                Logging.StartDbg("pld=" + PartialLookup.list.Count);
             }
             catch (Exception e)
             {

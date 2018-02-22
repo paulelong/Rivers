@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using System.IO;
 using System.Xml.Serialization;
 using WordSpell;
@@ -13,7 +14,7 @@ public class LocalizationManager : MonoBehaviour
     public GameObject StatusText;
     public GameObject Version;
 
-    public delegate void LoadDataCallback(WWW www);
+    public delegate void LoadDataCallback(string text);
     public delegate void StoreDataCallback(WWW www);
 
     public static LocalizationManager instance;
@@ -37,11 +38,15 @@ public class LocalizationManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        Logging.StartDbg("lma1", timestamp: true);
         StartCoroutine(LoadFileAsync(Path.Combine(Application.streamingAssetsPath, "EngLocale.xml"), LoadLocalizationData));
+        Logging.StartDbg("lma2", timestamp: true);
         StartCoroutine(LoadFileAsync(Path.Combine(Application.streamingAssetsPath, "EngDictACache.xml"), EngLetterScoring.LoadDictionaryData));
         //StartCoroutine(LoadFileAsync(EngLetterScoring.DictionaryCachePath, EngLetterScoring.LoadDictionaryData));
+        Logging.StartDbg("lma3", timestamp: true);
         StartCoroutine(LoadFileAsync(EngLetterScoring.PartialLookupCachePath, EngLetterScoring.PartialLookupData));
         //StartCoroutine(LoadFileAsync(EngLetterScoring.DictionaryTextPath, EngLetterScoring.DictionaryTextData));
+        Logging.StartDbg("lma4", timestamp: true);
 
         DontDestroyOnLoad(gameObject);
     }
@@ -185,12 +190,34 @@ public class LocalizationManager : MonoBehaviour
     {
         Logging.StartDbg("lfa1");
 
-        using (WWW www = new WWW(filePath))
+        string result = "";
+
+        if (filePath.Contains("://"))
         {
-            yield return www;
-            Logging.StartDbg("lf2");
-            ld(www);
+            UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(filePath);
+            yield return www.SendWebRequest();
+            if (string.IsNullOrEmpty(www.error))
+            {
+                result = www.downloadHandler.text;
+            }
+            else
+            {
+                Logging.StartDbg("lfa1!" + www.error + "\n" + filePath + "\n" + www.responseCode + "\n");
+            }
         }
+        else
+        {
+            result = System.IO.File.ReadAllText(filePath);
+        }
+
+        ld(result);
+
+        //using (WWW www = new WWW(filePath))
+        //{
+        //    yield return www;
+        //    Logging.StartDbg("lf2");
+        //    ld(www);
+        //}
 
         Logging.StartDbg("lfax");
     }
@@ -218,30 +245,23 @@ public class LocalizationManager : MonoBehaviour
         Logging.StartDbg("sfx");
     }
 
-    void LoadLocalizationData(WWW www)
+    void LoadLocalizationData(string text)
     {
-        if (string.IsNullOrEmpty(www.error))
-        {
-            localizationData = XmlDeserializeFromWWW<LocalizationData>(www);
+        localizationData = XmlDeserializeFromText<LocalizationData>(text);
 
-            localizedText = new Dictionary<string, string>();
+        localizedText = new Dictionary<string, string>();
 
-            foreach (LocalizationItem li in localizationData.items)
-            {
-                localizedText.Add(li.key, li.value);
-            }
-        }
-        else
+        foreach (LocalizationItem li in localizationData.items)
         {
-            Logging.StartDbg("lld!" + www.url + ":::" + www.error);
+            localizedText.Add(li.key, li.value);
         }
 
         XMLisReady = true;
     }
     
-    public static datatype XmlDeserializeFromWWW<datatype>(WWW www)
+    public static datatype XmlDeserializeFromText<datatype>(string text)
     {
-        using (TextReader textReader = new StringReader(www.text))
+        using (TextReader textReader = new StringReader(text))
         {
             XmlSerializer serializer = new XmlSerializer(typeof(datatype));
 
