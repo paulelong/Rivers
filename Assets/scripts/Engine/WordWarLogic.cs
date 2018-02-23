@@ -420,18 +420,6 @@ namespace WordSpell
 
         }
 
-        //public static LetterProp NewLetter(int i, int j)
-        //{
-        //    LetterPropGrid[i, j] = new LetterProp(gs.level, levelup, i, j);
-
-        //    if (levelup == true)
-        //    {
-        //        levelup = false;
-        //    }
-
-        //    return (LetterPropGrid[i, j]);
-        //}
-
         internal static void NewMusicTile()
         {
             int ti = WSGameState.Rnd.Next(Gridsize - 1);

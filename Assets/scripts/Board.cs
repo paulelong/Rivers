@@ -459,11 +459,13 @@ public class Board : MonoBehaviour
     void OnApplicationFocus(bool hasFocus)
     {
         SaveGameState();
+        ResetTimer();
     }
 
     void OnApplicationPause(bool pauseStatus)
     {
         SaveGameState();
+        ResetTimer();
     }
 
     void SaveGameState()
@@ -584,6 +586,7 @@ public class Board : MonoBehaviour
         WSGameState.NewMusicTile();
 
         ResetTimer();
+        RefreshSpells();
 
         // Load save game data
         //WSGameState.LoadGame();

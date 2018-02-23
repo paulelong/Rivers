@@ -46,6 +46,8 @@ namespace WordSpell
         Vector3 letterRotVUCAxis;
         Vector3 letterRotVDCAxis;
 
+        bool moving;
+
         private void ClearTransform()
         {
             if(LetTF != null)
@@ -125,6 +127,7 @@ namespace WordSpell
             set
             {
                 letterDCount = value;
+                moving = true;
             }
         }
 
@@ -177,6 +180,7 @@ namespace WordSpell
             set
             {
                 letterUCount = value;
+                moving = true;
             }
         }
 
@@ -190,6 +194,7 @@ namespace WordSpell
             set
             {
                 letterRCount = value;
+                moving = true;
             }
         }
 
@@ -203,6 +208,7 @@ namespace WordSpell
             set
             {
                 letterLCount = value;
+                moving = true;
             }
         }
 
@@ -216,6 +222,7 @@ namespace WordSpell
             set
             {
                 letterRotHR = value;
+                moving = true;
             }
         }
 
@@ -229,6 +236,7 @@ namespace WordSpell
             set
             {
                 letterRotHL = value;
+                moving = true;
             }
         }
 
@@ -242,6 +250,7 @@ namespace WordSpell
             set
             {
                 letterRotVU = value;
+                moving = true;
             }
         }
 
@@ -255,6 +264,7 @@ namespace WordSpell
             set
             {
                 letterRotVD = value;
+                moving = true;
             }
         }
 
@@ -268,6 +278,7 @@ namespace WordSpell
             set
             {
                 letterRotHRAxis = value;
+                moving = true;
             }
         }
 
@@ -281,6 +292,7 @@ namespace WordSpell
             set
             {
                 letterRotHLAxis = value;
+                moving = true;
             }
         }
 
@@ -294,6 +306,7 @@ namespace WordSpell
             set
             {
                 letterRotVUAxis = value;
+                moving = true;
             }
         }
 
@@ -307,6 +320,7 @@ namespace WordSpell
             set
             {
                 letterRotVDAxis = value;
+                moving = true;
             }
         }
 
@@ -320,6 +334,7 @@ namespace WordSpell
             set
             {
                 letterRotHRCAxis = value;
+                moving = true;
             }
         }
 
@@ -333,6 +348,7 @@ namespace WordSpell
             set
             {
                 letterRotHLCAxis = value;
+                moving = true;
             }
         }
 
@@ -346,6 +362,7 @@ namespace WordSpell
             set
             {
                 letterRotVUCAxis = value;
+                moving = true;
             }
         }
 
@@ -359,6 +376,7 @@ namespace WordSpell
             set
             {
                 letterRotVDCAxis = value;
+                moving = true;
             }
         }
 
@@ -407,6 +425,19 @@ namespace WordSpell
             get
             {
                 return (TileAnim)LetTF.GetChild(0).transform.GetComponent(typeof(TileAnim));
+            }
+        }
+
+        public bool Moving
+        {
+            get
+            {
+                return moving;
+            }
+
+            set
+            {
+                moving = value;
             }
         }
 
