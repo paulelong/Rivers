@@ -17,6 +17,9 @@ public class LocalizationManager : MonoBehaviour
     public delegate void LoadDataCallback(string text);
     public delegate void StoreDataCallback(WWW www);
 
+    public static string[] AsyncStringSlots = new string[3];
+    public static bool[] AsyncCompleteSlots = new bool[3];
+
     public static LocalizationManager instance;
     private static LocalizationData localizationData;
 
@@ -39,58 +42,76 @@ public class LocalizationManager : MonoBehaviour
         }
 
         Logging.StartDbg("lma1", timestamp: true);
-        StartCoroutine(LoadFileAsync(Path.Combine(Application.streamingAssetsPath, "EngLocale.xml"), LoadLocalizationData));
+        StartCoroutine(LoadFileAsync(Path.Combine(Application.streamingAssetsPath, "EngLocale.xml"), LoadLocalizationData, 0));
         Logging.StartDbg("lma2", timestamp: true);
-        StartCoroutine(LoadFileAsync(Path.Combine(Application.streamingAssetsPath, "EngDictACache.xml"), EngLetterScoring.LoadDictionaryData));
+        StartCoroutine(LoadFileAsync(Path.Combine(Application.streamingAssetsPath, "EngDictACache.xml"), EngLetterScoring.LoadDictionaryData,1));
         //StartCoroutine(LoadFileAsync(EngLetterScoring.DictionaryCachePath, EngLetterScoring.LoadDictionaryData));
         Logging.StartDbg("lma3", timestamp: true);
-        StartCoroutine(LoadFileAsync(EngLetterScoring.PartialLookupCachePath, EngLetterScoring.PartialLookupData));
+        StartCoroutine(LoadFileAsync(EngLetterScoring.PartialLookupCachePath, EngLetterScoring.PartialLookupData,2));
         //StartCoroutine(LoadFileAsync(EngLetterScoring.DictionaryTextPath, EngLetterScoring.DictionaryTextData));
         Logging.StartDbg("lma4", timestamp: true);
 
         DontDestroyOnLoad(gameObject);
+
+        Logging.StartDbg("lmax", timestamp: true);
     }
 
-    private IEnumerator Start()
+    private void Start()
     {
         UpdateVersion(Application.version);
 
         Logging.StartDbg("w1", timestamp: true);
-        Logging.StartDbg("w2");
 
         UpdateStatus("Loading localization data...");
 
-        while (!instance.GetIsXMLReady())
-        {
-            yield return null;
-        }
-        Logging.StartDbg("w3");
+        Logging.StartDbg("w2");
 
-        UpdateStatus("Loading dictionary cache...");
-
-        while (!EngLetterScoring.DictionaryCacheReady)
-        {
-            yield return null;
-        }
-        Logging.StartDbg("w4");
-
-        UpdateStatus("Loading partial lookup cache...");
-
-        //while (!EngLetterScoring.DictionharyPartialCacheReady)
+        //while (!AsyncCompleteSlots[0])
         //{
         //    yield return null;
         //}
+        ////LoadLocalizationData(AsyncStringSlots[0]);
+        //Logging.StartDbg("w3");
+
+
+        //UpdateStatus("Loading dictionary cache...");
+
+        //while (!AsyncCompleteSlots[1])
+        //{
+        //    yield return null;
+        //}
+        ////EngLetterScoring.LoadDictionaryData(AsyncStringSlots[1]);
+        //Logging.StartDbg("w4");
+
+        //UpdateStatus("Loading partial lookup cache...");
+
+        //while (!AsyncCompleteSlots[2])
+        //{
+        //    yield return null;
+        //}
+        ////EngLetterScoring.PartialLookupData(AsyncStringSlots[2]);
         //Logging.StartDbg("w5");
 
         //UpdateStatus("Checking dictionary...");
 
         //EngLetterScoring.ReloadDictionary();
 
-        UpdateStatus("Ready!");
-
-        isReady = true;
 
         Logging.StartDbg("wx", timestamp:true);
+    }
+
+
+    public void Update()
+    {
+        //if(XMLisReady)
+        //{
+        //    UpdateStatus("Loaded Localization");
+        //}
+
+        if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady)
+        {
+            isReady = true;
+        }
     }
 
     private void UpdateStatus(string status)
@@ -186,7 +207,7 @@ public class LocalizationManager : MonoBehaviour
         Logging.StartDbg("Dlx");
     }
 
-    static IEnumerator LoadFileAsync(string filePath, LoadDataCallback ld)
+    static IEnumerator LoadFileAsync(string filePath, LoadDataCallback ld, int slot)
     {
         Logging.StartDbg("lfa1");
 
@@ -210,6 +231,8 @@ public class LocalizationManager : MonoBehaviour
             result = System.IO.File.ReadAllText(filePath);
         }
 
+        AsyncStringSlots[slot] = result;
+        AsyncCompleteSlots[slot] = true;
         ld(result);
 
         //using (WWW www = new WWW(filePath))
@@ -294,6 +317,56 @@ public class LocalizationManager : MonoBehaviour
         }
 
         return result;
+    }
+
+    public string GetLocalizedValuesByindex(string key, int index)
+    {
+        string[] result = null;
+
+        if (localizedText.ContainsKey(key))
+        {
+            result = localizedText[key].Split('\n');
+        }
+        else
+        {
+            return "Error: Can't find strings";
+        }
+
+        if (result == null || result.Length <= 0)
+        {
+            return "Error: String list empty";
+        }
+
+        if(index >= result.Length)
+        {
+            return "";
+        }
+
+        return result[index];
+    }
+
+
+    public string GetLocalizedValueRandom(string key)
+    {
+        string[] result = null;
+
+        if (localizedText.ContainsKey(key))
+        {
+             result = localizedText[key].Split('\n');
+        }
+        else
+        {
+            return "Error: Can't find strings";
+        }
+
+        if(result == null || result.Length <= 0)
+        {
+            return "Error: String list empty";
+        }
+
+        int v = WSGameState.Rnd.Next(result.Length);
+
+        return result[v];
     }
 
     public bool GetIsReady()

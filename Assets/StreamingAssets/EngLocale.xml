@@ -6,12 +6,11 @@
       <value>Pangram, the letter volcano, is about to erupt!
 
 Legend tells of a magical prodigy who's mastery of words and strategy will save the day.  Spell words by selecting adjacent tiles in any of the 8 directions.  For instance, following the yellow arrows to spell GUITAR in the example below. 
-
 	  </value>
     </LocalizationItem>
     <LocalizationItem>
       <key>intro1</key>
-      <value>Longer words improve your fortune, which means better replacement letters.  But the jumble of letters, what is a Wizard to do?  
+      <value>Longer words improve your fortune, which means better replacement letters.  Oh, but the jumble of letters, what is a Wizard to do?  
 
 You will advance your magicial skills through levels, and when they are high enough, you will gain magic spells that are added to your book.  Casting these spells require mana, which you collect by spelling words with purple mana tiles.  
 
@@ -19,7 +18,7 @@ You are also awarded free spells, earned by spelling long or high scoring words.
 
 Spell higher scoring and longer words by strategically rearranging the letter tiles using the spells  you have available, and any that have been awarded.
 
-But beware of lava, e.g. the RED letter tile in the above example, because if they reach the bottom, the game is over.  Keep the lava tiles away and earn the highest score.
+But beware of lava, the RED letter tile in the above example, because if they reach the bottom the game is over.  Keep the lava tiles away and earn the highest score.
 	  </value>
     </LocalizationItem>
     <LocalizationItem>
@@ -49,6 +48,127 @@ But beware of lava, e.g. the RED letter tile in the above example, because if th
     <LocalizationItem>
       <key>Start7x7</key>
       <value>Start 7x7</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Level</key>
+      <value>Level</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Score</key>
+      <value>Score</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Mana</key>
+      <value>Mana</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Fortune</key>
+      <value>Fortune</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Spells</key>
+      <value>Spells</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Audition</key>
+      <value>Audition</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Free</key>
+      <value>free</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Close</key>
+      <value>Close</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Quit</key>
+      <value>Quit</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Email</key>
+      <value>Email</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Yes</key>
+      <value>Yes</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>No</key>
+      <value>No</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>OK</key>
+      <value>OK</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>NewSpell</key>
+      <value>You have new spells.  Spells require Mana which you collect by spelling words using purple Mana tiles.
+	  
+	  
+	  </value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>NoWordSpelledMsg</key>
+      <value>Select adjacent tiles in any direction to spells words.  When the word is valid, submit button will turn green.  Words must be 3 or more letters long.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>LessThanThreeMsg</key>
+      <value>Only words greater than 3 letters are accepted.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>NewLevel</key>
+      <value>Welcome to Level </value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>NiceWord</key>
+      <value>Nice word, you've earned a </value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Spell</key>
+      <value>spell</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Stuck</key>
+      <value>You seem stuck, do you want to me to find you a word?</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>UsedAlready</key>
+      <value>You've used that word already.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>SubmitButtonDefault</key>
+      <value>Click on letters 
+to spell a word</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>SubmitButtonAlreadyUsed</key>
+      <value> already used.
+</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>SubmitButtonSubmit</key>
+      <value>, submit?
+</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>IncorrectWordPhrases</key>
+      <value>Nice word...if you are a Martian :)  Please try again.
+Good try, but only earthbound languages will work.
+I'm sure you think that's a word, but it's not in my dictionary
+Creative, but that's not a word.
+Not every combination of letters spell a word.
+Do you need your reading glass, because that's not a word.
+You sure do have a knack for spelling gibberish.
+I'm not sure gibberish is a language.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>NextLevelMsg</key>
+      <value>Level 2 introduces blue tiles which are worth double the letter value
+Beware of lava tiles, if they reach the bottom, the game is over
+Level 4 introduces double word tiles which double the word score
+Level 5 introduces triple letter tiles which triple the letter value.
+Level 6 introduces triple word tiles which triple the word score</value>
     </LocalizationItem>
   </items>
 </LocalizationData>

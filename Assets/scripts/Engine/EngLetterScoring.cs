@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 //using System.Runtime.Serialization.Formatters.Binary;
 using System.Linq;
@@ -85,7 +86,7 @@ namespace WordSpell
         }
 
         static public bool DictionaryCacheReady { get; private set; }
-        static public bool DictionharyPartialCacheReady { get; private set; }
+        static public bool DictionaryPartialCacheReady { get; private set; }
         static public bool DictionaryTextReady { get; private set; }
 
         public static readonly string[] LevelMsgs = 
@@ -97,20 +98,10 @@ namespace WordSpell
             "Level 6 introduces triple word tiles which triple the word score",
         };
 
-        public static readonly string[] IncorrectWordPhrases =
-        {
-            "Nice word...if you are a Martian :)  Please try again.",
-            "Good try, but only earthbound languages will work.",
-            "I'm sure you think that's a word, but it's not in my dictionary",
-            "Creative, but that's not a word.",
-            "Not every combination of letters spell a word.",
-        };
-
-
         static public string GetIncorrectWordPhrase()
         {
-            int r = WSGameState.Rnd.Next(IncorrectWordPhrases.Length);
-            return IncorrectWordPhrases[r];
+
+            return LocalizationManager.instance.GetLocalizedValueRandom("IncorrectWordPhrases");
         }
 
         static char[] Vowels = { 'A', 'E', 'I', 'O', 'U' };
@@ -130,7 +121,7 @@ namespace WordSpell
                 Logging.StartDbg("ldd=" + dictionaryLookup.list.Count);
             }
             catch(Exception e)
-            {
+            { 
                 Logging.StartDbg("ldd!!" + e.ToString());
             }
 
@@ -150,7 +141,7 @@ namespace WordSpell
                 Logging.StartDbg("ldd!!" + e.ToString());
             }
 
-            DictionharyPartialCacheReady = true;
+            DictionaryPartialCacheReady = true;
         }
 
         static public void DictionaryTextData(WWW www)
@@ -382,14 +373,15 @@ namespace WordSpell
 
         static public string GetLevelMsg(int n)
         {
-            if ((n-2) < LevelMsgs.Length)
-            {
-                return LevelMsgs[n-2];
-            }
-            else
-            {
-                return "";
-            }
+            return LocalizationManager.instance.GetLocalizedValuesByindex("NextLevelMsg", n-2);
+            //if ((n-2) < LevelMsgs.Length)
+            //{
+            //    return LevelMsgs[n-2];
+            //}
+            //else
+            //{
+            //    return "";
+            //}
         }
 
         static public bool IsWord(string word)
