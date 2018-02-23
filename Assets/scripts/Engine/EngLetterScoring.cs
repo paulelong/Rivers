@@ -89,18 +89,8 @@ namespace WordSpell
         static public bool DictionaryPartialCacheReady { get; private set; }
         static public bool DictionaryTextReady { get; private set; }
 
-        public static readonly string[] LevelMsgs = 
-        {
-            "Level 2 introduces blue tiles which are worth double the letter value",
-            "Beware of lava tiles, if they reach the bottom, the game is over",
-            "Level 4 introduces double word tiles which double the word score",
-            "Level 5 introduces tripple letter tiles which triple the leter value.",
-            "Level 6 introduces triple word tiles which triple the word score",
-        };
-
         static public string GetIncorrectWordPhrase()
         {
-
             return LocalizationManager.instance.GetLocalizedValueRandom("IncorrectWordPhrases");
         }
 
@@ -158,230 +148,9 @@ namespace WordSpell
             DictionaryTextReady = true;
         }
 
-        /// <summary>
-        /// Checks to see if dictionary and partial cache is loaded properly, if not it rebuilds from text file.
-        /// </summary>
-        static public void ReloadDictionary()
-        {
-
-        }
-
-        static public void LoadDictionary()
-        {
-            Logging.StartDbg("ld0", timestamp:true);
-
-            //string filePath = Application.persistentDataPath + "/" + DictionaryCache;
-            //LocalizationManager.AsyncLoadDictionary(filePath);
-
-            if(dictionaryLookup.list.Count <= 0)
-            {
-                Logging.StartDbg("ld2", timestamp: true);
-                RebuildDictionaryFromTextFile(DictionaryCachePath);
-                Logging.StartDbg("ld3", timestamp: true);
-            }
-
-            Logging.StartDbg("Dictionary loaded " + dictionaryLookup.list.Count);
-
-            // Is it cached already?
-        //    if (File.Exists(filePath))
-        //    {
-        //        Logging.StartDbg("ld1", timestamp: true);
-        //        try
-        //        {
-        //            XmlSerializer xs = new XmlSerializer(typeof(SerializableDictList));
-
-        //            using (FileStream fs = new FileStream(filePath, FileMode.Open))
-        //            {
-        //                DictionaryLookup = (SerializableDictList)xs.Deserialize(fs);
-        //            }
-        //        }
-        //        catch (System.Xml.XmlException)
-        //        {
-        //            Something went wrong, so let's rebuilld
-        //            Logging.StartDbg("ld0!", timestamp: true);
-        //            RebuildDictionaryFromTextFile(filePath);
-        //            Logging.StartDbg("ld1!", timestamp: true);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Logging.StartDbg("ld2", timestamp: true);
-        //        RebuildDictionaryFromTextFile(filePath);
-        //        Logging.StartDbg("ld3", timestamp: true);
-        //    }
-
-        //    Logging.StartDbg("ld4", timestamp: true);
-        //    CreatePartialLookup();
-        //    Logging.StartDbg("ldx", timestamp: true);
-        }
-
-        static public void RebuildDictionaryCache()
-        {
-            Logging.StartDbg("rd1", timestamp: true);
-            string[] words = DictionaryText.Split('\n');
-            Logging.StartDbg("rd2", timestamp: true);
-
-            foreach (String rs in words)
-            {
-                string s = rs.TrimEnd();
-
-                if (!s.Contains("'") && s.Length > 2 && s.IndexOfAny(RequiredLettersForWord) >= 0)
-                {
-                    DictionaryLookup.Add(s);
-                }
-            }
-            Logging.StartDbg("rd3", timestamp: true);
-
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableDictList));
-
-            Logging.StartDbg("rd4", timestamp: true);
-
-            using (FileStream fs = new FileStream(DictionaryCachePath, FileMode.Create))
-            {
-                xs.Serialize(fs, DictionaryLookup);
-            }
-            Logging.StartDbg("rd5", timestamp: true);
-
-        }
-
-        static public void RebuildDictionaryFromTextFile(string filePath)
-        {
-            Logging.StartDbg("rdftf0", timestamp: true);
-            TextAsset DictFile = Resources.Load(filePath) as TextAsset;
-            if (DictFile != null)
-            {
-                Logging.StartDbg("rdftf1", timestamp: true);
-                string[] words = DictFile.text.Split('\n');
-                Logging.StartDbg("rdftf2", timestamp: true);
-
-                foreach (String rs in words)
-                {
-                    string s = rs.TrimEnd();
-
-                    if (!s.Contains("'") && s.Length > 2 && s.IndexOfAny(RequiredLettersForWord) >= 0)
-                    {
-                        DictionaryLookup.Add(s);
-                    }
-                }
-                Logging.StartDbg("rdftf3", timestamp: true);
-
-                XmlSerializer xs = new XmlSerializer(typeof(SerializableDictList));
-
-                Logging.StartDbg("rdftf4", timestamp: true);
-
-                using (FileStream fs = new FileStream(filePath, FileMode.Create))
-                {
-                    xs.Serialize(fs, DictionaryLookup);
-                }
-                Logging.StartDbg("rdftf5", timestamp: true);
-            }
-
-            Logging.StartDbg("rdftfx", timestamp: true);
-        }
-
-        static public void CreatePartialLookup()
-        {
-            Logging.StartDbg("cpl0", timestamp: true);
-
-            string filePath = Application.persistentDataPath + "/" + PartialLookupCache;
-            // Is it cached already?
-            if (File.Exists(filePath))
-            {
-                Logging.StartDbg("cpl1", timestamp: true);
-                try
-                {
-                    XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
-
-                    using(FileStream fs = new FileStream(filePath, FileMode.Open))
-                    {
-                        PartialLookup = (SerializableStringList)xs.Deserialize(fs);
-                    }
-                }
-                catch(System.Xml.XmlException)
-                {
-                    // Something went wrong, so let's rebuilld
-                    Logging.StartDbg("cpl!");
-                    BuildPartialLookup(filePath);
-                    Logging.StartDbg("cpl2");
-                }
-            }
-            else
-            {
-                Logging.StartDbg("cpl3", timestamp: true);
-                BuildPartialLookup(filePath);
-                Logging.StartDbg("cpl4", timestamp: true);
-            }
-        }
-
-        static private void ReuildPartialLookupCache()
-        {
-            Logging.StartDbg("bpl0");
-            // Build partial list for each unique letter combination.
-            foreach (string s in DictionaryLookup.list)
-            {
-                for (int i = 1; i <= s.Length; i++)
-                {
-                    string partial = s.Substring(0, i);
-                    if (PartialLookup.BinarySearch(partial) < 0)
-                    {
-                        PartialLookup.Add(partial);
-                    }
-                }
-            }
-            Logging.StartDbg("bpl1");
-
-            //LocalizationManager.StoreFile(PartialLookupCachePath, LocalizationManager.XmlSerializeToString<SerializableStringList>(PartialLookup));
-
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
-
-            Logging.StartDbg("bpl2");
-
-            using (FileStream fs = new FileStream(Path.Combine(Application.persistentDataPath, PartialLookupCache), FileMode.Create))
-            {
-                xs.Serialize(fs, PartialLookup);
-            }
-            Logging.StartDbg("bplx");
-        }
-
-        static private void BuildPartialLookup(string filePath)
-        {
-            Logging.StartDbg("bpl0");
-            // Build partial list for each unique letter combination.
-            foreach (string s in DictionaryLookup.list)
-            {
-                for (int i = 1; i <= s.Length; i++)
-                {
-                    string partial = s.Substring(0, i);
-                    if (PartialLookup.BinarySearch(partial) < 0)
-                    {
-                        PartialLookup.Add(partial);
-                    }
-                }
-            }
-            Logging.StartDbg("bpl1");
-
-            XmlSerializer xs = new XmlSerializer(typeof(SerializableStringList));
-
-            Logging.StartDbg("bpl2");
-
-            using (FileStream fs = new FileStream(filePath, FileMode.Create))
-            {
-                xs.Serialize(fs, PartialLookup);
-            }
-            Logging.StartDbg("bplx");
-        }
-
         static public string GetLevelMsg(int n)
         {
             return LocalizationManager.instance.GetLocalizedValuesByindex("NextLevelMsg", n-2);
-            //if ((n-2) < LevelMsgs.Length)
-            //{
-            //    return LevelMsgs[n-2];
-            //}
-            //else
-            //{
-            //    return "";
-            //}
         }
 
         static public bool IsWord(string word)
@@ -448,9 +217,8 @@ namespace WordSpell
         internal static bool PartialExists(string curword)
         {
             string curwordlower = curword.ToLower();
-            // TODO Check optimization
+
             return PartialLookup.BinarySearch(curwordlower) >= 0;
-            //return DictionaryLookup.Exists(x => x.StartsWith(curwordlower));
         }
 
         public static byte GetRandomLetter(bool isBurning, WSGameState.FortuneLevel fl)
