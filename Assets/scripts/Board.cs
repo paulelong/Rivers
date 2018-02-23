@@ -53,6 +53,10 @@ public class Board : MonoBehaviour
     private const float FORUTUNE_BAR_SCALE = 17.5f;
     private const float FORTUNE_BAR_SIZE = 55;
 
+    public const string SubmitButtonDefaultKey = "SubmitButtonDefault";
+    public const string SubmitButtonAlreadyUsedKey = "SubmitButtonAlreadyUsed";
+    public const string SubmitButtonSumbitKey = "SubmitButtonSubmit";
+
 
     #endregion Constants
 
@@ -380,7 +384,7 @@ public class Board : MonoBehaviour
             if (WSGameState.CurrentLevel < 4 && WSGameState.GameInProgress && Time.realtimeSinceStartup - LastActionTime > TIME_TILL_HINT && !OptionCanvas.activeSelf)
             {
                 ResetTimer();
-                ShowOption("You seem stuck, do you want to me to find you a word?");
+                ShowOption(LocalizationManager.instance.GetLocalizedValue("Stuck"));
             }
 
             if (MsgCanvas.activeSelf)
@@ -486,7 +490,7 @@ public class Board : MonoBehaviour
 
     public void ResetSubmitButton()
     {
-        SetCurrentWord("Click on letters to spell a word");
+        SetCurrentWord(LocalizationManager.instance.GetLocalizedValue(SubmitButtonDefaultKey));
         IndicateGoodWord(WSGameState.WordValidity.Garbage);
     }
 
@@ -627,7 +631,9 @@ public class Board : MonoBehaviour
 
     public GameObject SelectLet(int i, int j, bool isMagic = false)
     {
-        GameObject t = (GameObject)Instantiate(SelectPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset) * WSGameState.GridScale, 0.65f), Quaternion.identity);
+        Material m;
+
+        GameObject t = Instantiate(SelectPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset) * WSGameState.GridScale, 0.65f), Quaternion.identity);
         t.transform.localScale *= WSGameState.GridScale;
 
         GameObject hl = t.transform.GetChild(0).gameObject;
@@ -635,16 +641,15 @@ public class Board : MonoBehaviour
         GameObject hr = t.transform.GetChild(2).gameObject;
         GameObject vb = t.transform.GetChild(3).gameObject;
 
-        Material m;
         if(isMagic)
         {
             m = WSGameState.GetMagicMat();
         }
         else
         {
-            m = WSGameState.GetFortuneColor();
-
+            m = WSGameState.GetFortuneColor(WSGameState.ScoreWord());
         }
+
         hl.GetComponent<MeshRenderer>().material = m;
         vt.GetComponent<MeshRenderer>().material = m;
         hr.GetComponent<MeshRenderer>().material = m;
@@ -765,11 +770,11 @@ public class Board : MonoBehaviour
         UnityEngine.UI.Text c = item.Find(SpellCostPath).GetComponent<UnityEngine.UI.Text>();
         if (!awarded)
         {
-            c.text = si.MannaPoints.ToString() + " mana";
+            c.text = si.MannaPoints.ToString() + " " + LocalizationManager.instance.GetLocalizedValue("Mana");
         }
         else
         {
-            c.text = "free";
+            c.text = LocalizationManager.instance.GetLocalizedValue("Free");
         }
 
         UnityEngine.UI.Image i = item.Find(SpellImagePath).GetComponent<UnityEngine.UI.Image>();

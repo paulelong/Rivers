@@ -476,16 +476,21 @@ namespace WordSpell
                         // Deselect except for the one you just clicked.
                         if (!Deselect(lp))
                         {
+                            SelLetterList.Add(lp);
                             lp.SelectorObject = boardScript.SelectLet(lp.I, lp.J);
+                        }
+                        else
+                        {
+                            SelLetterList.Add(lp);
                         }
                     }
                     else
                     {
+                        SelLetterList.Add(lp);
                         lp.SelectorObject = boardScript.SelectLet(lp.I, lp.J);
                     }
 
-                    SelLetterList.Add(lp);
-
+                    //SelLetterList.Add(lp);
 
                     // add if for > 3 letters
 
@@ -494,12 +499,12 @@ namespace WordSpell
                     {
                         if (gs.history.FindIndex(f => (f.Word == GetCurrentWord())) >= 0)
                         {
-                            boardScript.SetCurrentWord(GetCurrentWord() + " = " + ScoreWord() + ", already used\n" + GetWordTally());
+                            boardScript.SetCurrentWord(GetCurrentWord() + " = " + ScoreWord() + LocalizationManager.instance.GetLocalizedValue(Board.SubmitButtonAlreadyUsedKey) + GetWordTally());
                             boardScript.IndicateGoodWord(WSGameState.WordValidity.UsedWord);
                         }
                         else
                         {
-                            boardScript.SetCurrentWord(GetCurrentWord() + " = " + ScoreWord() + ". submit?\n" + GetWordTally());
+                            boardScript.SetCurrentWord(GetCurrentWord() + " = " + ScoreWord() + LocalizationManager.instance.GetLocalizedValue(Board.SubmitButtonSumbitKey) + GetWordTally());
                             boardScript.IndicateGoodWord(WSGameState.WordValidity.Word);
                         }
 
@@ -525,7 +530,7 @@ namespace WordSpell
             {
                 if (gs.history.FindIndex(f => (f.Word == GetCurrentWord())) >= 0)
                 {
-                    boardScript.ShowMsg("You've used that word already.");
+                    boardScript.ShowMsg(LocalizationManager.instance.GetLocalizedValue("UsedAlready"));
                     Deselect(null);
                 }
                 else
@@ -574,7 +579,7 @@ namespace WordSpell
 
                         if (ss.si != null)
                         {
-                            boardScript.ShowMsg("Nice word, you've earned a " + ss.si.FriendlyName + " spell.");
+                            boardScript.ShowMsg(LocalizationManager.instance.GetLocalizedValue("NiceWord") + ss.si.FriendlyName + LocalizationManager.instance.GetLocalizedValue("Spell"));
                             boardScript.RefreshSpells();
                         }
 
@@ -584,10 +589,10 @@ namespace WordSpell
                         if (GainedNextLevel)
                         {
                             boardScript.LevelSound();
-                            string levelmsg = "Welcome to Level " + CurrentLevel.ToString() + "\n\n";
+                            string levelmsg = LocalizationManager.instance.GetLocalizedValue("NewLevel") + CurrentLevel.ToString() + "\n\n";
                             if (Spells.HasSpells())
                             {
-                                levelmsg += "You have new spells.  Spells require Mana which you collect by spelling words using purple Mana tiles.\n\n";
+                                levelmsg += LocalizationManager.instance.GetLocalizedValue("NewSpell");
                                 boardScript.RefreshSpells();
                             }
                             levelmsg += EngLetterScoring.GetLevelMsg(CurrentLevel);
@@ -605,11 +610,11 @@ namespace WordSpell
                 {
                     if (s.Length == 0)
                     {
-                        boardScript.ShowMsg("Select adjacent tiles in any direction to spells words.  When the word is valid, submit button will turn green.  Words must be 3 or more letters long.");
+                        boardScript.ShowMsg(LocalizationManager.instance.GetLocalizedValue("NoWordSpelledMsg"));
                     }
                     else
                     {
-                        boardScript.ShowMsg("Only words greater than 3 letters are accepted.");
+                        boardScript.ShowMsg(LocalizationManager.instance.GetLocalizedValue("LessThanThreeMsg"));
                     }
                 }
                 else
@@ -731,13 +736,24 @@ namespace WordSpell
 
         #region StatUpdate
 
-        public static FortuneLevel GetFortune()
+        public static FortuneLevel GetFortune(int value = 0)
         {
-            if (GetLatestEff() >= EffHigh)
+            double comparevalue;
+
+            if (value >= 0)
+            {
+                comparevalue = value;
+            }
+            else
+            {
+                comparevalue = GetLatestEff();
+            }
+
+            if (comparevalue >= EffHigh)
             {
                 return FortuneLevel.Great;
             }
-            else if (GetLatestEff() >= EffMed)
+            else if (comparevalue >= EffMed)
             {
                 return FortuneLevel.Good;
             }
@@ -895,7 +911,7 @@ namespace WordSpell
             return levelup;
         }
 
-        internal static int ScoreWord()
+        public static int ScoreWord()
         {
             return EngLetterScoring.ScoreWord(SelLetterList);
         }
@@ -1125,9 +1141,9 @@ namespace WordSpell
             return (double)wordtotal / (double)gs.fortune.Count;
         }
 
-        internal static Material GetFortuneColor()
+        internal static Material GetFortuneColor(int value = 0)
         {
-            switch (GetFortune())
+            switch (GetFortune(value))
             {
                 case FortuneLevel.Bad:
                     return (BadFortuneMaterial);
