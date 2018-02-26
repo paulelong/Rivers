@@ -46,6 +46,8 @@ namespace WordSpell
         Vector3 letterRotVUCAxis;
         Vector3 letterRotVDCAxis;
 
+        GameObject selectorGO = null;
+
         bool moving;
 
         private void ClearTransform()
@@ -438,6 +440,19 @@ namespace WordSpell
             set
             {
                 moving = value;
+            }
+        }
+
+        public GameObject SelectorGO
+        {
+            get
+            {
+                return selectorGO;
+            }
+
+            set
+            {
+                selectorGO = value;
             }
         }
 

@@ -28,6 +28,7 @@ namespace WordSpell
             Bad,
             Good,
             Great,
+            None,
         }
 
         public enum WordValidity
@@ -44,6 +45,14 @@ namespace WordSpell
             public int MannaScore;
             public SpellInfo si;
             public int bonus;
+        }
+
+        public enum GameEndReasons
+        {
+            NOT_OVER,
+            USER_ENDED,
+            BURNING_TILE,
+            NO_WORDS,
         }
 
         #region Privates
@@ -72,6 +81,7 @@ namespace WordSpell
         static Material GoodFortuneMaterial;
         static Material GreatFortuneMaterial;
         static Material ManaMaterial;
+        static Material NoWordMaterial;
 
         private static int FortuneLevelCount;
 
@@ -269,11 +279,6 @@ namespace WordSpell
         static float halfOffset = 0;
         #endregion Fields
 
-        internal static void DebugMode()
-        {
-            gs.mana = 100;
-            gs.level = 20;
-        }
 
         #region Init
 
@@ -345,6 +350,7 @@ namespace WordSpell
             BadFortuneMaterial = Resources.Load("Copper") as Material;
             GoodFortuneMaterial = Resources.Load("Silver") as Material;
             GreatFortuneMaterial = Resources.Load("Gold") as Material;
+            NoWordMaterial = Resources.Load("NormalSelect") as Material;
             ManaMaterial = Resources.Load("Mana") as Material;
 
             // Load the music for the speaker tiles just once.
@@ -478,6 +484,12 @@ namespace WordSpell
                         lp.SelectorObject = boardScript.SelectLet(lp.I, lp.J);
                     }
 
+                    //Deselect(null);
+                    foreach (LetterProp lpi in SelLetterList)
+                    {
+                        boardScript.SelectLet(lpi);
+                    }
+
                     //SelLetterList.Add(lp);
 
                     // add if for > 3 letters
@@ -538,16 +550,16 @@ namespace WordSpell
 
                     Logging.PlayDbg("Sub1");
                     RemoveWordAndReplaceTiles();
-                    IsGameOver = ProcessLetters();
+                    GameEndReasons ger = ProcessLetters();
                     Logging.PlayDbg("Sub2");
 
                     Deselect(null);
 
                     boardScript.ResetSubmitButton();
 
-                    if (IsGameOver)
+                    if (ger != GameEndReasons.NOT_OVER)
                     {
-                        GameOver();
+                        GameOver(ger);
                     }
                     else
                     {
@@ -631,6 +643,50 @@ namespace WordSpell
             }
 
             Logging.PlayDbg("SubX", last: true);
+        }
+
+        internal static void SetPanelSize(GameObject contrastPanel)
+        {
+            RectTransform r = contrastPanel.transform.GetComponent<RectTransform>();
+
+            //            r.sizeDelta = new Vector2(LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position.x, LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position.y);
+            //SetSize(r, new Vector2(LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position.x, LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position.y));
+
+            Vector3 minp = LetterPropGrid[0, 0].LetterBlockObj.transform.position;
+            Vector3 maxp = LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position;
+
+            Debug.Log("0,0 = " + minp);
+            Debug.Log("x,x = " + maxp);
+
+            Bounds b = LetterPropGrid[0, 0].LetterBlockObj.GetComponent<Renderer>().bounds;
+
+            Vector3 p1 = Camera.main.WorldToScreenPoint(minp - new Vector3(b.extents.x + .1f, b.extents.y + .1f, b.extents.z));
+            Vector3 p2 = Camera.main.WorldToScreenPoint(maxp + new Vector3(b.extents.x + .1f, b.extents.y + .1f, b.extents.z));
+
+            Debug.Log("Set1 to " + p1.x + " " + p1.y);
+            Debug.Log("Set2 to " + p2.x + " " + p2.y);
+
+            SetSize(r, p1, p2);
+        }
+
+        internal static void SetSize(RectTransform trans, Vector3 ul, Vector3 lr)
+        {
+            Vector3 d = lr - ul;
+
+            Vector2 min = new Vector2(ul.x / (float)Screen.width, ul.y / (float)Screen.height);
+            Vector2 max = new Vector2(lr.x / (float)Screen.width, lr.y / (float)Screen.height);
+
+            Debug.Log("min = " + min);
+            Debug.Log("max = " + max);
+
+            trans.anchorMin = min;
+            trans.anchorMax = max;
+
+            //Vector2 oldSize = trans.rect.size;
+            //Debug.Log("Oldsize " + oldSize);
+            //Vector2 deltaSize = newSize - oldSize;
+            //trans.offsetMin = trans.offsetMin - new Vector2(deltaSize.x * trans.pivot.x, deltaSize.y * trans.pivot.y);
+            //trans.offsetMax = trans.offsetMax + new Vector2(deltaSize.x * (1f - trans.pivot.x), deltaSize.y * (1f - trans.pivot.y));
         }
 
         internal static Material GetMagicMat()
@@ -724,26 +780,24 @@ namespace WordSpell
 
         #region StatUpdate
 
-        public static FortuneLevel GetFortune(int value = 0)
+        public static FortuneLevel GetFortune()
         {
-            double comparevalue;
+            return GetFortuneLevel((int)GetLatestEff());
+        }
 
-            if (value >= 0)
-            {
-                comparevalue = value;
-            }
-            else
-            {
-                comparevalue = GetLatestEff();
-            }
-
-            if (comparevalue >= EffHigh)
+        public static FortuneLevel GetFortuneLevel(int value)
+        {
+            if (value >= EffHigh)
             {
                 return FortuneLevel.Great;
             }
-            else if (comparevalue >= EffMed)
+            else if (value >= EffMed)
             {
                 return FortuneLevel.Good;
+            }
+            else if (value == 0)
+            {
+                return FortuneLevel.None;
             }
 
             return FortuneLevel.Bad;
@@ -844,8 +898,10 @@ namespace WordSpell
             TryWordList.Clear();
         }
 
-        public static void GameOver()
+        public static void GameOver(GameEndReasons ger)
         {
+            boardScript.ContrastPanel.SetActive(false);
+
             IsGameOver = true;
             Deselect(null);
 
@@ -857,7 +913,11 @@ namespace WordSpell
             RemoveGameBoard();
 
             Resume = false;
-            boardScript.EndGameAction();
+
+            int index = (int)ger - 1;
+
+
+            boardScript.EndGameAction(LocalizationManager.instance.GetLocalizedValuesByindex("EndGameReasons", index));
         }
 
         internal static bool EnoughMana(int mannaPoints)
@@ -1129,9 +1189,21 @@ namespace WordSpell
             return (double)wordtotal / (double)gs.fortune.Count;
         }
 
-        internal static Material GetFortuneColor(int value = 0)
+        internal static Material GetFortuneColor(int value = -1)
         {
-            switch (GetFortune(value))
+            FortuneLevel comparevalue = 0;
+
+            if (value == -1)
+            {
+                comparevalue = GetFortune();
+            }
+            else
+            {
+                comparevalue = GetFortuneLevel(value);
+            }
+
+
+            switch (comparevalue)
             {
                 case FortuneLevel.Bad:
                     return (BadFortuneMaterial);
@@ -1139,6 +1211,8 @@ namespace WordSpell
                     return (GoodFortuneMaterial);
                 case FortuneLevel.Great:
                     return (GreatFortuneMaterial);
+                case FortuneLevel.None:
+                    return (NoWordMaterial);
                 default:
                     return (BadFortuneMaterial);
             }
@@ -1206,7 +1280,7 @@ namespace WordSpell
             return (stillSelected);
         }
 
-        internal static bool ProcessLetters()
+        internal static GameEndReasons ProcessLetters()
         {
             List<LetterProp> removeList = new List<LetterProp>() ;
 
@@ -1220,7 +1294,7 @@ namespace WordSpell
                         if (curlp.J <= 0)
                         {
                             // GameOver
-                            return true;
+                            return GameEndReasons.BURNING_TILE;
                         }
 
                         if(LetterPropGrid[i, j -1].TileType != LetterProp.TileTypes.Burning)
@@ -1240,7 +1314,13 @@ namespace WordSpell
             }
 
             WordWarAI wwai = new WordWarAI(LetterPropGrid);
-            return (!wwai.AnyWords());
+            if(!wwai.AnyWords() && gs.awarded.Count <= 0)
+            {
+                return GameEndReasons.NO_WORDS;
+            }
+
+            return GameEndReasons.NOT_OVER;
+
         }
 
         public static void RemoveWordAndReplaceTiles()
@@ -1272,6 +1352,12 @@ namespace WordSpell
             }
 
             return ret;
+        }
+
+        internal static void DebugMode()
+        {
+            gs.mana = 100;
+            gs.level = 20;
         }
     }
 }

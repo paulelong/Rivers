@@ -14,17 +14,18 @@ namespace WordSpell
 
         public static void LoadMusic()
         {
+            Logging.StartDbg("lm0", timestamp: true);
             AmbientSongs = Resources.LoadAll<AudioClip>("Songs");
             if(AmbientSongs != null)
             {
-                Logging.StartDbg("lm0_" + AmbientSongs.Length);
+                Logging.StartDbg("lm1_" + AmbientSongs.Length);
             }
             else
             {
                 Logging.StartDbg("lm!");
             }
 
-            Logging.StartDbg("lmx");
+            Logging.StartDbg("lmx", timestamp: true);
         }
 
         public static AudioClip GetNextSong()

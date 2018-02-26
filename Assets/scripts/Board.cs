@@ -116,6 +116,8 @@ public class Board : MonoBehaviour
     public AudioClip SnipeSound;
     public AudioClip LavaSound;
 
+    public GameObject ContrastPanel;
+
     // Particle System
     public ParticleSystem MagicParticles;
     public ParticleSystem Horray;
@@ -129,12 +131,6 @@ public class Board : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-
-        //var gol = GameObject.FindGameObjectsWithTag("ScoreText");
-        //foreach(GameObject go in gol)
-        //{
-        //    Debug.Log(go.name);
-        //}
         try
         {
             Logging.StartDbg("S0", timestamp: true);
@@ -192,6 +188,8 @@ public class Board : MonoBehaviour
                 WSGameState.InitNewGame();
 
                 WSGameState.Load();
+
+                WSGameState.SetPanelSize(ContrastPanel);
             }
             Logging.StartDbg("S5", timestamp: true);
 
@@ -242,10 +240,10 @@ public class Board : MonoBehaviour
         CamZ = -16.5f;
     }
 
-    public void EndGameAction()
+    public void EndGameAction(string reason)
     {
         ResetSubmitButton();
-        StartCoroutine(EndGameDelay());
+        StartCoroutine(EndGameDelay(reason));
     }
 
     public Transform NewTile(int i, int j, float newtilepos = 0)
@@ -527,7 +525,7 @@ public class Board : MonoBehaviour
         SystemMenu.SetActive(false);
         SpellCanvas.SetActive(false);
         
-        WSGameState.GameOver();
+        WSGameState.GameOver(WSGameState.GameEndReasons.USER_ENDED);
     }
 
     public void ResetApp()
@@ -535,7 +533,7 @@ public class Board : MonoBehaviour
         SystemMenu.SetActive(false);
         SpellCanvas.SetActive(false);
 
-        WSGameState.GameOver();
+        WSGameState.GameOver(WSGameState.GameEndReasons.USER_ENDED);
         GamePersistence.ResetSavedData();
     }
 
@@ -588,18 +586,21 @@ public class Board : MonoBehaviour
         ResetTimer();
         RefreshSpells();
 
+        // Calculate Panel for background contrast size
+        WSGameState.SetPanelSize(ContrastPanel);
+
         // Load save game data
         //WSGameState.LoadGame();
         Logging.StartDbg("SGx");
     }
 
-    IEnumerator EndGameDelay()
+    IEnumerator EndGameDelay(string msg)
     {
         yield return new WaitForSeconds(1.5f);
 
-        ShowMsg("Game Over");
+        ShowMsg("Game Over\n\n" + msg);
         PlayEndGameSound();
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(5);
         HideMsg();
 
         RefreshStats();
@@ -632,17 +633,52 @@ public class Board : MonoBehaviour
         MsgCanvas.SetActive(false);
     }
 
-    public GameObject SelectLet(int i, int j, bool isMagic = false)
+    public GameObject SelectLet(LetterProp lp, bool isMagic = false)
     {
         Material m;
 
-        GameObject t = Instantiate(SelectPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset) * WSGameState.GridScale, 0.65f), Quaternion.identity);
-        t.transform.localScale *= WSGameState.GridScale;
+        if (isMagic)
+        {
+            m = WSGameState.GetMagicMat();
+        }
+        else
+        {
+            int wordscore;
+            if(EngLetterScoring.IsWord(WSGameState.GetCurrentWord()))
+            {
+                wordscore = WSGameState.ScoreWord();
+            }
+            else
+            {
+                wordscore = 0;
+            }
 
-        GameObject hl = t.transform.GetChild(0).gameObject;
-        GameObject vt = t.transform.GetChild(1).gameObject;
-        GameObject hr = t.transform.GetChild(2).gameObject;
-        GameObject vb = t.transform.GetChild(3).gameObject;
+            m = WSGameState.GetFortuneColor(wordscore);
+        }
+
+        // Does it have a selector already?
+        if (lp.SelectorObject == null)
+        { 
+            lp.SelectorObject = Instantiate(SelectPrefab, new Vector3((lp.I - WSGameState.HalfOffset) * WSGameState.GridScale, (lp.J - WSGameState.HalfOffset) * WSGameState.GridScale, 0.65f), Quaternion.identity);
+            lp.SelectorObject.transform.localScale *= WSGameState.GridScale;
+        }
+
+        GameObject hl = lp.SelectorObject.transform.GetChild(0).gameObject;
+        GameObject vt = lp.SelectorObject.transform.GetChild(1).gameObject;
+        GameObject hr = lp.SelectorObject.transform.GetChild(2).gameObject;
+        GameObject vb = lp.SelectorObject.transform.GetChild(3).gameObject;
+
+        hl.GetComponent<MeshRenderer>().material = m;
+        vt.GetComponent<MeshRenderer>().material = m;
+        hr.GetComponent<MeshRenderer>().material = m;
+        vb.GetComponent<MeshRenderer>().material = m;
+
+        return lp.SelectorGO;
+    }
+
+    public GameObject SelectLet(int i, int j, bool isMagic = false)
+    {
+        Material m;
 
         if(isMagic)
         {
@@ -652,6 +688,16 @@ public class Board : MonoBehaviour
         {
             m = WSGameState.GetFortuneColor(WSGameState.ScoreWord());
         }
+
+        GameObject t;
+
+        t = Instantiate(SelectPrefab, new Vector3((i - WSGameState.HalfOffset) * WSGameState.GridScale, (j - WSGameState.HalfOffset) * WSGameState.GridScale, 0.65f), Quaternion.identity);
+        t.transform.localScale *= WSGameState.GridScale;
+
+        GameObject hl = t.transform.GetChild(0).gameObject;
+        GameObject vt = t.transform.GetChild(1).gameObject;
+        GameObject hr = t.transform.GetChild(2).gameObject;
+        GameObject vb = t.transform.GetChild(3).gameObject;
 
         hl.GetComponent<MeshRenderer>().material = m;
         vt.GetComponent<MeshRenderer>().material = m;

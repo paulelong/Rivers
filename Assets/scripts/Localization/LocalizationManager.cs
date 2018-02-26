@@ -66,48 +66,12 @@ public class LocalizationManager : MonoBehaviour
 
         Logging.StartDbg("w2");
 
-        //while (!AsyncCompleteSlots[0])
-        //{
-        //    yield return null;
-        //}
-        ////LoadLocalizationData(AsyncStringSlots[0]);
-        //Logging.StartDbg("w3");
-
-
-        //UpdateStatus("Loading dictionary cache...");
-
-        //while (!AsyncCompleteSlots[1])
-        //{
-        //    yield return null;
-        //}
-        ////EngLetterScoring.LoadDictionaryData(AsyncStringSlots[1]);
-        //Logging.StartDbg("w4");
-
-        //UpdateStatus("Loading partial lookup cache...");
-
-        //while (!AsyncCompleteSlots[2])
-        //{
-        //    yield return null;
-        //}
-        ////EngLetterScoring.PartialLookupData(AsyncStringSlots[2]);
-        //Logging.StartDbg("w5");
-
-        //UpdateStatus("Checking dictionary...");
-
-        //EngLetterScoring.ReloadDictionary();
-
-
         Logging.StartDbg("wx", timestamp:true);
     }
 
 
     public void Update()
     {
-        //if(XMLisReady)
-        //{
-        //    UpdateStatus("Loaded Localization");
-        //}
-
         if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady)
         {
             isReady = true;
@@ -274,16 +238,20 @@ public class LocalizationManager : MonoBehaviour
 
         localizedText = new Dictionary<string, string>();
 
+        Logging.StartDbg("lld1", timestamp: true);
         foreach (LocalizationItem li in localizationData.items)
         {
             localizedText.Add(li.key, li.value);
         }
+        Logging.StartDbg("lldx", timestamp: true);
 
         XMLisReady = true;
     }
     
     public static datatype XmlDeserializeFromText<datatype>(string text)
     {
+        Logging.StartDbg("xd1", timestamp: true);
+
         using (TextReader textReader = new StringReader(text))
         {
             XmlSerializer serializer = new XmlSerializer(typeof(datatype));
@@ -292,6 +260,8 @@ public class LocalizationManager : MonoBehaviour
 
             return XmlData;
         }
+
+        Logging.StartDbg("xdx", timestamp: true);
     }
 
     public static string XmlSerializeToString<datatype>(datatype dt)

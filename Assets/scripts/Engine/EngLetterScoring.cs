@@ -272,7 +272,7 @@ namespace WordSpell
                 b = (byte)'E';
             }
 
-            return b; // System.Text.ASCIIEncoding.ASCII.GetString(new[] { b });
+            return b;
         }
 
         public static int ScoreWord(string s)
@@ -394,10 +394,7 @@ namespace WordSpell
 
             foreach (LetterProp lp in lp_list)
             {
-                //string s = (b.Content as string).ToLower();
                 word += lp.ASCIIString;
-
-                //LetterProp lp = b.DataContext as LetterProp;
 
                 string s = lp.ASCIIString;
                 _scorestr += s.ToUpper() + values[s[0]].ToString();

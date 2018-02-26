@@ -19,5 +19,4 @@ public class StartupManager : MonoBehaviour
         SceneManager.LoadScene("WordSpell");
         Logging.StartDbg("SMx", timestamp: true);
     }
-
 }
