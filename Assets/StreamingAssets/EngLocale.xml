@@ -12,7 +12,7 @@ Legend tells of a magical prodigy who's mastery of words and strategy will save 
       <key>intro1</key>
       <value>Longer words improve your fortune, which means better replacement letters.  Oh, but the jumble of letters, what is a Wizard to do?  
 
-You will advance your magicial skills through levels, and when they are high enough, you will gain magic spells that are added to your book.  Casting these spells require mana, which you collect by spelling words with purple mana tiles.  
+You will advance your magical skills through levels, and when they are high enough, you will gain magic spells that are added to your book.  Casting these spells require mana, which you collect by spelling words with purple mana tiles.  
 
 You are also awarded free spells, earned by spelling long or high scoring words.  They do not require any mana to cast.
 
@@ -164,11 +164,17 @@ I'm not sure gibberish is a language.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>NextLevelMsg</key>
-      <value>Level 2 introduces blue tiles which are worth double the letter value
+      <value>Level 2 introduces light blue tiles which doubles the letter value
 Beware of lava tiles, if they reach the bottom, the game is over
-Level 4 introduces double word tiles which double the word score
-Level 5 introduces triple letter tiles which triple the letter value.
-Level 6 introduces triple word tiles which triple the word score</value>
+Level 4 introduces pink word tiles which doubles the word score
+Level 5 introduces darker blue letter tiles which triples the letter value
+Level 6 introduces darker pink word tiles which triples the word score</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>EndGameReasons</key>
+      <value>You've ended the game, please play again.
+The lava has reached the bottom, the city is doomed.  Please try again.
+There are no more words for you to spell, please try again.</value>
     </LocalizationItem>
   </items>
 </LocalizationData>
