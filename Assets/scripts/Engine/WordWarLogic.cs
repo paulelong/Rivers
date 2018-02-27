@@ -782,10 +782,10 @@ namespace WordSpell
 
         public static FortuneLevel GetFortune()
         {
-            return GetFortuneLevel((int)GetLatestEff());
+            return GetFortuneLevel(GetLatestEff());
         }
 
-        public static FortuneLevel GetFortuneLevel(int value)
+        public static FortuneLevel GetFortuneLevel(float value)
         {
             if (value >= EffHigh)
             {
@@ -812,6 +812,11 @@ namespace WordSpell
         {
             float eff = (float)GetLatestEff();
 
+            if(eff <= 0f)
+            {
+                eff = .1f;
+            }
+
             // Scale goes from 3, the smallest score to EffHigh (which is the max efficiency) +20.
             float scale = (eff - LowestWordScore) / (EffHigh + FortuneMaxOver);
 
@@ -824,6 +829,7 @@ namespace WordSpell
             {
                 scale = 1f / (EffHigh + FortuneMaxOver - LowestWordScore);
             }
+
             Material fc = GetFortuneColor();
             boardScript.SetFortune(scale, fc);
         }
@@ -1173,11 +1179,11 @@ namespace WordSpell
             return EngLetterScoring.ScoreWordSimple(SelLetterList);
         }
 
-        private static double GetLatestEff()
+        private static float GetLatestEff()
         {
             if (gs.fortune.Count <= 0)
             {
-                return 0;
+                return 0.1f;
             }
 
             int wordtotal = 0;
@@ -1186,7 +1192,7 @@ namespace WordSpell
                 wordtotal += wsi.Score;
             }
 
-            return (double)wordtotal / (double)gs.fortune.Count;
+            return (float)wordtotal / (float)gs.fortune.Count;
         }
 
         internal static Material GetFortuneColor(int value = -1)

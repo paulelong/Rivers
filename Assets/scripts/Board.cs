@@ -8,7 +8,7 @@ using System;
 //using System.Net.Mail;
 //using System.Net;
 
-public class Board : MonoBehaviour
+public class Board : MonoBehaviour, IEventSystemHandler
 {
     #region Fields
     WSListBox TryListBox;
@@ -34,6 +34,9 @@ public class Board : MonoBehaviour
     int trigger_nf2 = Animator.StringToHash("nf2");
     int trigger_nf3 = Animator.StringToHash("nf3");
 
+    int CastButtonBlinkTrigger = Animator.StringToHash("Blink");
+    int CastButtonNormalTrigger = Animator.StringToHash("StopBlink");
+
     //private int half_offset = WSGameState.Gridsize / 2;
 
 
@@ -48,7 +51,7 @@ public class Board : MonoBehaviour
     const string SpellImagePath = "ButtonPanel/Image";
     const string SpellSelPath = "ButtonPanel/Selector";
 
-    private const float FORTUNE_CHANGE_SPEED = 1f;
+    private const float FORTUNE_CHANGE_SPEED = 4f;
     private const float TIME_TILL_HINT = 200f;
     private const float FORUTUNE_BAR_SCALE = 17.5f;
     private const float FORTUNE_BAR_SIZE = 55;
@@ -124,6 +127,8 @@ public class Board : MonoBehaviour
 
     private string NextSpellName = "";
     private bool NextSpellAwardState = false;
+
+    public bool blinkIsOn { get; private set; }
 
     #endregion Unity Objects
 
@@ -831,11 +836,59 @@ public class Board : MonoBehaviour
 
         Button b = item.Find(SpellImagePath).GetComponent<Button>();
         b.onClick.AddListener(delegate { SelectSpell(si.FriendlyName, awarded); });
+
+        // Add deselect trigger
+        EventTrigger trigger = b.GetComponent<EventTrigger>();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.Deselect;
+        entry.callback = new EventTrigger.TriggerEvent();
+        UnityEngine.Events.UnityAction<BaseEventData> call = new UnityEngine.Events.UnityAction<BaseEventData>(DeselectSpell);
+        entry.callback.AddListener(call);
+        trigger.triggers.Add(entry);
+
         if (!awarded && WSGameState.EnoughMana(si.MannaPoints))
         {
             b.enabled = false;
         }
     }
+
+    // Spell related stuff
+    //public void AddSpellList(WSListBox spellbox, SpellInfo si, bool awarded = false)
+    //{
+    //    Transform item = spellbox.Add();
+    //    item.transform.name = si.FriendlyName;
+
+    //    // Z position seems to get set random value, setting it to -3 so spells show up.
+    //    Vector3 t = item.transform.localPosition;
+    //    t.z = -3f;
+    //    item.transform.localPosition = t;
+
+
+    //    UnityEngine.UI.Text s = item.Find(SpellNamePath).GetComponent<UnityEngine.UI.Text>();
+    //    s.text = si.FriendlyName;
+
+    //    UnityEngine.UI.Text c = item.Find(SpellCostPath).GetComponent<UnityEngine.UI.Text>();
+    //    if (!awarded)
+    //    {
+    //        c.text = si.MannaPoints.ToString();
+    //    }
+    //    else
+    //    {
+    //        c.text = "";
+    //    }
+
+    //    UnityEngine.UI.Image i = item.Find(SpellImagePath).GetComponent<UnityEngine.UI.Image>();
+    //    i.sprite = si.Image;
+
+    //    Button b = item.Find(SpellImagePath).GetComponent<Button>();
+    //    //b.onClick.AddListener(delegate { SelectSpell(si.FriendlyName, awarded); } );
+    //    //b.OnDeselect.AddListner(delegate { DeselectSpell(); });
+
+    //    if(!awarded && WSGameState.EnoughMana(si.MannaPoints))
+    //    {
+    //        b.enabled = false;
+    //    }
+    //}
 
     public void RefreshSpells()
     {
@@ -852,49 +905,16 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void SelectSpell(BaseEventData data)
-    {
-        Debug.Log(data.ToString());
-    }
-
-    // Spell related stuff
-    public void AddSpellList(WSListBox spellbox, SpellInfo si, bool awarded = false)
-    {
-        Transform item = spellbox.Add();
-        item.transform.name = si.FriendlyName;
-
-        // Z position seems to get set random value, setting it to -3 so spells show up.
-        Vector3 t = item.transform.localPosition;
-        t.z = -3f;
-        item.transform.localPosition = t;
-
-
-        UnityEngine.UI.Text s = item.Find(SpellNamePath).GetComponent<UnityEngine.UI.Text>();
-        s.text = si.FriendlyName;
-
-        UnityEngine.UI.Text c = item.Find(SpellCostPath).GetComponent<UnityEngine.UI.Text>();
-        if (!awarded)
-        {
-            c.text = si.MannaPoints.ToString();
-        }
-        else
-        {
-            c.text = "";
-        }
-
-        UnityEngine.UI.Image i = item.Find(SpellImagePath).GetComponent<UnityEngine.UI.Image>();
-        i.sprite = si.Image;
-
-        Button b = item.Find(SpellImagePath).GetComponent<Button>();
-        b.onClick.AddListener(delegate { SelectSpell(si.FriendlyName, awarded); } );
-        if(!awarded && WSGameState.EnoughMana(si.MannaPoints))
-        {
-            b.enabled = false;
-        }
-    }
-
     public void ClearSpellList(WSListBox spellbox)
     {
+        foreach(Transform t in spellbox.ListboxObjects)
+        {
+            Button b = t.Find(SpellImagePath).GetComponent<Button>();
+            EventTrigger trigger = b.GetComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.callback.RemoveAllListeners();
+        }
+
         spellbox.Clear();
     }
 
@@ -910,18 +930,37 @@ public class Board : MonoBehaviour
             ShowCancelCast(SpellCasted);
             Spells.AbortSpell();
             PlayMagicParticle(SpellCasted);
-        }
-    }
 
-    public void CancelSpells()
-    {
-        SpellCanvas.SetActive(false);
+            BlinkCastButton(false);
+        }
     }
 
     void SelectSpell(string spellName, bool awarded)
     {
+        Debug.Log("Spell:" + spellName);
+
         NextSpellName = spellName;
         NextSpellAwardState = awarded;
+
+        BlinkCastButton(true);
+    }
+
+    public void SelectSpell(BaseEventData data)
+    {
+        Debug.Log(data.ToString());
+    }
+
+    public void DeselectSpell(BaseEventData data)
+    {
+        Debug.Log("But deselect");
+
+        BlinkCastButton(false);
+    }
+
+    public void OnSelect()
+    {
+        //base.OnSelect(eventData);
+        UnityEngine.Debug.Log("Selected");
     }
 
     void StartSpell()
@@ -929,7 +968,9 @@ public class Board : MonoBehaviour
         string spellName = NextSpellName;
         bool awarded = NextSpellAwardState;
 
-//        SpellCanvas.SetActive(false);
+        BlinkCastButton(false);
+
+        //        SpellCanvas.SetActive(false);
 
         // Awarded spells need to be removed from the list
         Spells.ReadySpell(spellName, awarded, SpellSucceded);
@@ -997,6 +1038,8 @@ public class Board : MonoBehaviour
 
         SpellCasted = false;
         PlayMagicParticle(SpellCasted);
+
+        BlinkCastButton(false);
     }
 
     public void PlayMagicParticle(bool play)
@@ -1008,6 +1051,24 @@ public class Board : MonoBehaviour
         else
         {
             MagicParticles.Stop();
+        }
+    }
+
+    void BlinkCastButton(bool blink=true)
+    {
+        if(blink && !blinkIsOn)
+        {
+            Animator a = CastButton.transform.GetChild(1).GetComponent<Animator>();
+            a.SetTrigger(CastButtonBlinkTrigger);
+            blinkIsOn = true;
+            Debug.Log("blink on");
+        }
+        else if(blinkIsOn)
+        {
+            Animator a = CastButton.transform.GetChild(1).GetComponent<Animator>();
+            a.SetTrigger(CastButtonNormalTrigger);
+            blinkIsOn = false;
+            Debug.Log("blink off");
         }
     }
 

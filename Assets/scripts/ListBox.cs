@@ -13,15 +13,28 @@ namespace WordSpell
         Transform prefab;
         public string dbg = "";
 
+        public Transform Prefab
+        {
+            get
+            {
+                return prefab;
+            }
+
+            set
+            {
+                prefab = value;
+            }
+        }
+
         public void InitWSListBox(GameObject _list, Transform _prefab)
         {
             list = _list;
-            prefab = _prefab;
+            Prefab = _prefab;
         }
 
         public Transform Add()
         {
-            Transform listItem = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
+            Transform listItem = Instantiate(Prefab, new Vector3(0, 0, 0), Quaternion.identity);
 
             LayoutGroup lg = list.GetComponent(typeof(LayoutGroup)) as LayoutGroup;
             listItem.SetParent(lg.transform);
@@ -77,6 +90,26 @@ namespace WordSpell
                 debugcnt++;
             }
             Logging.StartDbg("clx");
+        }
+
+        public List<Transform> ListboxObjects
+        {
+            get
+            {
+                List<Transform> l = new List<Transform>();
+
+                LayoutGroup lg = list.transform.GetComponent<LayoutGroup>() as LayoutGroup;
+                if (lg != null)
+                {
+                    //LayoutGroup lg = list.GetComponent(typeof(Layout)) as LayoutGroup;
+                    foreach (Transform t in lg.transform)
+                    {
+                        l.Add(t);
+                    }
+                }
+
+                return l;
+            }
         }
 
         public void Clear()
