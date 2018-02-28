@@ -28,6 +28,7 @@ public class LocalizationManager : MonoBehaviour
 
     private bool isReady = false;
     private string missingTextString = "Localized text not found";
+    private static bool MusicLoadingDone = false;
 
     // Use this for initialization
     void Awake()
@@ -48,8 +49,9 @@ public class LocalizationManager : MonoBehaviour
         //StartCoroutine(LoadFileAsync(EngLetterScoring.DictionaryCachePath, EngLetterScoring.LoadDictionaryData));
         Logging.StartDbg("lma3", timestamp: true);
         StartCoroutine(LoadFileAsync(EngLetterScoring.PartialLookupCachePath, EngLetterScoring.PartialLookupData,2));
-        //StartCoroutine(LoadFileAsync(EngLetterScoring.DictionaryTextPath, EngLetterScoring.DictionaryTextData));
         Logging.StartDbg("lma4", timestamp: true);
+        StartCoroutine(LoadMusicAsync());
+        Logging.StartDbg("lma5", timestamp: true);
 
         DontDestroyOnLoad(gameObject);
 
@@ -64,15 +66,13 @@ public class LocalizationManager : MonoBehaviour
 
         UpdateStatus("Loading localization data...");
 
-        Logging.StartDbg("w2");
-
         Logging.StartDbg("wx", timestamp:true);
     }
 
 
     public void Update()
     {
-        if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady)
+        if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady && MusicLoadingDone)
         {
             isReady = true;
         }
@@ -219,6 +219,27 @@ public class LocalizationManager : MonoBehaviour
             Logging.StartDbg("sfax");
         }
 
+    }
+
+    static IEnumerator LoadMusicAsync()
+    {
+        Logging.StartDbg("lmaa0");
+
+        foreach(string songname in Songs.SongNames)
+        {
+            ResourceRequest loadAsync = Resources.LoadAsync<AudioClip>("Songs/" + songname);
+            while (!loadAsync.isDone)
+            {
+                Debug.Log("Load Progress: " + loadAsync.progress);
+                yield return null;
+            }
+
+            Songs.AddSong(loadAsync.asset as AudioClip);
+        }
+
+        MusicLoadingDone = true;
+
+        Logging.StartDbg("lmaa=" + Songs.SongNames.Length + "," + Songs.Count);
     }
 
     public static void StoreFile(string filePath, string data)

@@ -354,7 +354,7 @@ namespace WordSpell
             ManaMaterial = Resources.Load("Mana") as Material;
 
             // Load the music for the speaker tiles just once.
-            Songs.LoadMusic();
+//            Songs.LoadMusic();
 
             //boardScript.ShowMsg("Loading dictionary...");
             //EngLetterScoring.LoadDictionary();
@@ -446,6 +446,8 @@ namespace WordSpell
             //HighScoreWordValue = 0;
             //HighScoreWord = "";
             totalwords = 0;
+
+            AwardedSpells.Clear();
 
             Logging.StartDbg("r1");
             UpdateStats();

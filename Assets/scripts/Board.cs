@@ -589,6 +589,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
         WSGameState.NewMusicTile();
 
         ResetTimer();
+
         RefreshSpells();
 
         // Calculate Panel for background contrast size

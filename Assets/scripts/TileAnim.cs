@@ -28,8 +28,15 @@ public class TileAnim : MonoBehaviour
         if(asrc != null)
         {
             asrc.clip = Songs.GetNextSong();
-            asrc.PlayDelayed(5);
-            Logging.PlayDbg("ns_" + asrc.clip.ToString().Substring(0, 20), '\n');
+            if(asrc.clip != null)
+            {
+                asrc.PlayDelayed(5);
+                Logging.PlayDbg("ns_" + asrc.clip.ToString().Substring(0, 20), '\n');
+            }
+            else
+            {
+                Logging.PlayDbg("ns!no_songs");
+            }
         }
         else
         {
