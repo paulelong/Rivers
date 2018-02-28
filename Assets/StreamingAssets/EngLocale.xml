@@ -5,8 +5,7 @@
       <key>intro0</key>
       <value>Pangram, the letter volcano, is about to erupt!
 
-Legend tells of a magical prodigy who's mastery of words and strategy will save the day.  Spell words by selecting adjacent tiles in any of the 8 directions.  For instance, following the yellow arrows to spell GUITAR in the example below. 
-	  </value>
+Legend tells of a magical prodigy whose mastery of words and strategy will save the day.  Spell words by selecting adjacent tiles in any of the 8 directions.  For instance, following the yellow arrows to spell GUITAR in the example below.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>intro1</key>
@@ -16,10 +15,9 @@ You will advance your magical skills through levels, and when they are high enou
 
 You are also awarded free spells, earned by spelling long or high scoring words.  They do not require any mana to cast.
 
-Spell higher scoring and longer words by strategically rearranging the letter tiles using the spells  you have available, and any that have been awarded.
+Spell higher scoring and longer words by strategically rearranging the letter tiles using the spells you have available, and any that have been awarded.
 
-But beware of lava, the RED letter tile in the above example, because if they reach the bottom the game is over.  Keep the lava tiles away and earn the highest score.
-	  </value>
+But beware of lava, the RED letter tile in the above example, because if they reach the bottom the game is over.  Keep the lava tiles away and earn the highest score.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>HelpButton</key>
