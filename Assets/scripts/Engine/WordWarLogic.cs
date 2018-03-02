@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 
 namespace WordSpell
@@ -57,6 +58,7 @@ namespace WordSpell
 
         #region Privates
         private static GameObject selMagicTile;
+        private static List<GameObject> selMagicTileList = new List<GameObject>();
         internal static bool dbg = false;
 
         static GameStats gs = new GameStats();
@@ -87,6 +89,11 @@ namespace WordSpell
 
         private static bool resume = false;
         private static bool gameOver = false;
+
+        // simple stats
+        private static int spellsCasted;
+        private static int spellsAwarded;
+
         #endregion Privates
 
         #region Properties
@@ -125,6 +132,8 @@ namespace WordSpell
                         else
                         {
                             Logging.StartDbg("StatXMLCorrupt!!!");
+                            GamePersistence.ResetHistoryData();
+                            return longestWordStrings;
                         }
                     }
                 }
@@ -264,6 +273,24 @@ namespace WordSpell
             {
                 return halfOffset;
             }
+        }
+
+        public static int NumAttempted
+        {
+            get { return gs.spellsAttempted; }
+            set { gs.spellsAttempted = value; }
+        }
+
+        public static int NumCasted
+        {
+            get { return gs.spellsCasted; }
+            set { gs.spellsCasted = value; }
+        }
+
+        public static int NumAborted
+        {
+            get { return gs.spellsAborted; }
+            set { gs.spellsAborted = value; }
         }
 
         #endregion Properties
@@ -590,6 +617,8 @@ namespace WordSpell
 
                         if (GainedNextLevel)
                         {
+                            RecordAnalyticsLevelReached();
+
                             boardScript.LevelSound();
                             string levelmsg = LocalizationManager.instance.GetLocalizedValue("NewLevel") + CurrentLevel.ToString() + "\n\n";
                             if (Spells.HasSpells())
@@ -908,6 +937,9 @@ namespace WordSpell
 
         public static void GameOver(GameEndReasons ger)
         {
+            // Send anylitics on how the game went
+            RecordAnalyticsGameOver();
+
             boardScript.ContrastPanel.SetActive(false);
 
             IsGameOver = true;
@@ -1075,7 +1107,10 @@ namespace WordSpell
         {
             foreach (SpellInfo si in Spells.AllSpells)
             {
-                AwardedSpells.Add(si);
+                //if(si.FriendlyName.Contains("Swap"))
+                //{
+                    AwardedSpells.Add(si);
+                //}
             }
 
             boardScript.ShowSpellStuff();
@@ -1254,16 +1289,17 @@ namespace WordSpell
 
         public static void MagicSelect(LetterProp lp_sel)
         {
-            selMagicTile = boardScript.SelectLet(lp_sel.I, lp_sel.J, true);
+            selMagicTileList.Add(boardScript.SelectLet(lp_sel.I, lp_sel.J, true));
         }
 
         public static void MagicDeselect()
         {
-            if(selMagicTile != null)
+            foreach(GameObject go in selMagicTileList)
             {
-                boardScript.DeselectLet(selMagicTile);
+                boardScript.DeselectLet(go);
             }
-            selMagicTile = null;                
+
+            selMagicTileList.Clear();
         }
 
         public static bool Deselect(LetterProp lp_sel)
@@ -1367,5 +1403,40 @@ namespace WordSpell
             gs.mana = 100;
             gs.level = 20;
         }
+
+        internal static void RecordAnalyticsGameOver()
+        {
+            Analytics.CustomEvent("gameOver", new Dictionary<string, object>
+            {
+                { "score", gs.score },
+                { "level", gs.level },
+                { "mana", gs.mana },
+                { "boardsize", gs.boardsize },
+                { "numWords", gs.history.Count },
+                { "awarded", gs.awarded.Count },
+                { "spellsAttempted", gs.spellsAttempted },
+                { "spellsCasted", gs.spellsCasted },
+                { "spellsAborted", gs.spellsAborted },
+                { "board", PrintGameBoard() },
+            });
+        }
+
+        internal static void RecordAnalyticsLevelReached()
+        {
+            Analytics.CustomEvent("levelReached", new Dictionary<string, object>
+            {
+                { "score", gs.score },
+                { "level", gs.level },
+                { "mana", gs.mana },
+                { "boardsize", gs.boardsize },
+                { "numWords", gs.history.Count },
+                { "awarded", gs.awarded.Count },
+                { "spellsAttempted", gs.spellsAttempted },
+                { "spellsCasted", gs.spellsCasted },
+                { "spellsAborted", gs.spellsAborted },
+                { "board", PrintGameBoard() },
+            });
+        }
+
     }
 }

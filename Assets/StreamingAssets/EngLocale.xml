@@ -174,5 +174,77 @@ Level 6 introduces darker pink word tiles which triples the word score</value>
 The lava has reached the bottom, the city is doomed.  Please try again.
 There are no more words for you to spell, please try again.</value>
     </LocalizationItem>
+    <LocalizationItem>
+      <key>MagicCancel</key>
+      <value>Cancel</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Snipe</key>
+      <value>Select one letter to destroy, then press the wand button.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Swap</key>
+      <value>Pick two adjacent tile up/down/left/right, the press the wand button.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Burn</key>
+      <value>Select a single tile to become lava, then press the wand button.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>VowelDust</key>
+      <value>Press the wand button to sprinkle vowels randomly on the grid.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>ConvertLetter</key>
+      <value>Chose a letter to convert, then press the wand button, and all letters of that kind will be changed to another random letter.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Bomb</key>
+      <value>Pick a tile to destroy it and it's up/down/left/right neighbors, then press the wand button.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>CWRotate</key>
+      <value>Pick a tile and then press the wand button to rotate the surrounding tiles clockwise once.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>CCWRotate</key>
+      <value>Pick a tile and then press the wand button to rotate the surrounding tiles counter-clockwise once.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Hint</key>
+      <value>Press the wand button to provide a decent hint, if one exists.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Rotate180</key>
+      <value>Pick a tile and then press the wand button to rotate the surrounding tiles 180 degrees.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>HintPlus</key>
+      <value>Press the wand button to provide the best word possible, if one exists.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>Vowelize</key>
+      <value>Pick one letter to change into a random vowel, then press the wand button.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>HintLet</key>
+      <value>Pick a letter, the press the wand button, and we'll try to find a hint that uses that letter.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>AnyLetter</key>
+      <value>Pick a letter to change into any letter you want.  After pressing the wand button, you can enter the letter of your choice.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>RowGone</key>
+      <value>Select a row, then the wand button to make it gone.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>ColGone</key>
+      <value>Select a column, then the wand button to make it gone.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>AnyLetterDefault</key>
+      <value>type a letter?</value>
+    </LocalizationItem>
   </items>
 </LocalizationData>

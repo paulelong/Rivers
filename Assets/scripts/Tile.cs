@@ -125,7 +125,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     // Called by animatitions so that spells can be completed, like turning tiles that have been flipped.
     public void FinishSpell()
     {
-        Spells.CastSpell();
+        Spells.CastSpell2();
     }
 
 }

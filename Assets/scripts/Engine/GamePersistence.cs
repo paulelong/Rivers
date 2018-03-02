@@ -33,6 +33,9 @@ namespace WordSpell
         public List<WordScoreItem> fortune = new List<WordScoreItem>();
         public List<SpellInfo> awarded = new List<SpellInfo>();
         public int boardsize = 0;
+        public int spellsAttempted = 0;
+        public int spellsCasted = 0;
+        public int spellsAborted = 0;
     }
 
     public class OverallStats
@@ -340,15 +343,34 @@ namespace WordSpell
                 }
             }
 
-//            gs.history.Clear();
             gs.fortune.Clear();
         }
 
+        internal static void ResetHistoryData()
+        {
+            string filePath = Application.persistentDataPath + "/" + OverallStatsPath;
+
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    File.Delete(filePath);
+                }
+                catch (Exception e)
+                {
+                    string s = e.Message;
+                }
+            }
+
+            gs.fortune.Clear();
+        }
+
+
         internal static void ResetSavedData()
         {
-            File.Delete(Application.persistentDataPath + "/" + SaveGamePath);
+            ResetGameData();
 
-            File.Delete(Application.persistentDataPath + "/" + OverallStatsPath);
+            ResetSavedData();
         }
     }
 }

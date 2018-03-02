@@ -78,6 +78,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
     public GameObject ControlCanvas;
     public GameObject StartCanvas;
     public GameObject MsgCanvas;
+    public GameObject MagicCanvas;
     public GameObject OptionCanvas;
     public GameObject SpellCanvas;
     public GameObject InputCanvas;
@@ -178,6 +179,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
             HideSpellStuff();
 
             StartCanvas.SetActive(true);
+            ControlCanvas.SetActive(false);
             Logging.StartDbg("S3.2", timestamp: true);
 
             GamePersistence.LoadSavedGameData();
@@ -611,6 +613,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
 
         RefreshStats();
 
+        ControlCanvas.SetActive(false);
         StartCanvas.SetActive(true);
     }
     #region Controls
@@ -637,6 +640,29 @@ public class Board : MonoBehaviour, IEventSystemHandler
     public void HideMsg()
     {
         MsgCanvas.SetActive(false);
+    }
+
+    public void ShowMagic(string text)
+    {
+        Text t = MagicCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
+
+        t.text = text;
+        MagicCanvas.SetActive(true);
+
+        SubmitButtonGO.transform.GetComponent<Button>().enabled = false;
+    }
+
+    public void HideMagic()
+    {
+        SubmitButtonGO.transform.GetComponent<Button>().enabled = true;
+        MagicCanvas.SetActive(false);
+    }
+
+    public void UpdateMagicPic(Sprite s)
+    {
+        Image i = MagicCanvas.transform.GetChild(0).GetChild(0).GetChild(2).GetComponent<UnityEngine.UI.Image>();
+
+        i.sprite = s;
     }
 
     public GameObject SelectLet(LetterProp lp, bool isMagic = false)
@@ -853,44 +879,6 @@ public class Board : MonoBehaviour, IEventSystemHandler
         }
     }
 
-    // Spell related stuff
-    //public void AddSpellList(WSListBox spellbox, SpellInfo si, bool awarded = false)
-    //{
-    //    Transform item = spellbox.Add();
-    //    item.transform.name = si.FriendlyName;
-
-    //    // Z position seems to get set random value, setting it to -3 so spells show up.
-    //    Vector3 t = item.transform.localPosition;
-    //    t.z = -3f;
-    //    item.transform.localPosition = t;
-
-
-    //    UnityEngine.UI.Text s = item.Find(SpellNamePath).GetComponent<UnityEngine.UI.Text>();
-    //    s.text = si.FriendlyName;
-
-    //    UnityEngine.UI.Text c = item.Find(SpellCostPath).GetComponent<UnityEngine.UI.Text>();
-    //    if (!awarded)
-    //    {
-    //        c.text = si.MannaPoints.ToString();
-    //    }
-    //    else
-    //    {
-    //        c.text = "";
-    //    }
-
-    //    UnityEngine.UI.Image i = item.Find(SpellImagePath).GetComponent<UnityEngine.UI.Image>();
-    //    i.sprite = si.Image;
-
-    //    Button b = item.Find(SpellImagePath).GetComponent<Button>();
-    //    //b.onClick.AddListener(delegate { SelectSpell(si.FriendlyName, awarded); } );
-    //    //b.OnDeselect.AddListner(delegate { DeselectSpell(); });
-
-    //    if(!awarded && WSGameState.EnoughMana(si.MannaPoints))
-    //    {
-    //        b.enabled = false;
-    //    }
-    //}
-
     public void RefreshSpells()
     {
         ClearSpellList(SpellsListBox);
@@ -919,29 +907,49 @@ public class Board : MonoBehaviour, IEventSystemHandler
         spellbox.Clear();
     }
 
-    public void ShowSpells()
+    public void WandButtonPressed()
     {
-        if(!SpellCasted)
-        {
-            StartSpell();
-        }
-        else
-        {
-            SpellCasted = false;
-            ShowCancelCast(SpellCasted);
-            Spells.AbortSpell();
-            PlayMagicParticle(SpellCasted);
+        WSGameState.boardScript.HideMagic();
+        Spells.CastSpell2();
+        BlinkCastButton(false);
 
-            BlinkCastButton(false);
-        }
+        //if(!SpellCasted)
+        //{
+        //    StartSpell();
+        //}
+        //else
+        //{
+        //    WSGameState.NumAborted++;
+
+        //    SpellCasted = false;
+        //    ShowCancelCast(SpellCasted);
+        //    Spells.AbortSpell();
+        //    PlayMagicParticle(SpellCasted);
+
+        //    BlinkCastButton(false);
+        //}
+    }
+
+    public void CancelSpell()
+    {
+        HideMagic();
+        SpellCasted = false;
+        //ShowCancelCast(SpellCasted);
+        Spells.AbortSpell();
+        PlayMagicParticle(SpellCasted);
+
+        BlinkCastButton(false);
     }
 
     void SelectSpell(string spellName, bool awarded)
     {
         Debug.Log("Spell:" + spellName);
+        WSGameState.NumAttempted++;
 
         NextSpellName = spellName;
         NextSpellAwardState = awarded;
+
+        StartSpell();
 
         BlinkCastButton(true);
     }
@@ -955,7 +963,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
     {
         Debug.Log("But deselect");
 
-        BlinkCastButton(false);
+        //BlinkCastButton(false);
     }
 
     public void OnSelect()
@@ -966,12 +974,13 @@ public class Board : MonoBehaviour, IEventSystemHandler
 
     void StartSpell()
     {
+
+        WSGameState.NumCasted++;
+
         string spellName = NextSpellName;
         bool awarded = NextSpellAwardState;
 
-        BlinkCastButton(false);
-
-        //        SpellCanvas.SetActive(false);
+        //BlinkCastButton(false);
 
         // Awarded spells need to be removed from the list
         Spells.ReadySpell(spellName, awarded, SpellSucceded);
@@ -982,7 +991,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
             //SetSpellButton(false);
 
             SpellCasted = true;
-            ShowCancelCast(true);
+           // ShowCancelCast(true);
 
             PlayMagicParticle(SpellCasted);
         }
@@ -1035,7 +1044,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
         RefreshSpells();
 
         //SetSpellButton(true);
-        ShowCancelCast(true);
+        //ShowCancelCast(true);
 
         SpellCasted = false;
         PlayMagicParticle(SpellCasted);
@@ -1064,7 +1073,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
             blinkIsOn = true;
             Debug.Log("blink on");
         }
-        else if(blinkIsOn)
+        else if(!blink && blinkIsOn)
         {
             Animator a = CastButton.transform.GetChild(1).GetComponent<Animator>();
             a.SetTrigger(CastButtonNormalTrigger);
