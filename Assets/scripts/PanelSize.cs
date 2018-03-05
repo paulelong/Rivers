@@ -15,8 +15,6 @@ public class PanelSize : MonoBehaviour {
             float newwidth = ratio * 800f;
 
             gameObject.GetComponent<LayoutElement>().preferredWidth = newwidth;
-        }
-		
-	}
-	
+        }		
+	}	
 }

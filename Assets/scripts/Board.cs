@@ -530,7 +530,6 @@ public class Board : MonoBehaviour, IEventSystemHandler
     public void QuitGame()
     {
         SystemMenu.SetActive(false);
-        SpellCanvas.SetActive(false);
         
         WSGameState.GameOver(WSGameState.GameEndReasons.USER_ENDED);
     }
@@ -626,14 +625,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
         Text t = MsgCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Text>();
        // RectTransform rt = MsgCanvas.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
         t.text = text;
-        if(bigmsg)
-        {
-            t.fontSize = 24;
-        }
-        else
-        {
-            t.fontSize = 40;
-        }
+
         MsgCanvas.SetActive(true);
     }
 
