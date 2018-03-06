@@ -325,8 +325,6 @@ public class Board : MonoBehaviour, IEventSystemHandler
         CastButton.GetComponent<Button>().interactable = true;
     }
 
-    #endregion Init
-
     void LoadStats()
     {
         Logging.StartDbg("LS0");
@@ -339,7 +337,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
     void RefreshStats()
     {
         Logging.StartDbg("RS0");
-        if(WSGameState.BestGameScores != null)
+        if (WSGameState.BestGameScores != null)
         {
             HighScoresListBox.CreateList(WSGameState.BestGameScores);
         }
@@ -380,6 +378,44 @@ public class Board : MonoBehaviour, IEventSystemHandler
 
         Logging.StartDbg("RSx");
     }
+
+    public void StartBig()
+    {
+        StartGame(9);
+    }
+
+    public void StartSmall()
+    {
+        StartGame(7);
+    }
+
+    private void StartGame(int _gridsize)
+    {
+        StartCanvas.SetActive(false);
+        ControlCanvas.SetActive(true);
+
+        WSGameState.InitNewGame();
+        WSGameState.CreateNewBoard(_gridsize);
+
+        Logging.StartDbg("SG1");
+
+        WSGameState.NewMusicTile();
+
+        ResetTimer();
+
+        RefreshSpells();
+
+        // Calculate Panel for background contrast size
+        WSGameState.SetPanelSize(ContrastPanel);
+
+        // Load save game data
+        //WSGameState.LoadGame();
+        Logging.StartDbg("SGx");
+    }
+
+    #endregion Init
+
+    #region Main
 
     // Update is called once per frame
     void Update()
@@ -441,8 +477,10 @@ public class Board : MonoBehaviour, IEventSystemHandler
         LastActionTime = Time.realtimeSinceStartup;
     }
 
+    #endregion Main
+
     // Handlers
-    #region Handlers
+    #region UIHandlers
 
     public void OnMouseClick()
     {
@@ -565,40 +603,33 @@ public class Board : MonoBehaviour, IEventSystemHandler
         ResetTimer();
     }
 
-    #endregion Handlers
-
-    public void StartBig()
+    public void IndicateGoodWord(WSGameState.WordValidity wordStatus)
     {
-        StartGame(9);
-    }
+        //var theColor = SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors;
+        var test = SubmitButtonGO.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>();
 
-    public void StartSmall()
-    {
-        StartGame(7);
-    }
+        switch (wordStatus)
+        {
+            case WSGameState.WordValidity.Garbage:
+                test.color = new Color32(200, 200, 200, 255);
+                //theColor.normalColor = Color.gray;
+                //theColor.highlightedColor = Color.gray;
+                //SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+                break;
+            case WSGameState.WordValidity.Word:
+                test.color = new Color32(72, 234, 94, 255);
+                //theColor.normalColor = new Color32(72, 234, 94, 255);
+                //theColor.highlightedColor = new Color32(72, 234, 94, 255);
+                //SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+                break;
+            case WSGameState.WordValidity.UsedWord:
+                test.color = Color.yellow;
+                //theColor.normalColor = Color.yellow;
+                //theColor.highlightedColor = Color.yellow;
+                //SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
+                break;
 
-    private void StartGame(int _gridsize)
-    {
-        StartCanvas.SetActive(false);
-        ControlCanvas.SetActive(true);
-
-        WSGameState.InitNewGame();
-        WSGameState.CreateNewBoard(_gridsize);
-
-        Logging.StartDbg("SG1");
-
-        WSGameState.NewMusicTile();
-
-        ResetTimer();
-
-        RefreshSpells();
-
-        // Calculate Panel for background contrast size
-        WSGameState.SetPanelSize(ContrastPanel);
-
-        // Load save game data
-        //WSGameState.LoadGame();
-        Logging.StartDbg("SGx");
+        }
     }
 
     IEnumerator EndGameDelay(string msg)
@@ -615,6 +646,9 @@ public class Board : MonoBehaviour, IEventSystemHandler
         ControlCanvas.SetActive(false);
         StartCanvas.SetActive(true);
     }
+    
+    #endregion IOHandlers
+        
     #region Controls
 
     // ----------------------------------------------------------
@@ -904,22 +938,6 @@ public class Board : MonoBehaviour, IEventSystemHandler
         WSGameState.boardScript.HideMagic();
         Spells.CastSpell2();
         BlinkCastButton(false);
-
-        //if(!SpellCasted)
-        //{
-        //    StartSpell();
-        //}
-        //else
-        //{
-        //    WSGameState.NumAborted++;
-
-        //    SpellCasted = false;
-        //    ShowCancelCast(SpellCasted);
-        //    Spells.AbortSpell();
-        //    PlayMagicParticle(SpellCasted);
-
-        //    BlinkCastButton(false);
-        //}
     }
 
     public void CancelSpell()
@@ -1075,60 +1093,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
     }
 
     #endregion Spells
-
-    public void DebugTest()
-    {
-        UnityEngine.Object[] gos = (UnityEngine.Object[])Resources.LoadAll("");
-        foreach (UnityEngine.Object go in gos)
-        {
-            if(go.ToString().Length > 100)
-            {
-                Logging.StartDbg(go.ToString().Substring(0, 20), '\n');
-            }
-            else
-            {
-                Logging.StartDbg(go.ToString(), '\n');
-            }
-        }
-
-        Logging.StartDbg("__");
-        gos = (UnityEngine.Object[])Resources.LoadAll("Songs");
-        foreach (UnityEngine.Object go in gos)
-        {
-            Logging.StartDbg(go.ToString(), '\n');
-        }
-    }
-
-    public void IndicateGoodWord(WSGameState.WordValidity wordStatus)
-    {
-        //var theColor = SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors;
-        var test = SubmitButtonGO.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>();
-
-        switch (wordStatus)
-        {
-            case WSGameState.WordValidity.Garbage:
-                test.color = new Color32(200,200,200, 255);
-                //theColor.normalColor = Color.gray;
-                //theColor.highlightedColor = Color.gray;
-                //SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
-                break;
-            case WSGameState.WordValidity.Word:
-                test.color = new Color32(72, 234, 94, 255);
-                //theColor.normalColor = new Color32(72, 234, 94, 255);
-                //theColor.highlightedColor = new Color32(72, 234, 94, 255);
-                //SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
-                break;
-            case WSGameState.WordValidity.UsedWord:
-                test.color = Color.yellow;
-                //theColor.normalColor = Color.yellow;
-                //theColor.highlightedColor = Color.yellow;
-                //SubmitButtonGO.GetComponent<UnityEngine.UI.Button>().colors = theColor;
-                break;
-
-        }
-    }
-
-
+    
     // Sounds to play
     #region SoundFX
     public void ScoreWordSound()
@@ -1172,31 +1137,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
 
     public void SendEmail2()
     {
-        //email Id to send the mail to
-        string email = "paulelong@outlook.com";
-        //subject of the mail
-        string subject = MyEscapeURL("WordSpell bug report " + Application.version);
-        //body of the mail which consists of Device Model and its Operating System
-        string body = MyEscapeURL("Please add an explantion of the move you just attempted.  For instance, I spelled a for letter word to get rid of a lava tile.  Try to add anything relevant, like a spell you just attempted.\n\n\n\n" +
-         "________" +
-         "\n\nPlease Do Not Modify This\n\n" +
-         "Model: " + SystemInfo.deviceModel + "\n\n" +
-            "OS: " + SystemInfo.operatingSystem + "\n\n" +
-            "Version: " + Application.version + "\n\n" +
-            "Startup Dbg: " + Logging.StartDbgInfo + "\n\n" +
-            "Play Dbg: " + Logging.LastPlayLog + "\n\n" +
-            "Ex1: " + Ex1Str + "\n\n" +
-            "Ex2: " + Ex2Str + "\n\n" +
-            //"Stats(" + GamePersistence.StatsText.Length + "): " + GamePersistence.StatsText + "\n\n" +
-            "Game(" + GamePersistence.GameWords.Length + "): " + GamePersistence.GameWords + "\n\n" +
-            "GameBoard:\n" + WSGameState.PrintGameBoard() + 
-         "________");
-        //Open the Default Mail App
-        Application.OpenURL("mailto:" + email + "?subject=" + subject + "&body=" + body);
+        WSAnalytics.EmailDev(Ex1Str, Ex2Str);
     }
 
-    string MyEscapeURL(string url)
-    {
-        return WWW.EscapeURL(url).Replace("+", "%20");
-    }
 }

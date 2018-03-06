@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using UnityEngine;
-using UnityEngine.Analytics;
 
 
 namespace WordSpell
@@ -39,15 +38,6 @@ namespace WordSpell
             UsedWord,
         }
 
-        #endregion Constants
-
-        public struct ScoreStats
-        {
-            public int MannaScore;
-            public SpellInfo si;
-            public int bonus;
-        }
-
         public enum GameEndReasons
         {
             NOT_OVER,
@@ -56,8 +46,17 @@ namespace WordSpell
             NO_WORDS,
         }
 
+        #endregion Constants
+
+
         #region Privates
-        private static GameObject selMagicTile;
+        public struct ScoreStats
+        {
+            public int MannaScore;
+            public SpellInfo si;
+            public int bonus;
+        }
+
         private static List<GameObject> selMagicTileList = new List<GameObject>();
         internal static bool dbg = false;
 
@@ -423,11 +422,6 @@ namespace WordSpell
             Logging.StartDbg("Ingx");
         }
 
-        public static void LoadGame()
-        {
-            WSGameState.Load();
-        }
-
         public static void CreateNewBoard(int size)
         {
             Gridsize = size;
@@ -440,6 +434,25 @@ namespace WordSpell
                     WSGameState.NewLetter(i, j);
                 }
             }
+        }
+
+        internal static void Replay()
+        {
+            gs.score = 0;
+            gs.level = 1;
+            gs.mana = 0;
+
+            gs.awarded.Clear();
+            gs.history.Clear();
+
+            TotalEfficiency = 0;
+            totalwords = 0;
+
+            AwardedSpells.Clear();
+            AwardedSpells.Clear();
+
+            Logging.StartDbg("r1");
+            UpdateStats();
         }
 
         public static void NewLetter(int i, int j, float fallcount = 0.0f)
@@ -460,27 +473,43 @@ namespace WordSpell
             Logging.PlayDbg("mt(" + LetterPropGrid[ti, Gridsize - 1].ASCIIString + "," + ti + ")");
         }
 
-        internal static void Replay()
+        internal static void SetPanelSize(GameObject contrastPanel)
         {
-            gs.score = 0;
-            gs.level = 1;
-            gs.mana = 0;
+            RectTransform r = contrastPanel.transform.GetComponent<RectTransform>();
 
-            gs.awarded.Clear();
-            gs.history.Clear();
+            Vector3 minp = LetterPropGrid[0, 0].LetterBlockObj.transform.position;
+            Vector3 maxp = LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position;
 
-            TotalEfficiency = 0;
-            //HighScoreWordValue = 0;
-            //HighScoreWord = "";
-            totalwords = 0;
+            Debug.Log("0,0 = " + minp);
+            Debug.Log("x,x = " + maxp);
 
-            AwardedSpells.Clear();
+            Bounds b = LetterPropGrid[0, 0].LetterBlockObj.GetComponent<Renderer>().bounds;
 
-            Logging.StartDbg("r1");
-            UpdateStats();
+            Vector3 p1 = Camera.main.WorldToScreenPoint(minp - new Vector3(b.extents.x + .1f, b.extents.y + .1f, b.extents.z));
+            Vector3 p2 = Camera.main.WorldToScreenPoint(maxp + new Vector3(b.extents.x + .1f, b.extents.y + .1f, b.extents.z));
+
+            Debug.Log("Set1 to " + p1.x + " " + p1.y);
+            Debug.Log("Set2 to " + p2.x + " " + p2.y);
+
+            SetSize(r, p1, p2);
+        }
+
+        internal static void SetSize(RectTransform trans, Vector3 ul, Vector3 lr)
+        {
+            Vector3 d = lr - ul;
+
+            Vector2 min = new Vector2(ul.x / (float)Screen.width, ul.y / (float)Screen.height);
+            Vector2 max = new Vector2(lr.x / (float)Screen.width, lr.y / (float)Screen.height);
+
+            Debug.Log("min = " + min);
+            Debug.Log("max = " + max);
+
+            trans.anchorMin = min;
+            trans.anchorMax = max;
         }
 
         #endregion init
+
 
         #region Main
         public static void LetterClick(int i, int j)
@@ -617,7 +646,7 @@ namespace WordSpell
 
                         if (GainedNextLevel)
                         {
-                            RecordAnalyticsLevelReached();
+                            WSAnalytics.RecordAnalyticsLevelReached(gs);
 
                             boardScript.LevelSound();
                             string levelmsg = LocalizationManager.instance.GetLocalizedValue("NewLevel") + CurrentLevel.ToString() + "\n\n";
@@ -675,50 +704,7 @@ namespace WordSpell
 
             Logging.PlayDbg("SubX", last: true);
         }
-
-        internal static void SetPanelSize(GameObject contrastPanel)
-        {
-            RectTransform r = contrastPanel.transform.GetComponent<RectTransform>();
-
-            //            r.sizeDelta = new Vector2(LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position.x, LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position.y);
-            //SetSize(r, new Vector2(LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position.x, LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position.y));
-
-            Vector3 minp = LetterPropGrid[0, 0].LetterBlockObj.transform.position;
-            Vector3 maxp = LetterPropGrid[gridsize - 1, gridsize - 1].LetterBlockObj.transform.position;
-
-            Debug.Log("0,0 = " + minp);
-            Debug.Log("x,x = " + maxp);
-
-            Bounds b = LetterPropGrid[0, 0].LetterBlockObj.GetComponent<Renderer>().bounds;
-
-            Vector3 p1 = Camera.main.WorldToScreenPoint(minp - new Vector3(b.extents.x + .1f, b.extents.y + .1f, b.extents.z));
-            Vector3 p2 = Camera.main.WorldToScreenPoint(maxp + new Vector3(b.extents.x + .1f, b.extents.y + .1f, b.extents.z));
-
-            Debug.Log("Set1 to " + p1.x + " " + p1.y);
-            Debug.Log("Set2 to " + p2.x + " " + p2.y);
-
-            SetSize(r, p1, p2);
-        }
-
-        internal static void SetSize(RectTransform trans, Vector3 ul, Vector3 lr)
-        {
-            Vector3 d = lr - ul;
-
-            Vector2 min = new Vector2(ul.x / (float)Screen.width, ul.y / (float)Screen.height);
-            Vector2 max = new Vector2(lr.x / (float)Screen.width, lr.y / (float)Screen.height);
-
-            Debug.Log("min = " + min);
-            Debug.Log("max = " + max);
-
-            trans.anchorMin = min;
-            trans.anchorMax = max;
-
-            //Vector2 oldSize = trans.rect.size;
-            //Debug.Log("Oldsize " + oldSize);
-            //Vector2 deltaSize = newSize - oldSize;
-            //trans.offsetMin = trans.offsetMin - new Vector2(deltaSize.x * trans.pivot.x, deltaSize.y * trans.pivot.y);
-            //trans.offsetMax = trans.offsetMax + new Vector2(deltaSize.x * (1f - trans.pivot.x), deltaSize.y * (1f - trans.pivot.y));
-        }
+        #endregion Main
 
         internal static Material GetMagicMat()
         {
@@ -752,6 +738,7 @@ namespace WordSpell
             }
         }
 
+        #region LetterTileManagment
         public static void RemoveAndReplaceTile(int i, int j)
         {
             LetterProp toRemove = LetterPropGrid[i, j];
@@ -807,7 +794,7 @@ namespace WordSpell
             rb.AddTorque(new Vector3(xr, yr, zr), ForceMode.VelocityChange);
         }
 
-        #endregion Main
+        #endregion
 
         #region StatUpdate
 
@@ -938,7 +925,7 @@ namespace WordSpell
         public static void GameOver(GameEndReasons ger)
         {
             // Send anylitics on how the game went
-            RecordAnalyticsGameOver();
+            WSAnalytics.RecordAnalyticsGameOver(gs);
 
             boardScript.ContrastPanel.SetActive(false);
 
@@ -1404,39 +1391,6 @@ namespace WordSpell
             gs.level = 20;
         }
 
-        internal static void RecordAnalyticsGameOver()
-        {
-            Analytics.CustomEvent("gameOver", new Dictionary<string, object>
-            {
-                { "score", gs.score },
-                { "level", gs.level },
-                { "mana", gs.mana },
-                { "boardsize", gs.boardsize },
-                { "numWords", gs.history.Count },
-                { "awarded", gs.awarded.Count },
-                { "spellsAttempted", gs.spellsAttempted },
-                { "spellsCasted", gs.spellsCasted },
-                { "spellsAborted", gs.spellsAborted },
-                { "board", PrintGameBoard() },
-            });
-        }
-
-        internal static void RecordAnalyticsLevelReached()
-        {
-            Analytics.CustomEvent("levelReached", new Dictionary<string, object>
-            {
-                { "score", gs.score },
-                { "level", gs.level },
-                { "mana", gs.mana },
-                { "boardsize", gs.boardsize },
-                { "numWords", gs.history.Count },
-                { "awarded", gs.awarded.Count },
-                { "spellsAttempted", gs.spellsAttempted },
-                { "spellsCasted", gs.spellsCasted },
-                { "spellsAborted", gs.spellsAborted },
-                { "board", PrintGameBoard() },
-            });
-        }
 
     }
 }
