@@ -364,6 +364,33 @@ namespace WordSpell
             GamePersistence.SaveOverallStats(os);
         }
 
+        static void RecoreGameScore(int totalScore)
+        {
+            if (totalScore >= 0)
+            {
+                BestGameScore bsc = new BestGameScore();
+
+                bsc.totalWords = gs.history.Count;
+                bsc.score = totalScore;
+                bsc.level = CurrentLevel;
+
+                int indx = os.BestGameScores.FindIndex(f => (f.score < totalScore));
+                if (indx >= 0)
+                {
+                    os.BestGameScores.Insert(indx, bsc);
+                }
+                else
+                {
+                    os.BestGameScores.Add(bsc);
+                }
+
+                if (os.BestGameScores.Count > TOP_SCORES_MAX)
+                {
+                    os.BestGameScores.RemoveAt(TOP_SCORES_MAX);
+                }
+            }
+        }
+
         #endregion Persistence
 
         public static void InitGameGlobal()
@@ -434,6 +461,8 @@ namespace WordSpell
                     WSGameState.NewLetter(i, j);
                 }
             }
+
+            WSAnalytics.RecordAnalyticsStartGame(gs, glbseed);
         }
 
         internal static void Replay()
@@ -449,7 +478,7 @@ namespace WordSpell
             totalwords = 0;
 
             AwardedSpells.Clear();
-            AwardedSpells.Clear();
+            Spells.AvailableSpells.Clear();
 
             Logging.StartDbg("r1");
             UpdateStats();
@@ -709,33 +738,6 @@ namespace WordSpell
         internal static Material GetMagicMat()
         {
             return ManaMaterial;
-        }
-
-        static void RecoreGameScore(int totalScore)
-        {
-            if (totalScore >= 0)
-            {
-                BestGameScore bsc = new BestGameScore();
-
-                bsc.totalWords = gs.history.Count;
-                bsc.score = totalScore;
-                bsc.level = CurrentLevel;
-
-                int indx = os.BestGameScores.FindIndex(f => (f.score < totalScore));
-                if (indx >= 0)
-                {
-                    os.BestGameScores.Insert(indx, bsc);
-                }
-                else
-                {
-                    os.BestGameScores.Add(bsc);
-                }
-
-                if (os.BestGameScores.Count > TOP_SCORES_MAX)
-                {
-                    os.BestGameScores.RemoveAt(TOP_SCORES_MAX);
-                }
-            }
         }
 
         #region LetterTileManagment
