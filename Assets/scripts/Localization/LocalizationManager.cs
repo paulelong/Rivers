@@ -30,6 +30,10 @@ public class LocalizationManager : MonoBehaviour
     private string missingTextString = "Localized text not found";
     private static bool MusicLoadingDone = false;
 
+    private bool alertedLocaleLoaded = false;
+    private bool alertedDictLoaded = false;
+    private bool alertedPartialDictLoaded = false;
+    private bool alertedMusicLoaded = false;
     // Use this for initialization
     void Awake()
     {
@@ -64,7 +68,7 @@ public class LocalizationManager : MonoBehaviour
 
         Logging.StartDbg("w1", timestamp: true);
 
-        UpdateStatus("Loading localization data...");
+        UpdateStatus("Loading...");
 
         Logging.StartDbg("wx", timestamp:true);
     }
@@ -72,8 +76,33 @@ public class LocalizationManager : MonoBehaviour
 
     public void Update()
     {
-        if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady && MusicLoadingDone)
+        if (XMLisReady && !alertedLocaleLoaded)
         {
+            UpdateStatus("Loaded localization data...");
+            alertedLocaleLoaded = true;
+        }
+
+        if (MusicLoadingDone && !alertedMusicLoaded)
+        {
+            UpdateStatus("Loaded music...");
+            alertedMusicLoaded = true;
+        }
+
+        if (EngLetterScoring.DictionaryCacheReady && !alertedDictLoaded)
+        {
+            UpdateStatus("Loaded dictionary...");
+            alertedDictLoaded = true;
+        }
+
+        if (EngLetterScoring.DictionaryPartialCacheReady && !alertedPartialDictLoaded)
+        {
+            UpdateStatus("Loaded dictionary partials...");
+            alertedPartialDictLoaded = true;
+        }
+
+        if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady && MusicLoadingDone && !isReady)
+        {
+            UpdateStatus("Ready");
             isReady = true;
         }
     }
