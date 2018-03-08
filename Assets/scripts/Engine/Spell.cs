@@ -876,7 +876,7 @@ namespace WordSpell
                 }
             }
 
-            if(bw.GetWord.Length > 3)
+            if(bw.GetWord.Length >= 3)
             {
                 WSGameState.boardScript.ShowMsg("How about " + bw.GetWord);
             }
