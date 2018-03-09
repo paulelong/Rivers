@@ -123,6 +123,14 @@ But beware of lava, the RED letter tile in the above example, because if they re
       <value>Nice word, you've earned a </value>
     </LocalizationItem>
     <LocalizationItem>
+      <key>BestWordIs</key>
+      <value>Your best word is </value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>LongestWordIs</key>
+      <value>Your Longest word is </value>
+    </LocalizationItem>
+    <LocalizationItem>
       <key>Spell</key>
       <value>spell</value>
     </LocalizationItem>
@@ -133,6 +141,10 @@ But beware of lava, the RED letter tile in the above example, because if they re
     <LocalizationItem>
       <key>UsedAlready</key>
       <value>You've used that word already.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>NeedVowels</key>
+      <value>You seem to be low on vowels.  To help you out, we've granted you a vowel dust spell.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>SubmitButtonDefault</key>
@@ -173,6 +185,14 @@ Level 6 introduces darker pink word tiles which triples the word score</value>
       <value>You've ended the game, please play again.
 The lava has reached the bottom, the city is doomed.  Please try again.
 There are no more words for you to spell, please try again.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>HintPhrase</key>
+      <value>There are a lot of words in here, how about </value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>HintNotFound</key>
+      <value>Uh oh, there are no words left, do you have any spells that could help?</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>MagicCancel</key>
@@ -245,6 +265,14 @@ There are no more words for you to spell, please try again.</value>
     <LocalizationItem>
       <key>AnyLetterDefault</key>
       <value>type a letter?</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>NewMusic</key>
+      <value>The background music hasn't changed in a while.  If you use the speaker in a word, the music will change as a new speaker is created.</value>
+    </LocalizationItem>
+    <LocalizationItem>
+      <key>NewMusicSnipe</key>
+      <value>The background music hasn't changed in a while.  You've been given a Snipe spell to remedy that situation if you wish.</value>
     </LocalizationItem>
   </items>
 </LocalizationData>

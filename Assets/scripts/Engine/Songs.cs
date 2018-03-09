@@ -29,8 +29,9 @@ namespace WordSpell
             "Theme1_MA",
             "WonderingAcc",
         };
+        private static int lastSong;
 
-//        public IEN
+        //        public IEN
 
         public static void AddSong(AudioClip a)
         {
@@ -70,8 +71,16 @@ namespace WordSpell
                 return null;
             }
             else
-            { 
-                int rs = WSGameState.Rnd.Next(BGMusic.Count - 1);
+            {
+                int rs;
+
+                do
+                {
+                    rs = WSGameState.Rnd.Next(BGMusic.Count - 1);
+                } while (lastSong == rs);
+                
+                lastSong = rs;
+
                 Logging.PlayDbg("gns1.1_" + rs);
                 return BGMusic[rs];
             }

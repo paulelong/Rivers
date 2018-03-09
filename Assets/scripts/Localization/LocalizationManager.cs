@@ -259,7 +259,6 @@ public class LocalizationManager : MonoBehaviour
             ResourceRequest loadAsync = Resources.LoadAsync<AudioClip>("Songs/" + songname);
             while (!loadAsync.isDone)
             {
-                Debug.Log("Load Progress: " + loadAsync.progress);
                 yield return null;
             }
 

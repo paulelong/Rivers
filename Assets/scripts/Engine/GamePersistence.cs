@@ -36,6 +36,9 @@ namespace WordSpell
         public int spellsAttempted = 0;
         public int spellsCasted = 0;
         public int spellsAborted = 0;
+        public int CheckMusicState = 0;
+        public float MusicWaitTime = 600f;
+        public bool SnipeGiven = false;
     }
 
     public class OverallStats
