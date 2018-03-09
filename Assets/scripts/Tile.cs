@@ -7,6 +7,7 @@ using WordSpell;
 public class Tile : MonoBehaviour, IPointerClickHandler
 {
     public LetterProp lp;
+    public bool BlackoutSpell = false;
 
     const float FALL_RATE = 1.5f;
     const float SPIN_RATE = 90f;
@@ -14,6 +15,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     // Use this for initialization
     void Start ()
     {
+        StartCoroutine(BlackoutDelay());
     }
 
     // Update is called once per frame
@@ -120,5 +122,22 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     {
         lp.PlaySelect();
         WSGameState.LetterClick(lp.I, lp.J);
+    }
+
+    private IEnumerator BlackoutDelay()
+    {
+        while(true)
+        {
+            if (BlackoutSpell)
+            {
+                yield return new WaitForSeconds(.1f);
+                Spells.CastSpell2();
+                BlackoutSpell = false;
+            }
+            else
+            {
+                yield return new WaitForSeconds(.1f);
+            }
+        }
     }
 }

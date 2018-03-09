@@ -263,6 +263,10 @@ There are no more words for you to spell, please try again.</value>
       <value>Select a column, then the wand button to make it gone.</value>
     </LocalizationItem>
     <LocalizationItem>
+      <key>Blackout</key>
+      <value>Press the wand button and the entire grid will be replaced with new letters.</value>
+    </LocalizationItem>
+    <LocalizationItem>
       <key>AnyLetterDefault</key>
       <value>type a letter?</value>
     </LocalizationItem>

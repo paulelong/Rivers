@@ -1590,6 +1590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2e91b5e6f218f4f9a12b8667a67bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlackoutSpell: 0
 --- !u!23 &178890089
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7548,6 +7549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2e91b5e6f218f4f9a12b8667a67bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlackoutSpell: 0
 --- !u!23 &505045874
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9460,6 +9462,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2e91b5e6f218f4f9a12b8667a67bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlackoutSpell: 0
 --- !u!23 &700559786
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11280,6 +11283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2e91b5e6f218f4f9a12b8667a67bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlackoutSpell: 0
 --- !u!23 &960382539
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12639,6 +12643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2e91b5e6f218f4f9a12b8667a67bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlackoutSpell: 0
 --- !u!23 &1150314928
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13595,6 +13600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2e91b5e6f218f4f9a12b8667a67bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlackoutSpell: 0
 --- !u!23 &1257034882
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15995,6 +16001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2e91b5e6f218f4f9a12b8667a67bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BlackoutSpell: 0
 --- !u!23 &1445338960
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18261,16 +18268,16 @@ MonoBehaviour:
   MenuHelpIntro1: {fileID: 410061955}
   StartHelpIntro0: {fileID: 616013229}
   StartHelpIntro1: {fileID: 686048790}
-  SubmitWordSound: {fileID: 8300000, guid: 98c8cd467fae59b4fb3e4dccdfb0d091, type: 3}
-  NewLevelSound: {fileID: 8300000, guid: 9baf30858dc663c49b60a24ee2ac01ee, type: 3}
+  SubmitWordSound: {fileID: 8300000, guid: 12872b89d36411344aaac332f69c25e9, type: 3}
+  NewLevelSound: {fileID: 8300000, guid: 8338072998988c446b41ee0e8bb2f410, type: 3}
   GameOverSound: {fileID: 8300000, guid: 4dda8c16252a9594f833b279fb773307, type: 3}
-  SwapSound: {fileID: 8300000, guid: 593d813f15105554a9d433f8d813ace5, type: 3}
-  SnipeSound: {fileID: 8300000, guid: 0c2c3cb63b3f3294580edb057da14e1d, type: 3}
+  SwapSound: {fileID: 8300000, guid: 7a757269cc04b1f4589a03518f2fa690, type: 3}
+  SnipeSound: {fileID: 8300000, guid: 52251a3e3bb72f540a8b30b1466744c4, type: 3}
   LavaSound: {fileID: 8300000, guid: 409b371fb6784b74fa838bbca0e80e01, type: 3}
-  BombSound: {fileID: 8300000, guid: 9fbf6f56898630e4288dac6f0847bd6a, type: 3}
-  RotateSound: {fileID: 8300000, guid: 5059048666a85514294cb61eb02c238f, type: 3}
-  TwinkleSound: {fileID: 8300000, guid: 43d656625564d954498c6581889504ca, type: 3}
-  ZapSound: {fileID: 8300000, guid: eecb8fd99b5b85447a21b528c05da38f, type: 3}
+  BombSound: {fileID: 8300000, guid: 53c46e844967c384f8398dca126ff8fe, type: 3}
+  RotateSound: {fileID: 8300000, guid: 429ba34d1c0dc404998a5fca763ba7c4, type: 3}
+  TwinkleSound: {fileID: 8300000, guid: 2208abe4aedafe8468f007aa39d4fb36, type: 3}
+  ZapSound: {fileID: 8300000, guid: 133368c385157dc4a94dd129a8bfee56, type: 3}
   ContrastPanel: {fileID: 904329224}
   MagicParticles: {fileID: 460501257}
   Horray: {fileID: 1827196589}
@@ -22534,7 +22541,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000026053862, y: 0.0000012016527}
+  m_AnchoredPosition: {x: 0.0000017267089, y: -0.000032843993}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1898278215

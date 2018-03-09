@@ -31,6 +31,7 @@ namespace WordSpell
             AnyLetter,
             RowBGone,
             ColumnBGone,
+            BlackOut,
         };
 
         public SpellType spellType;
@@ -95,6 +96,7 @@ namespace WordSpell
             { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter,    FriendlyName = "Any Letter",  MannaPoints = 12, SpellLevel = 17, Immediate = false, ImageName = "AnyLetter" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.RowBGone,     FriendlyName = "Row b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false, ImageName = "RowGone" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.ColumnBGone,  FriendlyName = "Col b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false, ImageName = "ColGone" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.BlackOut,  FriendlyName = "Black Out",  MannaPoints = 100, SpellLevel = 20, Immediate = true, ImageName = "Blackout" }},
         };
 
         public static List<SpellInfo> AllSpells
@@ -276,6 +278,7 @@ namespace WordSpell
                 case SpellInfo.SpellType.RandomVowels:
                 case SpellInfo.SpellType.WordHint:
                 case SpellInfo.SpellType.WordHint2:
+                case SpellInfo.SpellType.BlackOut:
                     break;
                 case SpellInfo.SpellType.LetterSwap:
                     switch (state)
@@ -352,6 +355,19 @@ namespace WordSpell
 
             switch (NextSpell.spellType)
             {
+                case SpellInfo.SpellType.BlackOut:
+                    if (state < WSGameState.Gridsize * WSGameState.Gridsize)
+                    {
+                        WSGameState.RemoveAndReplaceTile(state % WSGameState.Gridsize, state / WSGameState.Gridsize);
+                        Tile t = (Tile)WSGameState.LetterPropGrid[state % WSGameState.Gridsize, state / WSGameState.Gridsize].LetTF.GetComponent(typeof(Tile));
+                        t.BlackoutSpell = true;
+                        state++;
+                    }
+                    else
+                    {
+                        CompleteSpell();
+                    }
+                    break;
                 case SpellInfo.SpellType.DestroyLetter:
                     SpellDestroyLetter(lp);
                     WSGameState.boardScript.PlaySnipeSound();

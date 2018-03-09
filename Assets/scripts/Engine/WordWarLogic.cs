@@ -48,8 +48,7 @@ namespace WordSpell
 
         #endregion Constants
 
-
-        #region Privates
+        #region Fields
         public struct ScoreStats
         {
             public int MannaScore;
@@ -71,7 +70,31 @@ namespace WordSpell
 #if UNITY_EDITOR
         private static int[] Levels = { 0, 20, 40, 60, 87, 100, 120, 140, 160, 180, 200, 220, 1300, 1600, 2000, 5000, 10000 };
 #else
-        private static int[] Levels = { 0, 25, 60, 100, 160, 230, 310, 400, 500, 650, 850, 1000, 1300, 1600, 2000, 2500, 3000, 4600, 5200, 10000, 20000, 30000  };
+        private static int[] Levels = 
+                { 
+                    0,      // 1
+                    25,     // 2
+                    60,     // 3 
+                    100,    // 4
+                    160,    // 5
+                    230,    // 6
+                    310,    // 7
+                    400,    // 8
+                    500,    // 9
+                    650,    // 10
+                    850,      // 11
+                    1000,      // 12
+                    1300,      // 13
+                    1600,      // 14
+                    2000,      // 15
+                    2500,      // 16
+                    3000,      // 17
+                    4600,      // 18
+                    5200,      // 19
+                    6000,      // 20
+                    6900,      // 21
+                    8000       // 22
+                };
 #endif
 
         private static bool levelup = false;
@@ -92,8 +115,16 @@ namespace WordSpell
         // simple stats
         private static int spellsCasted;
         private static int spellsAwarded;
+        static public Board boardScript;
 
-        #endregion Privates
+        static public LetterProp[,] LetterPropGrid = null;
+
+        static float scaleSize = 0;
+
+        static int gridsize = 7;
+        static float halfOffset = 0;
+
+        #endregion Fields
 
         #region Properties
 
@@ -311,18 +342,6 @@ namespace WordSpell
         }
 
         #endregion Properties
-
-        #region Fields
-        static public Board boardScript;
-
-        static public LetterProp[,] LetterPropGrid = null;
-
-        static float scaleSize = 0;
-
-        static int gridsize = 7;
-        static float halfOffset = 0;
-        #endregion Fields
-
 
         #region Init
 
@@ -561,7 +580,6 @@ namespace WordSpell
 
         #endregion init
 
-
         #region Main
         public static void LetterClick(int i, int j)
         {
@@ -755,6 +773,66 @@ namespace WordSpell
 
             Logging.PlayDbg("SubX", last: true);
         }
+
+        internal static void TurnOver()
+        {
+            boardScript.ClearTryList();
+            TryWordList.Clear();
+        }
+
+        public static void GameOver(GameEndReasons ger)
+        {
+            // Send anylitics on how the game went
+            WSAnalytics.RecordAnalyticsGameOver(gs);
+
+            boardScript.ContrastPanel.SetActive(false);
+
+            IsGameOver = true;
+            Deselect(null);
+
+            RecoreGameScore(gs.score);
+
+            GamePersistence.SaveOverallStats(os);
+            GamePersistence.ResetGameData();
+
+            RemoveGameBoard();
+
+            Resume = false;
+
+            int index = (int)ger - 1;
+
+
+            int wordlength = 0;
+            int bestscore = 0;
+            string longestword = "";
+            WordScoreItem bestword = null;
+
+            foreach (WordScoreItem wsi in gs.history)
+            {
+                if (wsi.Word.Length > wordlength)
+                {
+                    wordlength = wsi.Word.Length;
+                    longestword = wsi.Word;
+                }
+
+                if (wsi.Score > bestscore)
+                {
+                    bestscore = wsi.Score;
+                    bestword = wsi;
+                }
+            }
+
+            string bestWordResponse = "";
+            if(bestword != null)
+            {
+                bestWordResponse = LocalizationManager.instance.GetLocalizedValue("BestWordIs") + " " + bestword.Word + "=" + bestword.Score.ToString() + ". ";
+                bestWordResponse += LocalizationManager.instance.GetLocalizedValue("LongestWordIs") + " " + longestword + ".\n";
+
+            }
+
+            boardScript.EndGameAction(bestWordResponse + LocalizationManager.instance.GetLocalizedValuesByindex("EndGameReasons", index));
+        }
+
         #endregion Main
 
         internal static Material GetMagicMat()
@@ -938,60 +1016,6 @@ namespace WordSpell
         internal static string GetWordTally()
         {
             return EngLetterScoring.GetWordTally(SelLetterList);
-        }
-
-        internal static void TurnOver()
-        {
-            boardScript.ClearTryList();
-            TryWordList.Clear();
-        }
-
-        public static void GameOver(GameEndReasons ger)
-        {
-            // Send anylitics on how the game went
-            WSAnalytics.RecordAnalyticsGameOver(gs);
-
-            boardScript.ContrastPanel.SetActive(false);
-
-            IsGameOver = true;
-            Deselect(null);
-
-            RecoreGameScore(gs.score);
-
-            GamePersistence.SaveOverallStats(os);
-            GamePersistence.ResetGameData();
-
-            RemoveGameBoard();
-
-            Resume = false;
-
-            int index = (int)ger - 1;
-
-
-            int wordlength = 0;
-            int bestscore = 0;
-            string longestword = "";
-            WordScoreItem bestword = null;
-
-            foreach(WordScoreItem wsi in gs.history)
-            {
-                if(wsi.Word.Length > wordlength)
-                {
-                    wordlength = wsi.Word.Length;
-                    longestword = wsi.Word;
-                }
-
-                if (wsi.Score > bestscore)
-                {
-                    bestscore = wsi.Score;
-                    bestword = wsi;
-                }
-            }
-
-            string bestWordResponse = LocalizationManager.instance.GetLocalizedValue("BestWordIs") + " " + bestword.Word + "=" + bestword.Score.ToString() + ". ";
-            bestWordResponse += LocalizationManager.instance.GetLocalizedValue("LongestWordIs") + " " + longestword + ".\n";
-
-            boardScript.EndGameAction(bestWordResponse + LocalizationManager.instance.GetLocalizedValuesByindex("EndGameReasons", index));
         }
 
         internal static bool EnoughMana(int mannaPoints)
@@ -1226,7 +1250,6 @@ namespace WordSpell
             }
 
             Logging.PlayDbg("ctl4");
-
         }
 
         private static void CheckTopBestWordScoresSimple(WordScoreItem wsi)
