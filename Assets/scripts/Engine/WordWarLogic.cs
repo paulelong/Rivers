@@ -123,6 +123,7 @@ namespace WordSpell
 
         static int gridsize = 7;
         static float halfOffset = 0;
+        private static int RndSeed;
 
         #endregion Fields
 
@@ -463,12 +464,13 @@ namespace WordSpell
             AwardAllSpells();
             if (glbseed == 0)
             {
-                int seed = (int)DateTime.Now.Ticks;
-                Logging.StartDbg("sd=" + seed.ToString());
-                r = new System.Random(seed);
+                RndSeed = (int)DateTime.Now.Ticks;
+                Logging.StartDbg("sd=" + RndSeed.ToString());
+                r = new System.Random(RndSeed);
             }
             else
             {
+                RndSeed = glbseed;
                 Logging.StartDbg("sd=" + glbseed.ToString());
                 r = new System.Random(glbseed);
             }
@@ -499,7 +501,7 @@ namespace WordSpell
                 }
             }
 
-            WSAnalytics.RecordAnalyticsStartGame(gs, glbseed);
+            WSAnalytics.RecordAnalyticsStartGame(gs, RndSeed);
         }
 
         internal static void Replay()
