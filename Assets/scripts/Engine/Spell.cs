@@ -376,6 +376,8 @@ namespace WordSpell
                                 _lp.FlipTileForward();
                                 _lp.TileIdle();
 
+                                WSGameState.boardScript.PlayTwinkleSound();
+
                                 RandomLetterList.RemoveAt(0);
                             }
 
@@ -389,10 +391,21 @@ namespace WordSpell
                     }
                     break;
                 case SpellInfo.SpellType.ChangeToVowel:
-                    lp.UpdateLetterDisplay();
-                    lp.FlipTileForward();
-                    lp.TileIdle();
-                    CompleteSpell();
+                    switch(state)
+                    {
+                        case 0:
+                            lp.letter = EngLetterScoring.RandomVowel();
+                            lp.FlipTileBack();
+                            state++;
+                            break;
+                        case 1:
+                            lp.UpdateLetterDisplay();
+                            lp.FlipTileForward();
+                            lp.TileIdle();
+                            CompleteSpell();
+                            WSGameState.boardScript.PlayTwinkleSound();
+                            break;
+                    }
                     break;
                 case SpellInfo.SpellType.Burn:
                     BurnTile(lp);
@@ -433,6 +446,7 @@ namespace WordSpell
 
                             if (RandomLetterList.Count <= 0)
                             {
+                                WSGameState.boardScript.PlayTwinkleSound();
                                 CompleteSpell();
                                 RandomLetterList.Clear();
                                 state = 0;
@@ -442,24 +456,30 @@ namespace WordSpell
                     break;
                 case SpellInfo.SpellType.WordHint:
                     GetBestHint(10);
+                    WSGameState.boardScript.PlayTwinkleSound();
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.WordHint2:
                     GetBestHint(200);
+                    WSGameState.boardScript.PlayTwinkleSound();
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.RotateCW:
+                    WSGameState.boardScript.PlayRotateSound();
                     CompleteSpell(Rotate(lp, -1));
                     break;
                 case SpellInfo.SpellType.RotateCCW:
+                    WSGameState.boardScript.PlayRotateSound();
                     CompleteSpell(Rotate(lp, 1));
                     break;
                 case SpellInfo.SpellType.Rotate180:
+                    WSGameState.boardScript.PlayRotateSound();
                     CompleteSpell(Rotate(lp, 4));
                     break;
                 case SpellInfo.SpellType.HintOnLetter:
                     GetBestHint(lp);
                     CompleteSpell();
+                    WSGameState.boardScript.PlayTwinkleSound();
                     break;
                 case SpellInfo.SpellType.AnyLetter:
                     //lp.AnimationEnabled = true;
@@ -486,6 +506,7 @@ namespace WordSpell
                         case 2:
                             lp.UpdateLetterDisplay();
                             lp.FlipTileForward();
+                            WSGameState.boardScript.PlayTwinkleSound();
                             CompleteSpell();
                             break;
                     }
@@ -495,6 +516,7 @@ namespace WordSpell
                     {
                         WSGameState.RemoveAndReplaceTile(lp.I, i);
                     }
+                    WSGameState.boardScript.PlayZapSound();
                     CompleteSpell();
                     break;
                 case SpellInfo.SpellType.RowBGone:
@@ -502,203 +524,11 @@ namespace WordSpell
                     {
                         WSGameState.RemoveAndReplaceTile(i, lp.J);
                     }
+                    WSGameState.boardScript.PlayZapSound();
                     CompleteSpell();
                     break;
             }
         }
-
-        public static void CastSpell(string s = null)
-        {
-            if (NextSpell == null)
-            {
-                return;
-            }
-
-            switch (NextSpell.spellType)
-            {
-                case SpellInfo.SpellType.DestroyLetter:
-                    SpellDestroyLetter(lp);
-                    WSGameState.boardScript.PlaySnipeSound();
-                    CompleteSpell();
-                    break;
-                case SpellInfo.SpellType.DestroyGroup:
-                    //lp.AnimationEnabled = true;
-                    SpellDestroyLetterGroupSmall(lp);
-                    break;
-                case SpellInfo.SpellType.RandomVowels:
-                    switch (state)
-                    {
-                        case 0:
-                            CreateRandomVowels(5);
-                            state++;
-                            break;
-                        case 1:
-                            if (RandomLetterList.Count > 0)
-                            {
-                                LetterProp _lp = RandomLetterList[0];
-
-                                _lp.UpdateLetterDisplay();
-                                _lp.FlipTileForward();
-                                _lp.TileIdle();
-
-                                RandomLetterList.RemoveAt(0);
-                            }
-
-                            if (RandomLetterList.Count <= 0)
-                            {
-                                CompleteSpell();
-                                RandomLetterList.Clear();
-                                state = 0;
-                            }
-                            break;
-                    }
-                    break;
-                case SpellInfo.SpellType.ChangeToVowel:
-                    //lp.AnimationEnabled = true;
-
-                    switch (state)
-                    {
-                        case 0:
-                            ChangeToVowel(lp);
-                            WSGameState.MagicSelect(lp);
-                            state++;
-                            break;
-                        case 1:
-                            lp.UpdateLetterDisplay();
-                            lp.FlipTileForward();
-                            lp.TileIdle();
-                            CompleteSpell();
-                            break;
-                    }
-                    break;
-                case SpellInfo.SpellType.Burn:
-                    BurnTile(lp);
-                    CompleteSpell();
-                    break;
-                case SpellInfo.SpellType.LetterSwap:
-                    switch (state)
-                    {
-                        case 0:
-                            LetterSwapFirst = lp;
-                            WSGameState.MagicSelect(lp);
-                            state++;
-                            break;
-                        case 1:
-                            if (SwapLetters(lp, LetterSwapFirst, false))
-                            {
-                                WSGameState.boardScript.PlaySwapSound();
-
-                                SwapMovement(lp, LetterSwapFirst);
-
-                                CompleteSpell();
-                            }
-                            else
-                            {
-                                CompleteSpell(false);
-                            }
-                            break;
-                    }
-                    break;
-                case SpellInfo.SpellType.ConvertLetter:
-
-                    switch (state)
-                    {
-                        case 0:
-                            ConvertLetterTile(lp);
-                            WSGameState.MagicSelect(lp);
-                            Debug.Log("Found Converts: " + RandomLetterList.Count);
-                            state++;
-                            break;
-                        case 1:
-                            if (RandomLetterList.Count > 0)
-                            {
-                                LetterProp _lp = RandomLetterList[0];
-
-                                _lp.UpdateLetterDisplay();
-                                _lp.FlipTileForward();
-                                _lp.TileIdle();
-
-                                RandomLetterList.RemoveAt(0);
-                            }
-
-                            if (RandomLetterList.Count <= 0)
-                            {
-                                CompleteSpell();
-                                RandomLetterList.Clear();
-                                state = 0;
-                            }
-                            break;
-                    }
-                    break;
-                case SpellInfo.SpellType.WordHint:
-                    GetBestHint(10);
-                    CompleteSpell();
-                    break;
-                case SpellInfo.SpellType.WordHint2:
-                    GetBestHint(200);
-                    CompleteSpell();
-                    break;
-                case SpellInfo.SpellType.RotateCW:
-                    CompleteSpell(Rotate(lp, -1));
-                    break;
-                case SpellInfo.SpellType.RotateCCW:
-                    CompleteSpell(Rotate(lp, 1));
-                    break;
-                case SpellInfo.SpellType.Rotate180:
-                    CompleteSpell(Rotate(lp, 4));
-                    break;
-                case SpellInfo.SpellType.HintOnLetter:
-                    GetBestHint(lp);
-                    CompleteSpell();
-                    break;
-                case SpellInfo.SpellType.AnyLetter:
-                    //lp.AnimationEnabled = true;
-                    switch (state)
-                    {
-                        case 0:
-                            WSGameState.boardScript.SelectLetterToChange();
-                            WSGameState.MagicSelect(lp);
-                            state++;
-                            break;
-                        case 1:
-                            if (s == "" || !char.IsLetter(s[0]) || s.Length > 1)
-                            {
-                                WSGameState.boardScript.ShowMsg("That entry was not valid.  Must enter a single letter.");
-                                CompleteSpell(false);
-                            }
-                            else
-                            {
-                                lp.FlipTileBack();
-                                lp.letter = (byte)s[0];
-                                state++;
-                            }
-                            break;
-                        case 2:
-                            lp.UpdateLetterDisplay();
-                            lp.FlipTileForward();
-                            CompleteSpell();
-                            break;
-                    }
-                    break;
-                case SpellInfo.SpellType.ColumnBGone:
-                    for (int i = WSGameState.Gridsize - 1; i >= 0; i--)
-                    {
-                        WSGameState.RemoveAndReplaceTile(lp.I, i);
-                    }
-                    CompleteSpell();
-                    break;
-                case SpellInfo.SpellType.RowBGone:
-                    for (int i = WSGameState.Gridsize - 1; i >= 0; i--)
-                    {
-                        WSGameState.RemoveAndReplaceTile(i, lp.J);
-                    }
-                    CompleteSpell();
-                    break;
-            }
-
-        }
-
-
 
         private static void SwapMovement(LetterProp lp1, LetterProp lp2)
         {
@@ -878,11 +708,11 @@ namespace WordSpell
 
             if(bw.GetWord.Length >= 3)
             {
-                WSGameState.boardScript.ShowMsg("How about " + bw.GetWord);
+                WSGameState.boardScript.ShowMsg(LocalizationManager.instance.GetLocalizedValue("HintPhrase") + bw.GetWord);
             }
             else
             {
-                WSGameState.boardScript.ShowMsg("Uh oh, do you have any spells that could help?" + bw.GetWord);
+                WSGameState.boardScript.ShowMsg(LocalizationManager.instance.GetLocalizedValue("HintNotFound"));
             }
         }
 
@@ -1003,6 +833,7 @@ namespace WordSpell
                     state++;
                     break;
                 case 1:
+                    WSGameState.boardScript.PlayBombSound();
                     if (lp.J - 1 >= 0)
                     {
                         WSGameState.RemoveAndReplaceTile(lp.I, lp.J - 1);

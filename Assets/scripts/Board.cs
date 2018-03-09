@@ -119,6 +119,10 @@ public class Board : MonoBehaviour, IEventSystemHandler
     public AudioClip SwapSound;
     public AudioClip SnipeSound;
     public AudioClip LavaSound;
+    public AudioClip BombSound;
+    public AudioClip RotateSound;
+    public AudioClip TwinkleSound;
+    public AudioClip ZapSound;
 
     public GameObject ContrastPanel;
 
@@ -201,6 +205,8 @@ public class Board : MonoBehaviour, IEventSystemHandler
             Logging.StartDbg("S5", timestamp: true);
 
             RefreshSpells();
+
+            StartCoroutine("CheckMusic");
 
             //DebugTest();
         }
@@ -391,6 +397,8 @@ public class Board : MonoBehaviour, IEventSystemHandler
 
     private void StartGame(int _gridsize)
     {
+        WSGameState.CheckMusicState = 0;
+
         StartCanvas.SetActive(false);
         ControlCanvas.SetActive(true);
 
@@ -1041,7 +1049,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
 
         Text t = InputCanvas.transform.GetChild(0).GetChild(0).GetChild(1).GetChild(2).GetComponent<Text>();
 
-        Spells.CastSpell(t.text.ToUpper());
+        Spells.CastSpell2(t.text.ToUpper());
     }
 
     void SpellSucceded()
@@ -1133,6 +1141,30 @@ public class Board : MonoBehaviour, IEventSystemHandler
         audio.PlayOneShot(LavaSound);
     }
 
+    public void PlayBombSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(BombSound);
+    }
+
+    public void PlayRotateSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(RotateSound);
+    }
+
+    public void PlayTwinkleSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(TwinkleSound);
+    }
+
+    public void PlayZapSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(ZapSound);
+    }
+
     #endregion SoundFX
 
     public void SendEmail2()
@@ -1140,4 +1172,43 @@ public class Board : MonoBehaviour, IEventSystemHandler
         WSAnalytics.EmailDev(Ex1Str, Ex2Str);
     }
 
+
+    private IEnumerator CheckMusic()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(WSGameState.MusicWaitTime);
+
+            switch (WSGameState.CheckMusicState)
+            {
+                case 0:
+                    WSGameState.CheckMusicState++;
+                    break;
+                case 1:
+                    ShowMsg(LocalizationManager.instance.GetLocalizedValue("NewMusic"));
+                    WSGameState.CheckMusicState++;
+                    break;
+                case 2:
+                    if (!WSGameState.SnipeGiven)
+                    {
+                        ShowMsg(LocalizationManager.instance.GetLocalizedValue("NewMusicSnipe"));
+                        WSGameState.AwardSpell("Snipe");
+                        WSGameState.SnipeGiven = true;
+                        WSGameState.MusicWaitTime = 600f;
+                        RefreshSpells();
+                    }
+                    else
+                    {
+                        WSGameState.ChangeSong();
+                    }
+                    break;
+            }
+
+        }
+    }
+
+    public void ResetCheckMusic()
+    {
+        WSGameState.CheckMusicState = 0;
+    }
 }

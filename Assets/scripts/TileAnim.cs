@@ -17,11 +17,6 @@ public class TileAnim : MonoBehaviour
 		
 	}
 
-    public void FinishSpell()
-    {
-        Spells.CastSpell();
-    }
-
     public void NewSong()
     {
         AudioSource asrc = (AudioSource)gameObject.GetComponent(typeof(AudioSource));
@@ -54,6 +49,12 @@ public class TileAnim : MonoBehaviour
     {
         AudioSource audio = GetComponent<AudioSource>();
         audio.PlayOneShot(SelectSound);
+    }
+
+    // Called by animatitions so that spells can be completed, like turning tiles that have been flipped.
+    public void FinishSpell()
+    {
+        Spells.CastSpell2();
     }
 
 }

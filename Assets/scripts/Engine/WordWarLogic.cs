@@ -114,6 +114,24 @@ namespace WordSpell
             get { return gs.awarded; }
         }
 
+        public static bool SnipeGiven
+        {
+            get { return gs.SnipeGiven;  }
+            set { gs.SnipeGiven = value; }
+        }
+
+        public static int CheckMusicState
+        {
+            get { return gs.CheckMusicState; }
+            set { gs.CheckMusicState = value; }
+        }
+
+        public static float MusicWaitTime
+        {
+            get { return gs.MusicWaitTime; }
+            set { gs.MusicWaitTime = value;  }
+        }
+
         static public List<string> LongestWords
         {
             get
@@ -497,7 +515,11 @@ namespace WordSpell
 
         internal static void NewMusicTile()
         {
-            int ti = WSGameState.Rnd.Next(Gridsize - 1);
+            boardScript.ResetCheckMusic();
+
+            int ti;
+            ti = WSGameState.Rnd.Next(Gridsize - 1);
+
             LetterPropGrid[ti, Gridsize - 1].PlayBackgroundMusic();
             Logging.PlayDbg("mt(" + LetterPropGrid[ti, Gridsize - 1].ASCIIString + "," + ti + ")");
         }
@@ -946,7 +968,30 @@ namespace WordSpell
             int index = (int)ger - 1;
 
 
-            boardScript.EndGameAction(LocalizationManager.instance.GetLocalizedValuesByindex("EndGameReasons", index));
+            int wordlength = 0;
+            int bestscore = 0;
+            string longestword = "";
+            WordScoreItem bestword = null;
+
+            foreach(WordScoreItem wsi in gs.history)
+            {
+                if(wsi.Word.Length > wordlength)
+                {
+                    wordlength = wsi.Word.Length;
+                    longestword = wsi.Word;
+                }
+
+                if (wsi.Score > bestscore)
+                {
+                    bestscore = wsi.Score;
+                    bestword = wsi;
+                }
+            }
+
+            string bestWordResponse = LocalizationManager.instance.GetLocalizedValue("BestWordIs") + " " + bestword.Word + "=" + bestword.Score.ToString() + ". ";
+            bestWordResponse += LocalizationManager.instance.GetLocalizedValue("LongestWordIs") + " " + longestword + ".\n";
+
+            boardScript.EndGameAction(bestWordResponse + LocalizationManager.instance.GetLocalizedValuesByindex("EndGameReasons", index));
         }
 
         internal static bool EnoughMana(int mannaPoints)
@@ -1092,6 +1137,12 @@ namespace WordSpell
             return ss;
         }
 
+        public static void AwardSpell(string spellname)
+        {
+            SpellInfo si = Spells.FindSpell(spellname);
+            AwardedSpells.Add(si);
+        }
+
         internal static void AwardAllSpells()
         {
             foreach (SpellInfo si in Spells.AllSpells)
@@ -1103,6 +1154,32 @@ namespace WordSpell
             }
 
             boardScript.ShowSpellStuff();
+        }
+
+        public static void ChangeSong()
+        {
+            GameObject go = null;
+
+            for (int i = 0; i < Gridsize; i++)
+            {
+                for (int j = 0; j < Gridsize; j++)
+                {
+                    if (LetterPropGrid[i, j].TileType == LetterProp.TileTypes.Speaker)
+                    {
+                        go = LetterPropGrid[i, j].LetterBlockObj;
+                    }
+                }
+            }
+
+            if(go != null)
+            {
+                AudioSource asrc = (AudioSource)go.transform.GetComponent(typeof(AudioSource));
+                if (asrc != null)
+                {
+                    asrc.clip = Songs.GetNextSong();
+                    asrc.PlayDelayed(0);
+                }
+            }
         }
 
         internal static void RemoveAwardedSpells(SpellInfo selectedSpell)
@@ -1317,11 +1394,19 @@ namespace WordSpell
         {
             List<LetterProp> removeList = new List<LetterProp>() ;
 
+            int vowelcount = 0;
+
             for (int i = 0; i < Gridsize; i++)
             {
                 for (int j = 0; j < Gridsize; j++)
                 {
                     LetterProp curlp = LetterPropGrid[i, j];
+
+                    if(!EngLetterScoring.IsConsonant(LetterPropGrid[i,j].ASCIIString))
+                    {
+                        vowelcount++;
+                    }
+
                     if (curlp.IsBurning())
                     {
                         if (curlp.J <= 0)
@@ -1339,6 +1424,12 @@ namespace WordSpell
 //                        RemoveAndReplaceTile(curlp.I, curlp.J - 1);
                     }
                 }
+            }
+
+            if(vowelcount <= 2 && gs.level <= 3)
+            {
+                boardScript.ShowMsg(LocalizationManager.instance.GetLocalizedValue("NeedVowels"));
+                AwardSpell("VowelDust");
             }
 
             foreach(LetterProp lp in removeList)

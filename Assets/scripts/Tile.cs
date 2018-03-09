@@ -9,7 +9,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     public LetterProp lp;
 
     const float FALL_RATE = 1.5f;
-    const float SPIN_RATE = 60f;
+    const float SPIN_RATE = 90f;
 
     // Use this for initialization
     void Start ()
@@ -121,11 +121,4 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         lp.PlaySelect();
         WSGameState.LetterClick(lp.I, lp.J);
     }
-
-    // Called by animatitions so that spells can be completed, like turning tiles that have been flipped.
-    public void FinishSpell()
-    {
-        Spells.CastSpell2();
-    }
-
 }
