@@ -22,6 +22,8 @@ namespace WordSpell
         const int glbseed = 0; //319266411;
 
         private const float LowestWordScore = 3f;
+        private const int SPELL_AWARD_SCORE_BASE = 14;
+        private const int SPELL_AWARD_LENGTH_BASE = 8;
 
         public enum FortuneLevel
         {
@@ -340,6 +342,42 @@ namespace WordSpell
         {
             get { return gs.spellsAborted; }
             set { gs.spellsAborted = value; }
+        }
+
+        /// <summary>
+        /// Between levels 5-20, the difficulty gets harder and 14-40 point words are required for an award.
+        /// </summary>
+        public static int SpellAwardScore
+        {
+            get
+            {
+                if(gs.level > 5)
+                {
+                    return SPELL_AWARD_SCORE_BASE + ((gs.level - 5) * 3);
+                }
+                else
+                {
+                    return SPELL_AWARD_SCORE_BASE;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Between levels 5-20, the difficulty gets harder and 8-12 letter long words are required for an award.
+        /// </summary>
+        public static int SpellAwardLength
+        {
+            get
+            {
+                if (gs.level > 5)
+                {
+                    return SPELL_AWARD_LENGTH_BASE + ((gs.level - 5) / 3);
+                }
+                else
+                {
+                    return SPELL_AWARD_LENGTH_BASE;
+                }
+            }
         }
 
         #endregion Properties
@@ -1013,8 +1051,6 @@ namespace WordSpell
             UpdateManaScore();
         }
 
-        #endregion StatUpdate
-
         internal static string GetWordTally()
         {
             return EngLetterScoring.GetWordTally(SelLetterList);
@@ -1024,6 +1060,8 @@ namespace WordSpell
         {
             return (mannaPoints > WSGameState.gs.mana);
         }
+
+        #endregion StatUpdate
 
         private static void RemoveGameBoard()
         {
@@ -1122,7 +1160,7 @@ namespace WordSpell
 
             // If it's a big or price word, give them a spell based on the word.
             string curword = GetCurrentWord();
-            if (wordTotal > 14 || curword.Length >= 8)
+            if (wordTotal > SpellAwardScore || curword.Length >= SpellAwardLength)
             {
                 SpellInfo si = null;
 

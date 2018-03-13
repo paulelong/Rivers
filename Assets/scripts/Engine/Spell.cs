@@ -81,21 +81,21 @@ namespace WordSpell
         static List<SpellInfo> allSpells = new List<SpellInfo>
         {
             { new SpellInfo { spellType = SpellInfo.SpellType.LetterSwap,   FriendlyName = "Swap",      MannaPoints = 10, SpellLevel = 5, Immediate = false, ImageName = "Swap" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.Burn,         FriendlyName = "Lava" ,     MannaPoints = 6, SpellLevel = 6, Immediate = false, ImageName = "Burn"  }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 10, SpellLevel = 7, Immediate = true, ImageName = "VowelDust" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 12, SpellLevel = 8, Immediate = false, ImageName = "ConvertLetter" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyGroup, FriendlyName = "Bomb",      MannaPoints = 8, SpellLevel = 9, Immediate = false, ImageName = "Bomb" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCW,     FriendlyName = "Rotate CW",  MannaPoints = 3, SpellLevel = 10, Immediate = false, ImageName = "CWRotate"  }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCCW,    FriendlyName = "Rotate CCW",  MannaPoints = 3, SpellLevel = 10, Immediate = false, ImageName = "CCWRotate"  }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint,     FriendlyName = "Hint",      MannaPoints = 10, SpellLevel = 11, Immediate = true,ImageName = "Hint" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.Rotate180,    FriendlyName = "Rotate 180",  MannaPoints = 5, SpellLevel = 12, Immediate = false, ImageName = "Rotate180"  }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyLetter, FriendlyName = "Snipe",    MannaPoints = 10, SpellLevel = 13, Immediate = false, ImageName = "Snipe" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2,    FriendlyName = "Hint++",    MannaPoints = 14, SpellLevel = 14, Immediate = true,ImageName = "HintPlus" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.ChangeToVowel, FriendlyName = "Vowelize", MannaPoints = 7, SpellLevel = 15, Immediate = false, ImageName = "Vowelize" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.HintOnLetter, FriendlyName = "Letter Hint",  MannaPoints = 15, SpellLevel = 16, Immediate = false,ImageName = "HintLet" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter,    FriendlyName = "Any Letter",  MannaPoints = 12, SpellLevel = 17, Immediate = false, ImageName = "AnyLetter" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.RowBGone,     FriendlyName = "Row b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false, ImageName = "RowGone" }},
-            { new SpellInfo { spellType = SpellInfo.SpellType.ColumnBGone,  FriendlyName = "Col b'Gone",  MannaPoints = 12, SpellLevel = 18, Immediate = false, ImageName = "ColGone" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.Burn,         FriendlyName = "Lava" ,     MannaPoints = 9, SpellLevel = 6, Immediate = false, ImageName = "Burn"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RandomVowels, FriendlyName = "Vowel Dust", MannaPoints = 14, SpellLevel = 7, Immediate = true, ImageName = "VowelDust" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.ConvertLetter, FriendlyName = "Convert",  MannaPoints = 15, SpellLevel = 8, Immediate = false, ImageName = "ConvertLetter" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyGroup, FriendlyName = "Bomb",      MannaPoints = 15, SpellLevel = 9, Immediate = false, ImageName = "Bomb" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCW,     FriendlyName = "Rotate CW",  MannaPoints = 5, SpellLevel = 10, Immediate = false, ImageName = "CWRotate"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RotateCCW,    FriendlyName = "Rotate CCW",  MannaPoints = 5, SpellLevel = 10, Immediate = false, ImageName = "CCWRotate"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint,     FriendlyName = "Hint",      MannaPoints = 40, SpellLevel = 11, Immediate = true,ImageName = "Hint" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.Rotate180,    FriendlyName = "Rotate 180",  MannaPoints = 10, SpellLevel = 12, Immediate = false, ImageName = "Rotate180"  }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.DestroyLetter, FriendlyName = "Snipe",    MannaPoints = 20, SpellLevel = 13, Immediate = false, ImageName = "Snipe" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.WordHint2,    FriendlyName = "Hint++",    MannaPoints = 100, SpellLevel = 14, Immediate = true,ImageName = "HintPlus" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.ChangeToVowel, FriendlyName = "Vowelize", MannaPoints = 20, SpellLevel = 15, Immediate = false, ImageName = "Vowelize" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.HintOnLetter, FriendlyName = "Letter Hint",  MannaPoints = 30, SpellLevel = 16, Immediate = false,ImageName = "HintLet" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.AnyLetter,    FriendlyName = "Any Letter",  MannaPoints = 50, SpellLevel = 17, Immediate = false, ImageName = "AnyLetter" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.RowBGone,     FriendlyName = "Row b'Gone",  MannaPoints = 20, SpellLevel = 18, Immediate = false, ImageName = "RowGone" }},
+            { new SpellInfo { spellType = SpellInfo.SpellType.ColumnBGone,  FriendlyName = "Col b'Gone",  MannaPoints = 20, SpellLevel = 18, Immediate = false, ImageName = "ColGone" }},
             { new SpellInfo { spellType = SpellInfo.SpellType.BlackOut,  FriendlyName = "Black Out",  MannaPoints = 100, SpellLevel = 20, Immediate = true, ImageName = "Blackout" }},
         };
 
@@ -356,6 +356,7 @@ namespace WordSpell
             switch (NextSpell.spellType)
             {
                 case SpellInfo.SpellType.BlackOut:
+                    WSGameState.boardScript.PlayLaserBeamSound();
                     if (state < WSGameState.Gridsize * WSGameState.Gridsize)
                     {
                         WSGameState.RemoveAndReplaceTile(state % WSGameState.Gridsize, state / WSGameState.Gridsize);

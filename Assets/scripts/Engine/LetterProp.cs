@@ -7,6 +7,44 @@ namespace WordSpell
 {
     public class LetterProp
     {
+        #region Constants
+        int Burning = Animator.StringToHash("Burning");
+        int Selected = Animator.StringToHash("StartSel");
+        //int LetterFall = Animator.StringToHash("LetterFall");
+        //int LetterFallObj = Animator.StringToHash("LetterFallObj");
+        int Idle = Animator.StringToHash("Idle");
+        int FlipBack = Animator.StringToHash("FlipBack");
+        int FlipForward = Animator.StringToHash("FlipForward");
+        int Bomb = Animator.StringToHash("Bomb");
+
+
+        public enum TileTypes
+        {
+            WordDouble,
+            LetterDouble,
+            WordTriple,
+            LetterTriple,
+            Burning,
+            Manna,
+            Speaker,
+            Normal,
+        };
+
+        static Dictionary<TileTypes, TileTypeProperties> TileTypeProp = new Dictionary<TileTypes, TileTypeProperties>
+        {
+            {TileTypes.Normal, new TileTypeProperties { prob2 = 150, probability = 1.0, background = Color.black, foreground = Color.grey, depthmod = 0.01, level = 0, levelmod = 0.0 } },
+            {TileTypes.LetterDouble, new TileTypeProperties { prob2 = 10, probability = 0.08, foreground = Color.black, background = Color.magenta, depthmod = 0.01, level = 2, levelmod = 0.2 }},
+            {TileTypes.WordDouble, new TileTypeProperties { prob2 = 8, probability = 0.05, foreground = Color.black, background = Color.cyan, depthmod = 0.01, level = 4, levelmod = 0.2 }},
+            {TileTypes.LetterTriple, new TileTypeProperties { prob2 = 5, probability = 0.04, foreground = Color.black, background = Color.magenta, depthmod = 0.01, level = 7, levelmod = 0.2 }},
+            {TileTypes.WordTriple, new TileTypeProperties { prob2 = 4, probability = 0.03, foreground = Color.black, background = Color.green, depthmod = 0.01, level = 6, levelmod = 0.2 }},
+            {TileTypes.Burning, new TileTypeProperties{ prob2 = 10, probability = 0.12, background = Color.black, foreground = Color.red, depthmod = 1.0, level = 3, levelmod = 1.9 }},
+            {TileTypes.Manna, new TileTypeProperties{ prob2 = 8, probability = 0.15, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 5, levelmod = 0.4 }},
+            {TileTypes.Speaker, new TileTypeProperties{ prob2 = 0, probability = 0.0, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 30000, levelmod = 0.4 }},
+        };
+
+        #endregion Constants
+
+        #region Fields
         int i, j;
 
         private TileTypes tt;
@@ -17,14 +55,6 @@ namespace WordSpell
         private byte _letter;
         static private int prob_total;
         bool IsSelected = false;
-        int Burning = Animator.StringToHash("Burning");
-        int Selected = Animator.StringToHash("StartSel");
-        //int LetterFall = Animator.StringToHash("LetterFall");
-        //int LetterFallObj = Animator.StringToHash("LetterFallObj");
-        int Idle = Animator.StringToHash("Idle");
-        int FlipBack = Animator.StringToHash("FlipBack");
-        int FlipForward = Animator.StringToHash("FlipForward");
-        int Bomb = Animator.StringToHash("Bomb");
 
         float letterDCount = 0.0f;
         float letterUCount = 0.0f;
@@ -36,10 +66,10 @@ namespace WordSpell
         float letterRotVU = 0.0f;
         float letterRotVD = 0.0f;
 
-        Vector3 letterRotHRAxis ;
-        Vector3 letterRotHLAxis ;
-        Vector3 letterRotVUAxis ;
-        Vector3 letterRotVDAxis ;
+        Vector3 letterRotHRAxis;
+        Vector3 letterRotHLAxis;
+        Vector3 letterRotVUAxis;
+        Vector3 letterRotVDAxis;
 
         Vector3 letterRotHRCAxis;
         Vector3 letterRotHLCAxis;
@@ -49,7 +79,8 @@ namespace WordSpell
         GameObject selectorGO = null;
 
         bool moving;
-
+        #endregion Fields
+        
         private void ClearTransform()
         {
             if(LetTF != null)
@@ -459,18 +490,6 @@ namespace WordSpell
         #endregion Properties
 
 
-        public enum TileTypes
-        {
-            WordDouble,
-            LetterDouble,
-            WordTriple,
-            LetterTriple,
-            Burning,
-            Manna,
-            Speaker,
-            Normal,
-        };
-
         struct TileTypeProperties
         {
             public double probability;
@@ -488,17 +507,7 @@ namespace WordSpell
             public TileTypes tt;
         }
 
-        static Dictionary<TileTypes, TileTypeProperties> TileTypeProp = new Dictionary<TileTypes, TileTypeProperties>
-        {
-            {TileTypes.Normal, new TileTypeProperties { prob2 = 150, probability = 1.0, background = Color.black, foreground = Color.grey, depthmod = 0.01, level = 0, levelmod = 0.0 } },
-            {TileTypes.LetterDouble, new TileTypeProperties { prob2 = 10, probability = 0.08, foreground = Color.black, background = Color.magenta, depthmod = 0.01, level = 2, levelmod = 0.2 }},
-            {TileTypes.WordDouble, new TileTypeProperties { prob2 = 8, probability = 0.05, foreground = Color.black, background = Color.cyan, depthmod = 0.01, level = 4, levelmod = 0.2 }},
-            {TileTypes.LetterTriple, new TileTypeProperties { prob2 = 5, probability = 0.04, foreground = Color.black, background = Color.magenta, depthmod = 0.01, level = 7, levelmod = 0.2 }},
-            {TileTypes.WordTriple, new TileTypeProperties { prob2 = 4, probability = 0.03, foreground = Color.black, background = Color.green, depthmod = 0.01, level = 6, levelmod = 0.2 }},
-            {TileTypes.Burning, new TileTypeProperties{ prob2 = 10, probability = 0.12, background = Color.black, foreground = Color.red, depthmod = 1.0, level = 3, levelmod = 0.9 }},
-            {TileTypes.Manna, new TileTypeProperties{ prob2 = 8, probability = 0.15, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 5, levelmod = 0.4 }},
-            {TileTypes.Speaker, new TileTypeProperties{ prob2 = 0, probability = 0.0, foreground = Color.yellow, background = Color.blue, depthmod = 1.0, level = 30000, levelmod = 0.4 }},
-        };
+
 
         static Material NormalMat;
         static Material LetterDoubleMat;

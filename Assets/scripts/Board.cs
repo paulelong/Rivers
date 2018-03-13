@@ -123,6 +123,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
     public AudioClip RotateSound;
     public AudioClip TwinkleSound;
     public AudioClip ZapSound;
+    public AudioClip LaserBeamSound;
 
     public GameObject ContrastPanel;
 
@@ -1163,6 +1164,12 @@ public class Board : MonoBehaviour, IEventSystemHandler
     {
         AudioSource audio = GetComponent<AudioSource>();
         audio.PlayOneShot(ZapSound);
+    }
+
+    public void PlayLaserBeamSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.PlayOneShot(LaserBeamSound);
     }
 
     #endregion SoundFX
