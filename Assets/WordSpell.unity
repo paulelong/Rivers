@@ -10297,7 +10297,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000030436627, y: -0.000002169567}
+  m_AnchoredPosition: {x: -0.000002758347, y: -0.000010083812}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &812072372
@@ -18278,6 +18278,7 @@ MonoBehaviour:
   RotateSound: {fileID: 8300000, guid: 429ba34d1c0dc404998a5fca763ba7c4, type: 3}
   TwinkleSound: {fileID: 8300000, guid: 2208abe4aedafe8468f007aa39d4fb36, type: 3}
   ZapSound: {fileID: 8300000, guid: 133368c385157dc4a94dd129a8bfee56, type: 3}
+  LaserBeamSound: {fileID: 8300000, guid: b2b148f56bf9d8a44bb88a4d5cac959d, type: 3}
   ContrastPanel: {fileID: 904329224}
   MagicParticles: {fileID: 460501257}
   Horray: {fileID: 1827196589}
@@ -22541,7 +22542,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000017267089, y: -0.000032843993}
+  m_AnchoredPosition: {x: -0.00001683184, y: -0.000033657885}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1898278215
