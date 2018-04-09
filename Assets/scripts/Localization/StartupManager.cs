@@ -14,7 +14,7 @@ public class StartupManager : MonoBehaviour
         {
             yield return null;
         }
-
+         
         Logging.StartDbg("SM0", timestamp: true);
         SceneManager.LoadScene("WordSpell");
         Logging.StartDbg("SMx", timestamp: true);

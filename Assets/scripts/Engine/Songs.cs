@@ -77,33 +77,12 @@ namespace WordSpell
                 do
                 {
                     rs = WSGameState.Rnd.Next(BGMusic.Count - 1);
-                } while (lastSong == rs);
+                } while (lastSong == rs && Count >= 2);
                 
                 lastSong = rs;
 
                 Logging.PlayDbg("gns1.1_" + rs);
                 return BGMusic[rs];
-            }
-
-            if (AmbientSongs != null)
-            {
-                Logging.PlayDbg("gns0_"+AmbientSongs.Length);
-                if (AmbientSongs.Length > 0)
-                {
-                    int rs = WSGameState.Rnd.Next(AmbientSongs.Length - 1);
-                    Logging.PlayDbg("gns1.1_" + rs);
-                    return AmbientSongs[rs];
-                }
-                else
-                {
-                    Logging.PlayDbg("gns1.2");
-                    return null;
-                }
-            }
-            else
-            {
-                Logging.PlayDbg("gns!");
-                return null;
             }
         }
     }

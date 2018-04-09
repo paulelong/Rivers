@@ -100,7 +100,7 @@ public class LocalizationManager : MonoBehaviour
             alertedPartialDictLoaded = true;
         }
 
-        if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady && MusicLoadingDone && !isReady)
+        if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady /*&& MusicLoadingDone*/ && !isReady)
         {
             UpdateStatus("Ready");
             isReady = true;
