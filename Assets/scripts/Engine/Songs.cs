@@ -65,7 +65,7 @@ namespace WordSpell
 
         public static AudioClip GetNextSong()
         {
-            if(BGMusic.Count <= 0)
+            if(Count <= 0)
             {
                 Logging.PlayDbg("gns!");
                 return null;
@@ -76,7 +76,7 @@ namespace WordSpell
 
                 do
                 {
-                    rs = WSGameState.Rnd.Next(BGMusic.Count - 1);
+                    rs = WSGameState.Rnd.Next(Count - 1);
                 } while (lastSong == rs && Count >= 2);
                 
                 lastSong = rs;
