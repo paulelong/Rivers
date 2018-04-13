@@ -82,11 +82,11 @@ public class LocalizationManager : MonoBehaviour
             alertedLocaleLoaded = true;
         }
 
-        if (MusicLoadingDone && !alertedMusicLoaded)
-        {
-            UpdateStatus("Loaded music...");
-            alertedMusicLoaded = true;
-        }
+        //if (MusicLoadingDone && !alertedMusicLoaded)
+        //{
+        //    UpdateStatus("Loaded music...");
+        //    alertedMusicLoaded = true;
+        //}
 
         if (EngLetterScoring.DictionaryCacheReady && !alertedDictLoaded)
         {
@@ -100,10 +100,10 @@ public class LocalizationManager : MonoBehaviour
             alertedPartialDictLoaded = true;
         }
 
-        if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady && Songs.Count > 1 && !isReady)
+        if (XMLisReady && EngLetterScoring.DictionaryCacheReady && EngLetterScoring.DictionaryPartialCacheReady && Songs.Count > 2 && !isReady)
         {
-            UpdateStatus("Ready");
             isReady = true;
+            UpdateStatus("Ready");
         }
     }
 
