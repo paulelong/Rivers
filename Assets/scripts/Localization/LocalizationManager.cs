@@ -34,9 +34,14 @@ public class LocalizationManager : MonoBehaviour
     private bool alertedDictLoaded = false;
     private bool alertedPartialDictLoaded = false;
     private bool alertedMusicLoaded = false;
+
+    private DateTime startLoad;
+
     // Use this for initialization
     void Awake()
     {
+        startLoad = DateTime.Now;
+
         if (instance == null)
         {
             instance = this;
@@ -104,6 +109,7 @@ public class LocalizationManager : MonoBehaviour
         {
             isReady = true;
             UpdateStatus("Ready");
+            WSAnalytics.RecordAnalyticsLoadTime(startLoad - DateTime.Now);
         }
     }
 

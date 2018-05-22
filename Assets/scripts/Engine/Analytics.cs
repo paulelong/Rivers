@@ -53,6 +53,14 @@ namespace WordSpell
             });
         }
 
+        internal static void RecordAnalyticsLoadTime(TimeSpan span)
+        {
+            Analytics.CustomEvent("loadTime", new Dictionary<string, object>
+            {
+                { "timespan", span.Seconds },
+            });
+        }
+
         public void DebugTest()
         {
             UnityEngine.Object[] gos = (UnityEngine.Object[])Resources.LoadAll("");

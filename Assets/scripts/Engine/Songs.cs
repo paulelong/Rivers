@@ -17,11 +17,11 @@ namespace WordSpell
 
         public static string[] SongNames =
         {
-            "Acoustica_EQ",
-            "idea5-Master",
-            "idea6-Master",
-            "iSong-Master",
-            "KingArthorsPlight",
+            "Acoustica",
+            "iSong",
+            "KingArthursPlight",
+            "3Part",
+            "idea 6 build",
             "MaHype2",
             "Prey4#3",
             "LetsGo49",
