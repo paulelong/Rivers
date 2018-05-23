@@ -109,7 +109,7 @@ public class LocalizationManager : MonoBehaviour
         {
             isReady = true;
             UpdateStatus("Ready");
-            WSAnalytics.RecordAnalyticsLoadTime(startLoad - DateTime.Now);
+            WSAnalytics.RecordAnalyticsLoadTime(DateTime.Now - startLoad);
         }
     }
 

@@ -9,6 +9,5 @@ public class TimerSpin : MonoBehaviour
 	void Update ()
     {
         transform.Rotate(Vector3.down, 100f * Time.deltaTime);
-        Logging.StartDbg("tic " + transform.rotation.ToString(), timestamp:true);
     }
 }

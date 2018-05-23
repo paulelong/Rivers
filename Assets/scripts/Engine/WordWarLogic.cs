@@ -1319,13 +1319,13 @@ namespace WordSpell
             int idx = os.BestWordScores.FindIndex(f => (f.Word == wsi.Word));
             if (idx >= 0)
             {
-                if(os.BestWordScores[idx].Simplescore <= wsi.Simplescore)
+                if(os.BestWordScores[idx].Score <= wsi.Score)
                 {
                     return;
                 }
             }
 
-            int indx = os.BestWordScores.FindIndex(f => (f.Score < wsi.Simplescore));
+            int indx = os.BestWordScores.FindIndex(f => (f.Score < wsi.Score));
             if (indx >= 0)
             {
                 os.BestWordScores.Insert(indx, wsi);

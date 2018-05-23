@@ -29,7 +29,7 @@ But beware of lava, the RED letter tile in the above example, because if they re
     </LocalizationItem>
     <LocalizationItem>
       <key>BestWords</key>
-      <value>Best Word</value>
+      <value>Best Words</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>LongestWords</key>
@@ -37,7 +37,7 @@ But beware of lava, the RED letter tile in the above example, because if they re
     </LocalizationItem>
     <LocalizationItem>
       <key>BestOverallWords</key>
-      <value>Best Overall Words</value>
+      <value>Best Words including bonuses</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>Start9x9</key>
