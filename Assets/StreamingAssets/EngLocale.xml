@@ -216,7 +216,7 @@ There are no more words for you to spell, please try again.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>ConvertLetter</key>
-      <value>Chose a letter to convert, then press the wand button, and all letters of that kind will be changed to another random letter.</value>
+      <value>Chose a letter to convert, then press the wand and all letters of that kind will be randomized.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>Bomb</key>
@@ -252,7 +252,7 @@ There are no more words for you to spell, please try again.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>AnyLetter</key>
-      <value>Pick a letter to change into any letter you want.  After pressing the wand button, you can enter the letter of your choice.</value>
+      <value>Pick a letter to change.  After pressing the wand, you can enter the letter of your choice.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>RowGone</key>
