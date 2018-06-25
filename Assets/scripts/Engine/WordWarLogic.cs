@@ -499,7 +499,7 @@ namespace WordSpell
 
             // Stuff useful for development, don't ship
 #if UNITY_EDITOR
-            AwardAllSpells();
+            //AwardAllSpells();
             if (glbseed == 0)
             {
                 RndSeed = (int)DateTime.Now.Ticks;
@@ -801,6 +801,7 @@ namespace WordSpell
                     {
                         boardScript.ShowMsg("You've found the backdoor.");
                         AwardAllSpells();
+                        boardScript.RefreshSpells();
                     }
                     else
                     {
@@ -1058,7 +1059,7 @@ namespace WordSpell
 
         internal static bool EnoughMana(int mannaPoints)
         {
-            return (mannaPoints > WSGameState.gs.mana);
+            return (mannaPoints <= WSGameState.gs.mana);
         }
 
         #endregion StatUpdate
@@ -1085,7 +1086,7 @@ namespace WordSpell
                 gs.level++;
                 levelup = true;
 
-                if (gs.level >= 5)
+                if (gs.level == 5)
                 {
                     ChangeManna(6);
                 }
@@ -1395,6 +1396,8 @@ namespace WordSpell
             int addedManna = EngLetterScoring.ScoreManna(SelLetterList);
             gs.mana += addedManna;
             UpdateManaScore();
+
+            boardScript.RefreshSpells();
 
             return addedManna;
         }

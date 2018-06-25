@@ -908,7 +908,7 @@ public class Board : MonoBehaviour, IEventSystemHandler
         entry.callback.AddListener(call);
         trigger.triggers.Add(entry);
 
-        if (!awarded && WSGameState.EnoughMana(si.MannaPoints))
+        if (!awarded && !WSGameState.EnoughMana(si.MannaPoints))
         {
             b.enabled = false;
         }

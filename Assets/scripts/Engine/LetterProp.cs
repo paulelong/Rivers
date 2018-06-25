@@ -744,6 +744,7 @@ namespace WordSpell
                 case 'S':
                 case 'Z':
                 case 'J':
+                case 'F':
                     //text.transform.localPosition = new Vector3(-0.3f, 0.3f, -0.06f);
                     text.transform.localPosition = new Vector3(-0.2f, 0.49f, -0.06f);
                     break;
