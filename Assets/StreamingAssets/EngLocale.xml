@@ -220,15 +220,15 @@ There are no more words for you to spell, please try again.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>Bomb</key>
-      <value>Pick a tile to destroy it and it's up/down/left/right neighbors, then press the wand button.</value>
+      <value>Pick a tile to destroy it and its neighbors, then press the wand button.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>CWRotate</key>
-      <value>Pick a tile and then press the wand button to rotate the surrounding tiles clockwise once.</value>
+      <value>Pick a tile and then press the wand to rotate the surrounding tiles clockwise once.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>CCWRotate</key>
-      <value>Pick a tile and then press the wand button to rotate the surrounding tiles counter-clockwise once.</value>
+      <value>Pick a tile and then press the wand to rotate the surrounding tiles counter-clockwise once.</value>
     </LocalizationItem>
     <LocalizationItem>
       <key>Hint</key>
